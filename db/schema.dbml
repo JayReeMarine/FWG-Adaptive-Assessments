@@ -1,4 +1,143 @@
 Project FWG_Adaptive_Assessments {
   database_type: 'PostgreSQL'
-  Note: 'FWG Adaptive Assessment DB (monthly/yearly, branching, scoring)'
 }
+
+/********************************************************
+ * 1) People & Consent
+ ********************************************************/
+Table "user" {
+  id           serial [pk]
+  created_at   timestamptz [default: `now()`]
+  Note: 'No personally identifying data (e.g., name/residency). Anonymous user id only.'
+}
+
+Table profile {
+  id             serial [pk]
+  user_id        int [ref: > user.id]
+  sex_at_birth   text
+  birth_year     int
+  Note: 'Minimal non-identifiable profile; sensitive fields avoided.'
+}
+
+Table consent {
+  id         serial [pk]
+  user_id    int [ref: > user.id]
+  version    text
+  scope      text
+  signed_at  timestamptz
+}
+
+/********************************************************
+ * 2) Question Bank (versioned)
+ ********************************************************/
+Table questionnaire {
+  id     serial [pk]
+  name   text
+  domain text // 'mental' | 'diet' | 'activity' | 'women_health'
+}
+
+Table question {
+  id                serial [pk]
+  questionnaire_id  int [ref: > questionnaire.id]
+  code              text  // e.g., 'Q1a'
+  text              text
+  type              text  // 'single','multi','scale','numeric',...
+  unit              text  // 'min','hr','cm','kg',...
+  required          boolean
+  active            boolean [default: true]
+  Note: 'Question master (mutable). Runtime uses version record.'
+}
+
+Table question_version {
+  id              serial [pk]
+  question_id     int [ref: > question.id]
+  v               int
+  text            text
+  response_schema jsonb  // options/range/validation schema
+  scoring         jsonb  // PHQ/GAD scoring rules etc.
+  valid_from      date
+  valid_to        date
+  Note: 'Freeze text/options/scoring per version.'
+}
+
+Table option {
+  id                  serial [pk]
+  question_version_id int [ref: > question_version.id]
+  label               text
+  value               text
+  display_order       int
+}
+
+/********************************************************
+ * 3) Scheduling / Rotation
+ ********************************************************/
+Table schedule {
+  id         serial [pk]
+  frequency  text // 'monthly' | 'yearly'
+}
+
+Table question_schedule {
+  id             serial [pk]
+  schedule_id    int [ref: > schedule.id]
+  question_id    int [ref: > question.id]
+  rotation_group text // nullable e.g., 'setA','setB'
+}
+
+/********************************************************
+ * 4) Branching Rules
+ ********************************************************/
+Table rule {
+  id                           serial [pk]
+  name                         text
+  trigger_question_version_id  int [ref: > question_version.id]
+  expression                   jsonb // {"op":">=","question":"Q1a","value":2}
+  target_action                jsonb // {"show":[101,102],"hide":[103],"route":"groupB"}
+  Note: 'UI resolves expression → applies target_action.'
+}
+
+/********************************************************
+ * 5) Session & Responses
+ ********************************************************/
+Table session {
+  id           serial [pk]
+  user_id      int [ref: > user.id]
+  period_month int
+  period_year  int
+  type         text // 'monthly' | 'yearly'
+  started_at   timestamptz [default: `now()`]
+  completed_at timestamptz
+  Note: 'One adaptive run per session (monthly/yearly).'
+}
+
+Table response {
+  id                   serial [pk]
+  session_id           int [ref: > session.id]
+  question_version_id  int [ref: > question_version.id]
+  created_at           timestamptz [default: `now()`]
+  raw                  jsonb   // multi-select as JSON array
+  score                numeric // nullable; computed for PHQ/GAD etc.
+}
+
+Table response_index {
+  id            serial [pk]
+  session_id    int [ref: > session.id]
+  user_id       int [ref: > user.id]
+  question_code text
+  period_month  int
+  period_year   int
+  Note: 'Optional helper table/materialized view for faster queries.'
+}
+
+/********************************************************
+ * 6) Risk & Actions
+ ********************************************************/
+Table flag {
+  id         serial [pk]
+  user_id    int [ref: > user.id]
+  session_id int [ref: > session.id]
+  domain     text // 'mental' | 'diet' | 'activity' | 'women_health'
+  level      text // 'none' | 'mild' | 'moderate' | 'high'
+  details    jsonb
+  created_at timestamptz [default: `now()`]
+}
+

@@ -8,7 +8,6 @@ Project FWG_Adaptive_Assessments {
 Table "user" {
   id           serial [pk]
   created_at   timestamptz [default: `now()`]
-  Note: 'No personally identifying data (e.g., name/residency). Anonymous user id only.'
 }
 
 Table profile {
@@ -16,14 +15,12 @@ Table profile {
   user_id        int [ref: > user.id]
   sex_at_birth   text
   birth_year     int
-  Note: 'Minimal non-identifiable profile; sensitive fields avoided.'
 }
 
 Table consent {
   id         serial [pk]
   user_id    int [ref: > user.id]
   version    text
-  scope      text
   signed_at  timestamptz
 }
 
@@ -34,38 +31,19 @@ Table questionnaire {
   id     serial [pk]
   name   text
   domain text // 'mental' | 'diet' | 'activity' | 'women_health'
+  Note:  'Question Topic'
 }
 
 Table question {
   id                serial [pk]
+  difficulty        text // e.g. easy, medium, hard
   questionnaire_id  int [ref: > questionnaire.id]
-  code              text  // e.g., 'Q1a'
   text              text
   type              text  // 'single','multi','scale','numeric',...
   unit              text  // 'min','hr','cm','kg',...
   required          boolean
   active            boolean [default: true]
-  Note: 'Question master (mutable). Runtime uses version record.'
-}
-
-Table question_version {
-  id              serial [pk]
-  question_id     int [ref: > question.id]
-  v               int
-  text            text
-  response_schema jsonb  // options/range/validation schema
-  scoring         jsonb  // PHQ/GAD scoring rules etc.
-  valid_from      date
-  valid_to        date
-  Note: 'Freeze text/options/scoring per version.'
-}
-
-Table option {
-  id                  serial [pk]
-  question_version_id int [ref: > question_version.id]
-  label               text
-  value               text
-  display_order       int
+  scoring           jsonb  // PHQ/GAD scoring rules etc.
 }
 
 /********************************************************
@@ -74,6 +52,7 @@ Table option {
 Table schedule {
   id         serial [pk]
   frequency  text // 'monthly' | 'yearly'
+  Note:       'Not sure how to intergrate with ML so far'
 }
 
 Table question_schedule {
@@ -81,18 +60,19 @@ Table question_schedule {
   schedule_id    int [ref: > schedule.id]
   question_id    int [ref: > question.id]
   rotation_group text // nullable e.g., 'setA','setB'
+  Note:       'Not sure how to intergrate with ML so far'
 }
 
 /********************************************************
- * 4) Branching Rules
+ * 4) Branching Rules. --> Do we need to store that information?
  ********************************************************/
 Table rule {
   id                           serial [pk]
   name                         text
-  trigger_question_version_id  int [ref: > question_version.id]
+  trigger_question_version_id  int [ref: > question.id]
   expression                   jsonb // {"op":">=","question":"Q1a","value":2}
   target_action                jsonb // {"show":[101,102],"hide":[103],"route":"groupB"}
-  Note: 'UI resolves expression → applies target_action.'
+  Note:                       'Do we need to store that information?'
 }
 
 /********************************************************
@@ -101,31 +81,20 @@ Table rule {
 Table session {
   id           serial [pk]
   user_id      int [ref: > user.id]
-  period_month int
-  period_year  int
-  type         text // 'monthly' | 'yearly'
+  period_month int // July
+  period_year  int // 2025
   started_at   timestamptz [default: `now()`]
   completed_at timestamptz
-  Note: 'One adaptive run per session (monthly/yearly).'
+  Note: 'One adaptive run per session.'
 }
 
 Table response {
   id                   serial [pk]
   session_id           int [ref: > session.id]
-  question_version_id  int [ref: > question_version.id]
+  question_version_id  int [ref: > question.id]
   created_at           timestamptz [default: `now()`]
   raw                  jsonb   // multi-select as JSON array
   score                numeric // nullable; computed for PHQ/GAD etc.
-}
-
-Table response_index {
-  id            serial [pk]
-  session_id    int [ref: > session.id]
-  user_id       int [ref: > user.id]
-  question_code text
-  period_month  int
-  period_year   int
-  Note: 'Optional helper table/materialized view for faster queries.'
 }
 
 /********************************************************

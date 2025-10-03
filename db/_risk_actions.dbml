@@ -1,0 +1,17 @@
+Table flag {
+  id         serial [pk]
+  user_id    int [ref: > user.id]
+  session_id int [ref: > session.id]
+  domain     text // 'mental' | 'diet' | 'activity' | 'women_health'
+  level      text // 'none' | 'mild' | 'moderate' | 'high'
+  details    jsonb
+  created_at timestamptz [default: `now()`]
+}
+
+Table resource_link {
+  id      serial [pk]
+  region  text
+  domain  text
+  label   text
+  url     text
+}

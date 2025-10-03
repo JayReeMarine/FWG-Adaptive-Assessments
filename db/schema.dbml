@@ -1,0 +1,4 @@
+Project FWG_Adaptive_Assessments {
+  database_type: 'PostgreSQL'
+  Note: 'FWG Adaptive Assessment DB (monthly/yearly, branching, scoring)'
+}

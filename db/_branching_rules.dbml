@@ -1,0 +1,7 @@
+Table rule {
+  id                             serial [pk]
+  name                           text
+  trigger_question_version_id    int [ref: > question_version.id]
+  expression                     jsonb // {"op": ">=", "question":"Q1a", "value": 2}
+  target_action                  jsonb // {"show": [101,102], "hide":[103], "route": "groupB"}
+}

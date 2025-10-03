@@ -1,0 +1,35 @@
+Table questionnaire {
+  id     serial [pk]
+  name   text
+  domain text // 'mental' | 'diet' | 'activity' | 'women_health'
+}
+
+Table question {
+  id                serial [pk]
+  questionnaire_id  int [ref: > questionnaire.id]
+  code              text  // e.g., 'Q1a'
+  text              text
+  type              text  // 'single', 'multi', 'scale', 'numeric', ...
+  unit              text  // 'min','hr','cm','kg', ...
+  required          boolean
+  active            boolean [default: true]
+}
+
+Table question_version {
+  id             serial [pk]
+  question_id    int [ref: > question.id]
+  v              int
+  text           text
+  response_schema jsonb  
+  scoring        jsonb   
+  valid_from     date
+  valid_to       date
+}
+
+Table option {
+  id                  serial [pk]
+  question_version_id int [ref: > question_version.id]
+  label               text
+  value               text
+  display_order       int
+}

@@ -1,0 +1,19 @@
+Table "user" {
+  id           serial [pk]
+  created_at   timestamptz [default: `now()`]
+}
+
+Table profile {
+  id             serial [pk]
+  user_id        int [ref: > user.id]
+  sex_at_birth   text
+  birth_year     int
+}
+
+Table consent {
+  id         serial [pk]
+  user_id    int [ref: > user.id]
+  version    text
+  scope      text
+  signed_at  timestamptz
+}

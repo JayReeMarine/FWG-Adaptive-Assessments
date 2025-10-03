@@ -35,7 +35,7 @@ Table questionnaire {
 }
 
 Table question {
-  id                serial [pk]
+  id                seriaål [pk]
   difficulty        text // e.g. easy, medium, hard
   questionnaire_id  int [ref: > questionnaire.id]
   text              text
@@ -44,6 +44,7 @@ Table question {
   required          boolean
   active            boolean [default: true]
   scoring           jsonb  // PHQ/GAD scoring rules etc.
+  period_question   boolean // Static or Periodic question
 }
 
 /********************************************************

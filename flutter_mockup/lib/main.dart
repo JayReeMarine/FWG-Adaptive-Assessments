@@ -6,6 +6,30 @@ import 'screens/survey_page.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+    // ✅ Fail fast if env not provided
+  if (supabaseUrl.isEmpty || supabaseAnon.isEmpty) {
+    throw Exception(
+      'Missing SUPABASE_URL or SUPABASE_ANON_KEY. '
+      'Run with --dart-define to provide them.',
+    );
+  }
+
+  await Supabase.initialize(url: supabaseUrl, anonKey: supabaseAnon);
+
+  // ✅ Tiny ping to verify DB/RLS
+  try {
+    final rows = await Supabase.instance.client
+        .from('question')
+        .select('id')
+        .limit(1);
+    // ignore: avoid_print
+    print('[boot] supabase ok. sample=${rows}');
+  } catch (e) {
+    // ignore: avoid_print
+    print('[boot] supabase failed: $e');
+    rethrow;
+  }
+  
   // Initialize Supabase SDK
   await Supabase.initialize(
     url: supabaseUrl,

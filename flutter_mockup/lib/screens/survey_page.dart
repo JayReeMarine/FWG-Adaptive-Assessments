@@ -29,7 +29,13 @@ class _SurveyPageState extends State<SurveyPage> {
   // Load questions from DB
   Future<void> _load() async {
     try {
-      final data = await repo.fetchByQuestionnaire(1); 
+      final data = await repo.fetchByQuestionnaire(1);
+      // DEBUG: print what we loaded from Supabase
+      // This helps ensure we're not using any stale mock path.
+      // ignore: avoid_print
+      print('[SurveyPage] loaded ${data.length} questions '
+            'first="${data.isNotEmpty ? data.first.title : 'none'}"');
+
       setState(() {
         items = data;
         loading = false;

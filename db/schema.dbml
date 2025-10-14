@@ -30,7 +30,7 @@ Table consent {
 Table questionnaire {
   id     serial [pk]
   name   text
-  domain text // 'mental' | 'diet' | 'activity' | 'women_health'
+  domain text // 'mental' | 'diet' | 'physical activity' | 'women_health'
   Note:  'Question Topic'
 }
 
@@ -38,13 +38,13 @@ Table question {
   id                seriaål [pk]
   difficulty        text // e.g. easy, medium, hard
   questionnaire_id  int [ref: > questionnaire.id]
-  text              text
-  type              text  // 'single','multi','scale','numeric',...
+  explanation       text
+  type_of_answer    text  // 'single','multi','scale','numeric',...
   unit              text  // 'min','hr','cm','kg',...
   required          boolean
-  active            boolean [default: true]
-  scoring           jsonb  // PHQ/GAD scoring rules etc.
+  active            boolean [default: true] // necessary??
   period_question   boolean // Static or Periodic question
+  Note: 'answer should be fixed answer -> type_of_answer'
 }
 
 /********************************************************

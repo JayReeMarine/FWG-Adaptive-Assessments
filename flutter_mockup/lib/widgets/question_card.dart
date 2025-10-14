@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import '../models/question.dart';
+import '../models/ui_question.dart'; // Use UiQuestion instead of mock Question
 import '../utils/constants.dart';
 import 'help_dialog.dart';
 
 class QuestionCard extends StatelessWidget {
-  final Question question;
+  final UiQuestion question; // <- change type to UiQuestion
   final int questionNumber;
   final Function(int) onOptionToggle;
   final VoidCallback? onPrevious;
@@ -22,7 +22,7 @@ class QuestionCard extends StatelessWidget {
   void _showHelpDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (BuildContext context) => HelpDialog(question: question),
+      builder: (BuildContext context) => HelpDialog(question: question), // pass UiQuestion
     );
   }
 
@@ -37,7 +37,7 @@ class QuestionCard extends StatelessWidget {
       ),
       child: Column(
         children: [
-          // Question Header
+          // Header
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -63,16 +63,19 @@ class QuestionCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 20),
-          // Question Text
+
+          // Question text (UiQuestion.title)
           Text(
-            question.question,
+            question.title, // <- was question.question
             style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w500,
             ),
           ),
+
           const SizedBox(height: 30),
-          // Options List
+
+          // Options list
           Expanded(
             child: ListView.builder(
               itemCount: question.options.length,
@@ -102,7 +105,8 @@ class QuestionCard extends StatelessWidget {
               },
             ),
           ),
-          // Navigation Buttons
+
+          // Navigation
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

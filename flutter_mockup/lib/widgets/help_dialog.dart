@@ -1,8 +1,9 @@
+// widgets/help_dialog.dart
 import 'package:flutter/material.dart';
-import '../models/question.dart';
+import '../models/ui_question.dart'; // Use UiQuestion
 
 class HelpDialog extends StatelessWidget {
-  final Question question;
+  final UiQuestion question; // <- change type
 
   const HelpDialog({super.key, required this.question});
 
@@ -18,6 +19,7 @@ class HelpDialog extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Header with static title
             Row(
               children: [
                 Container(
@@ -29,10 +31,10 @@ class HelpDialog extends StatelessWidget {
                   child: const Icon(Icons.info_outline, size: 20),
                 ),
                 const SizedBox(width: 12),
-                Expanded(
+                const Expanded(
                   child: Text(
-                    question.helpTitle,
-                    style: const TextStyle(
+                    'More info', // static title for help
+                    style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
@@ -41,8 +43,10 @@ class HelpDialog extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 16),
+
+            // Body text from UiQuestion.help
             Text(
-              question.helpText,
+              question.help, // <- use help field
               style: TextStyle(
                 fontSize: 14,
                 color: Colors.grey[700],
@@ -50,6 +54,7 @@ class HelpDialog extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 24),
+
             OutlinedButton(
               onPressed: () => Navigator.of(context).pop(),
               style: OutlinedButton.styleFrom(

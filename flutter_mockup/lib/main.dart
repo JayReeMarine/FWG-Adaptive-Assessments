@@ -1,7 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'core/config/env.dart';
 import 'screens/survey_page.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Supabase SDK
+  await Supabase.initialize(
+    url: supabaseUrl,
+    anonKey: supabaseAnon,
+  );
+
   runApp(const MyApp());
 }
 

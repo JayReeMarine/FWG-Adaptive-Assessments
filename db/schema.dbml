@@ -27,24 +27,53 @@ Table consent {
 /********************************************************
  * 2) Question Bank (versioned)
  ********************************************************/
+
+Enum answer_kind {
+  NUMERIC
+  SCALE
+}
+
+Table unit {
+  id        serial [pk]
+  code      text   // e.g., "kg", "cm", "min", "hr"
+  name      text   // e.g., "kilogram", "centimeter", "minute"
+  Note: 'Normalised units for numeric answers'
+}
+
+Table scale {
+  id        serial [pk]
+  min_value int    // e.g., 0
+  max_value int    // e.g., 3 or 5 or 10
+  labels    jsonb  // optional: { "0":"Not at all", "1":"Several days", ... }
+  reversed  boolean [default: false] // if higher=better and you need reverse scoring
+  Note: 'Normalised scale definitions'
+}
+
 Table questionnaire {
   id     serial [pk]
   name   text
-  domain text // 'mental' | 'diet' | 'physical activity' | 'women_health'
+  domain text // consider Enum later: 'mental' | 'diet' | 'physical_activity' | 'women_health'
   Note:  'Question Topic'
 }
 
+
 Table question {
-  id                seriaål [pk]
-  difficulty        text // e.g. easy, medium, hard
-  questionnaire_id  int [ref: > questionnaire.id]
-  explanation       text
-  type_of_answer    text  // 'single','multi','scale','numeric',...
-  unit              text  // 'min','hr','cm','kg',...
+  id                serial [pk]                // fixed identity for this “item”
+  questionnaire_id  int   [ref: > questionnaire.id]
+  text              text                       // the prompt shown to the user
+  explanation       text                       // help text / tooltip
   required          boolean
-  active            boolean [default: true] // necessary??
-  period_question   boolean // Static or Periodic question
-  Note: 'answer should be fixed answer -> type_of_answer'
+  // answer model
+  answer_kind       answer_kind                 // NUMERIC or SCALE
+  // For NUMERIC
+  unit_id           int   [ref: > unit.id]      // required iff answer_kind=NUMERIC
+  min_numeric       numeric                      // nullable; e.g., 0
+  max_numeric       numeric                      // nullable; e.g., 300
+  precision_dp      int                          // decimal places allowed; e.g., 0,1,2
+  period_question   boolean
+  scale_id          int   [ref: > scale.id]      // answer_kind=SCALE
+
+  Note: 'Exactly one of {unit_id|min_numeric|max_numeric|precision_dp} or {scale_id} is used based on answer_kind'
 }
 
 /********************************************************
@@ -94,6 +123,8 @@ Table response {
   session_id           int [ref: > session.id]
   question_version_id  int [ref: > question.id]
   created_at           timestamptz [default: `now()`]
+  value_number         numeric   
+  value_scale          int       
   raw                  jsonb   // multi-select as JSON array
   score                numeric // nullable; computed for PHQ/GAD etc.
 }

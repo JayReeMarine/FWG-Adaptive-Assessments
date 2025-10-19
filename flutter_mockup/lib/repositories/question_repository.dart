@@ -41,7 +41,6 @@ class QuestionRepository {
     // 3) map DTO → UiQuestion
     return dtos.map((q) {
       List<String> options = [];
-      bool isNumeric = q.answerKind == 'NUMERIC';
 
       if (q.answerKind == 'SCALE') {
         final s = q.scaleId != null ? scales[q.scaleId!] : null;
@@ -78,7 +77,7 @@ class QuestionRepository {
         title: q.text,
         help: q.explanation ?? '',
         options: options,
-        isNumeric: isNumeric,
+        answerKind: q.answerKind,
         required: q.required,
       );
     }).toList();

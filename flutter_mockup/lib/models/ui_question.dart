@@ -3,7 +3,7 @@ class UiQuestion {
   final String title;          // question text
   final String help;           // explanation/help text
   final List<String> options;  // rendered choices for current widget
-  final bool isNumeric;        // hint for widget switching (numeric vs scale)
+  final String answerKind;        // hint for widget switching (numeric vs scale)
   final bool required;
 
   // state kept in UI layer
@@ -13,7 +13,7 @@ class UiQuestion {
     required this.title,
     required this.help,
     required this.options,
-    required this.isNumeric,
+    required this.answerKind,
     required this.required,
     Set<int>? selected,
   }) : selected = selected ?? <int>{};

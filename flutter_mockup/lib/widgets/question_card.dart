@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../models/ui_question.dart'; // Use UiQuestion instead of mock Question
 import '../utils/constants.dart';
 import 'help_dialog.dart';
@@ -76,35 +77,48 @@ class QuestionCard extends StatelessWidget {
           const SizedBox(height: 30),
 
           // Options list
-          Expanded(
-            child: ListView.builder(
-              itemCount: question.options.length,
-              itemBuilder: (context, index) {
-                final isSelected = question.selected.contains(index);
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: InkWell(
-                    onTap: () => onOptionToggle(index),
-                    child: Row(
-                      children: [
-                        Checkbox(
-                          value: isSelected,
-                          onChanged: (value) => onOptionToggle(index),
-                          activeColor: Colors.black,
-                          checkColor: Colors.white,
-                        ),
-                        const SizedBox(width: 12),
-                        Text(
-                          question.options[index],
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
+          if (question.answerKind == 'NUMERIC') ...[
+            // Not a list; just a single numeric input field
+          TextField(
+            keyboardType: TextInputType.number,
+            inputFormatters: [
+              // allow integers or decimals (and optional leading minus)
+              FilteringTextInputFormatter.allow(RegExp(r'^-?\d*\.?\d*$')),
+            ],
+            decoration: const InputDecoration(
+              labelText: 'Enter a number',
+              border: OutlineInputBorder(),
+            ),
+            onChanged: (value) {
+              final n = num.tryParse(value);
+              // store on the model so parent can read later
+              // question.numericAnswer = n;
+              // If you want to notify parent that “answered” state changed,
+              // you can call onOptionToggle(-1); // (pick any sentinel you use)
+            },
+          ),
+          const SizedBox(height: 16),
+        ] else if (question.answerKind == 'SCALE') ...[
+          RadioGroup<int>(
+            groupValue:
+                question.selected.isNotEmpty ? question.selected.first : null,
+            onChanged: (int? value) {
+              if (value != null) {
+                onOptionToggle(value);
+              }
+            },
+            child: Column(
+              children: List.generate(
+                question.options.length,
+                (index) => RadioListTile<int>(
+                  value: index,
+                  title: Text(question.options[index]),
+                ),
+              ),
             ),
           ),
+        ],
+
 
           // Navigation
           Row(

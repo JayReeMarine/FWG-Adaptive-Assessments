@@ -4,6 +4,7 @@ import '../models/ui_question.dart';
 import '../utils/constants.dart';
 import '../widgets/progress_bar.dart';
 import '../widgets/question_card.dart';
+import 'completion_page.dart';
 
 class SurveyPage extends StatefulWidget {
   const SurveyPage({super.key});
@@ -66,8 +67,14 @@ class _SurveyPageState extends State<SurveyPage> {
   void next() {
     if (current < items.length - 1) {
       setState(() => current++);
+    } else {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const CompletionPage()),
+      );
     }
   }
+
 
   void prev() {
     if (current > 0) {
@@ -104,7 +111,7 @@ class _SurveyPageState extends State<SurveyPage> {
                   questionNumber: current + 1,
                   onOptionToggle: toggleOption,
                   onPrevious: current > 0 ? prev : null,
-                  onNext: current < items.length - 1 ? next : null,
+                  onNext: next
                 ),
               ),
             ],

@@ -16,7 +16,7 @@ class QuestionRepository {
             .update({'questionnaire_id': 1})
             .filter('questionnaire_id', 'is', null);
         return;
-      }
+      } 
 
       await _sp
           .from('question')

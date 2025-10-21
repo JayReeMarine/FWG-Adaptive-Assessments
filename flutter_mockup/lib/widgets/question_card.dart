@@ -117,6 +117,30 @@ class QuestionCard extends StatelessWidget {
               ),
             ),
           ),
+        ]
+        else if (question.answerKind == 'MULTI') ...[
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: question.options.length,
+            itemBuilder: (context, index) {
+              final isSelected = question.selected.contains(index);
+              return CheckboxListTile(
+                value: isSelected,
+                title: Text(question.options[index]),
+                controlAffinity: ListTileControlAffinity.leading,
+                onChanged: (checked) {
+                  // toggle selection
+                  if (checked == true) {
+                    onOptionToggle(index); // your handler: add index
+                  } else {
+                    onOptionToggle(index); // same handler: remove index
+                  }
+                },
+              );
+            },
+          ),
+          const SizedBox(height: 16),
         ],
 
 

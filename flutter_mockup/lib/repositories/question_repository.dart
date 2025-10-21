@@ -8,6 +8,28 @@ class QuestionRepository {
   QuestionRepository({SupabaseClient? client})
       : _sp = client ?? Supabase.instance.client;
 
+  Future<void> resetQuestionnaireId({bool all = false}) async {
+    try {
+      if (all) {
+        await _sp
+            .from('question')
+            .update({'questionnaire_id': 1})
+            .filter('questionnaire_id', 'is', null);
+        return;
+      }
+
+      await _sp
+          .from('question')
+          .update({'questionnaire_id': 1})
+          .eq('period_question', true)
+          .filter('questionnaire_id', 'is', null);
+    
+
+    } catch (e) {
+      print('Error updating questionnaire id: $e');
+    }
+  }
+
   // Fetch questions by questionnaire and map them to UiQuestion
   Future<List<UiQuestion>> fetchByQuestionnaire(int questionnaireId) async {
     // 1) read questions
@@ -15,11 +37,25 @@ class QuestionRepository {
         .from('question')
         .select('*')
         .eq('questionnaire_id', questionnaireId)
-        .order('id', ascending: true);
+        .order('id', ascending: true)
+        .limit(6);
 
     final dtos = (rows as List)
         .map((e) => QuestionDto.fromMap(e as Map<String, dynamic>))
         .toList();
+  
+    await _sp
+        .from('question')
+        .update({'questionnaire_id': null}) 
+        .inFilter('id', dtos.map((q) => q.id).toList());
+    
+    if ((rows as List).length < 6) {
+      resetQuestionnaireId(all: true);
+    }
+
+    if (rows.isEmpty) {
+      return fetchByQuestionnaire(questionnaireId);
+    }
 
     // 2) batch-read scales (only for SCALE)
     final scaleIds = dtos

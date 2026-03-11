@@ -1,17 +1,35 @@
-# FWG-Adaptive-Assessments
-FWG  Adaptive Assessments
+# FWG Adaptive Assessments
 
-FIT4701
+> FIT4702 - Adaptive Assessment Platform built with Flutter & Supabase
 
-Team's folder -> https://drive.google.com/drive/u/1/folders/1g20YC3A-IQ8-JM6LBUzlJKDUFKCSX0sM
+## Links
 
-Diagram link -> https://dbdiagram.io/d/FWG-ADAPTIVE-Schema-68df3c08d2b621e422107095
+| Resource | URL |
+|----------|-----|
+| Team's Folder | https://drive.google.com/drive/u/1/folders/1g20YC3A-IQ8-JM6LBUzlJKDUFKCSX0sM |
+| DB Diagram | https://dbdiagram.io/d/FWG-ADAPTIVE-Schema-68df3c08d2b621e422107095 |
+| Supabase Dashboard | https://aqyrpgcssvczmzsojzpm.supabase.co |
 
-Supabase URL - > https://xasvgonxhzghgkbfpizg.supabase.co
+## Supabase Credentials
 
-How to run
+| Key | Value |
+|-----|-------|
+| URL | `https://aqyrpgcssvczmzsojzpm.supabase.co` |
+| Password | `apative123@` |
+| Anon Key | `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFxeXJwZ2Nzc3Zjem16c29qenBtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyNTQyMDQsImV4cCI6MjA4ODgzMDIwNH0.XsQVkjm43yJf8CVRr57QGTq0soFZEOnpD4S03QG7q8g` |
 
-1. flutter clean
-2. flutter pub get
+## Getting Started
 
-3. flutter run -d chrome --dart-define=SUPABASE_URL=https://xasvgonxhzghgkbfpizg.supabase.co --dart-define=SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhhc3Znb254aHpnaGdrYmZwaXpnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA0MDA3MzksImV4cCI6MjA3NTk3NjczOX0.q9DmzjLE-CH2WcIy-6hYpcDfhubnx4-sTSy9ccD9XIo
+```bash
+# 1. Navigate to the Flutter project
+cd flutter_mockup
+
+# 2. Clean & install dependencies
+flutter clean
+flutter pub get
+
+# 3. Run the app
+flutter run -d chrome \
+  --dart-define=SUPABASE_URL=https://aqyrpgcssvczmzsojzpm.supabase.co \
+  --dart-define=SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFxeXJwZ2Nzc3Zjem16c29qenBtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyNTQyMDQsImV4cCI6MjA4ODgzMDIwNH0.XsQVkjm43yJf8CVRr57QGTq0soFZEOnpD4S03QG7q8g
+```

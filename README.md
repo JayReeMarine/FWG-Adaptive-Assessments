@@ -33,3 +33,13 @@ flutter run -d chrome \
   --dart-define=SUPABASE_URL=https://aqyrpgcssvczmzsojzpm.supabase.co \
   --dart-define=SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFxeXJwZ2Nzc3Zjem16c29qenBtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyNTQyMDQsImV4cCI6MjA4ODgzMDIwNH0.XsQVkjm43yJf8CVRr57QGTq0soFZEOnpD4S03QG7q8g
 ```
+
+## Flow Diagram
+
+View the adaptive assessment flow diagram locally.
+
+```bash
+cd docs/flow-diagram
+npm install   # first time only
+npm run dev   # opens at http://localhost:5173
+```

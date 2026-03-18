@@ -1,72 +1,68 @@
-// widgets/help_dialog.dart
 import 'package:flutter/material.dart';
-import '../models/ui_question.dart'; // Use UiQuestion
+import '../models/ui_question.dart';
+import '../utils/constants.dart';
 
 class HelpDialog extends StatelessWidget {
-  final UiQuestion question; // <- change type
+  final UiQuestion question;
 
   const HelpDialog({super.key, required this.question});
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Container(
         padding: const EdgeInsets.all(24),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header with static title
             Row(
               children: [
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
+                    color: AppColors.primary.withValues(alpha: 0.1),
                     shape: BoxShape.circle,
-                    border: Border.all(color: Colors.black, width: 2),
                   ),
-                  child: const Icon(Icons.info_outline, size: 20),
+                  child: const Icon(Icons.info_outline,
+                      size: 20, color: AppColors.primary),
                 ),
                 const SizedBox(width: 12),
                 const Expanded(
                   child: Text(
-                    'More info', // static title for help
+                    'More info',
                     style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textPrimary,
                     ),
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 16),
-
-            // Body text from UiQuestion.help
             Text(
-              question.help, // <- use help field
-              style: TextStyle(
+              question.help,
+              style: const TextStyle(
                 fontSize: 14,
-                color: Colors.grey[700],
+                color: AppColors.textSecondary,
                 height: 1.5,
               ),
             ),
             const SizedBox(height: 24),
-
-            OutlinedButton(
-              onPressed: () => Navigator.of(context).pop(),
-              style: OutlinedButton.styleFrom(
-                side: const BorderSide(color: Colors.black, width: 2),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton(
+                onPressed: () => Navigator.of(context).pop(),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: AppColors.primary,
+                  side: const BorderSide(color: AppColors.primary),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  padding: const EdgeInsets.symmetric(vertical: 12),
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              ),
-              child: const Text(
-                'Close',
-                style: TextStyle(color: Colors.black),
+                child: const Text('Close'),
               ),
             ),
           ],

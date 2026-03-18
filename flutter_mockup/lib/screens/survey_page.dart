@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import '../repositories/question_repository.dart';
 import '../repositories/session_repository.dart';
 import '../repositories/rule_repository.dart';
+import '../repositories/flag_repository.dart';
 import '../models/ui_question.dart';
 import '../models/branch_rule.dart';
 import '../services/branching_engine.dart';
+import '../services/scoring_service.dart';
 import '../utils/constants.dart';
 import '../widgets/progress_bar.dart';
 import '../widgets/question_card.dart';
@@ -30,6 +32,7 @@ class _SurveyPageState extends State<SurveyPage> {
   final _questionRepo = QuestionRepository();
   final _sessionRepo = SessionRepository();
   final _ruleRepo = RuleRepository();
+  final _flagRepo = FlagRepository();
 
   int _currentIndex = 0;
   List<UiQuestion> _allQuestions = [];
@@ -40,6 +43,9 @@ class _SurveyPageState extends State<SurveyPage> {
   int? _sessionId;
   late BranchingEngine _engine;
 
+  // Track previous domain for transition detection
+  String? _previousDomain;
+
   @override
   void initState() {
     super.initState();
@@ -48,33 +54,33 @@ class _SurveyPageState extends State<SurveyPage> {
 
   Future<void> _load() async {
     try {
-      // 1) Load questions based on survey type
       final List<UiQuestion> questions;
       if (widget.surveyType == SurveyType.foundational) {
         questions = await _questionRepo.fetchFoundational();
       } else {
         questions = await _questionRepo.fetchMonthly();
       }
+      // ignore: avoid_print
       print('[SurveyPage] loaded ${questions.length} ${widget.surveyType.name} questions');
 
-      // 2) Load branching rules
       List<BranchRule> rules;
       try {
         rules = await _ruleRepo.fetchAll();
+        // ignore: avoid_print
         print('[SurveyPage] loaded ${rules.length} rules');
       } catch (e) {
+        // ignore: avoid_print
         print('[SurveyPage] rules unavailable: $e');
         rules = [];
       }
 
-      // 3) Create branching engine
       _engine = BranchingEngine(rules: rules);
 
-      // 4) Create session
       final sessionId = await _sessionRepo.createSession(
         periodMonth: widget.periodMonth,
         periodYear: widget.periodYear,
       );
+      // ignore: avoid_print
       print('[SurveyPage] session id=$sessionId');
 
       setState(() {
@@ -148,6 +154,8 @@ class _SurveyPageState extends State<SurveyPage> {
     final q = _visibleQuestions[_currentIndex];
     if (!q.isAnswered) return;
 
+    final score = ScoringService.questionScore(q);
+
     try {
       switch (q.answerKind) {
         case 'NUMERIC':
@@ -155,6 +163,7 @@ class _SurveyPageState extends State<SurveyPage> {
             sessionId: _sessionId!,
             questionId: q.questionId,
             valueNumber: q.numericAnswer,
+            score: score,
           );
           break;
         case 'SCALE':
@@ -162,6 +171,7 @@ class _SurveyPageState extends State<SurveyPage> {
             sessionId: _sessionId!,
             questionId: q.questionId,
             valueScale: q.selected.first,
+            score: score,
           );
           break;
         case 'MULTI':
@@ -169,11 +179,14 @@ class _SurveyPageState extends State<SurveyPage> {
             sessionId: _sessionId!,
             questionId: q.questionId,
             raw: {'selected': q.selected.toList()},
+            score: score,
           );
           break;
       }
-      print('[SurveyPage] saved q=${q.questionId}');
+      // ignore: avoid_print
+      print('[SurveyPage] saved q=${q.questionId} score=$score');
     } catch (e) {
+      // ignore: avoid_print
       print('[SurveyPage] save failed: $e');
     }
   }
@@ -182,16 +195,38 @@ class _SurveyPageState extends State<SurveyPage> {
     await _saveCurrentResponse();
 
     if (_currentIndex < _visibleQuestions.length - 1) {
-      setState(() => _currentIndex++);
+      final currentDomain = _visibleQuestions[_currentIndex].domain;
+      setState(() {
+        _previousDomain = currentDomain;
+        _currentIndex++;
+      });
     } else {
+      List<DomainScore> domainScores = [];
+
       if (_sessionId != null) {
         try {
+          domainScores =
+              ScoringService.calculateDomainScores(_visibleQuestions);
+          for (final ds in domainScores) {
+            // ignore: avoid_print
+            print('[SurveyPage] ${ds.domain}: '
+                '${ds.totalScore}/${ds.maxPossible} -> ${ds.level.name}');
+          }
+
+          await _flagRepo.saveFlags(
+            sessionId: _sessionId!,
+            scores: domainScores,
+          );
+
           await _sessionRepo.completeSession(_sessionId!);
-          print('[SurveyPage] session completed');
+          // ignore: avoid_print
+          print('[SurveyPage] session completed with ${domainScores.length} flags');
         } catch (e) {
+          // ignore: avoid_print
           print('[SurveyPage] complete failed: $e');
         }
       }
+
       if (!mounted) return;
       Navigator.pushReplacement(
         context,
@@ -200,6 +235,7 @@ class _SurveyPageState extends State<SurveyPage> {
             completedType: widget.surveyType,
             periodMonth: widget.periodMonth,
             periodYear: widget.periodYear,
+            domainScores: domainScores,
           ),
         ),
       );
@@ -219,43 +255,98 @@ class _SurveyPageState extends State<SurveyPage> {
         : 'Monthly Check-in';
 
     return Scaffold(
-      backgroundColor: AppColors.secondary,
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: AppColors.primary,
         elevation: 0,
-        title: Center(
-          child: Text(typeLabel,
-              style: const TextStyle(color: Colors.white, fontSize: 18)),
+        leading: IconButton(
+          icon: const Icon(Icons.close, color: Colors.white),
+          onPressed: () => _showExitDialog(context),
         ),
+        title: Text(typeLabel,
+            style: const TextStyle(color: Colors.white, fontSize: 16)),
+        centerTitle: true,
       ),
       body: Builder(
         builder: (_) {
-          if (loading) return const Center(child: CircularProgressIndicator());
-          if (error != null) return Center(child: Text('Load failed: $error'));
+          if (loading) {
+            return const Center(
+                child:
+                    CircularProgressIndicator(color: AppColors.primary));
+          }
+          if (error != null) {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(32),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.error_outline,
+                        size: 48, color: Colors.red),
+                    const SizedBox(height: 16),
+                    Text('Load failed: $error',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(color: AppColors.textSecondary)),
+                  ],
+                ),
+              ),
+            );
+          }
           if (_visibleQuestions.isEmpty) {
             return const Center(child: Text('No questions'));
           }
 
           final currentQ = _visibleQuestions[_currentIndex];
+          final domainLabel = currentQ.domain != null
+              ? _domainLabel(currentQ.domain!)
+              : null;
+
+          // Detect domain transition
+          final showDomainTransition = _previousDomain != null &&
+              currentQ.domain != null &&
+              _previousDomain != currentQ.domain;
 
           return Column(
             children: [
-              SurveyProgressBar(progress: progress),
-              if (currentQ.domain != null)
-                Padding(
-                  padding: const EdgeInsets.only(top: 8, left: 20, right: 20),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Chip(
-                      label: Text(
-                        _domainLabel(currentQ.domain!),
-                        style: const TextStyle(
-                            color: Colors.white, fontSize: 12),
+              SurveyProgressBar(
+                progress: progress,
+                domainLabel: domainLabel,
+                currentQuestion: _currentIndex + 1,
+                totalQuestions: _visibleQuestions.length,
+              ),
+
+              // Domain transition banner
+              if (showDomainTransition && domainLabel != null)
+                Container(
+                  width: double.infinity,
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  decoration: BoxDecoration(
+                    color: AppColors.accent.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                        color: AppColors.accent.withValues(alpha: 0.3)),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.swap_horiz,
+                          size: 18,
+                          color: AppColors.accent),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Now entering: $domainLabel',
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.primaryDark,
+                        ),
                       ),
-                      backgroundColor: _domainColor(currentQ.domain!),
-                    ),
+                    ],
                   ),
                 ),
+
               Expanded(
                 child: QuestionCard(
                   question: currentQ,
@@ -267,6 +358,8 @@ class _SurveyPageState extends State<SurveyPage> {
                   },
                   onPrevious: _currentIndex > 0 ? prev : null,
                   onNext: next,
+                  isLast:
+                      _currentIndex == _visibleQuestions.length - 1,
                 ),
               ),
             ],
@@ -274,6 +367,33 @@ class _SurveyPageState extends State<SurveyPage> {
         },
       ),
     );
+  }
+
+  Future<void> _showExitDialog(BuildContext context) async {
+    final shouldExit = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Text('Leave Assessment?'),
+        content: const Text(
+            'Your progress so far has been saved, but the session will remain incomplete.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: const Text('Continue'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: const Text('Leave'),
+          ),
+        ],
+      ),
+    );
+    if (shouldExit == true) {
+      if (!mounted) return;
+      Navigator.of(context).pop();
+    }
   }
 
   String _domainLabel(String domain) {
@@ -292,25 +412,6 @@ class _SurveyPageState extends State<SurveyPage> {
         return 'Smoking/Vaping';
       default:
         return domain;
-    }
-  }
-
-  Color _domainColor(String domain) {
-    switch (domain.toUpperCase()) {
-      case 'MENTAL HEALTH':
-        return Colors.purple;
-      case 'DIETARY':
-        return Colors.green;
-      case 'PHYSICAL ACTIVITY':
-        return Colors.orange;
-      case 'WOMEN HEALTH':
-        return Colors.pink;
-      case 'ALCOHOL':
-        return Colors.red;
-      case 'SMOKING/VAPING':
-        return Colors.brown;
-      default:
-        return Colors.grey;
     }
   }
 }

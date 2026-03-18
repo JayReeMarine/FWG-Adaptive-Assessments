@@ -3,10 +3,6 @@ import '../repositories/session_repository.dart';
 import '../utils/constants.dart';
 import 'survey_page.dart';
 
-/// Landing page that determines which survey to show.
-/// - If foundational assessment is not done → start it.
-/// - If foundational is done and current month is not done → start monthly.
-/// - If everything is done → show "come back next month".
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -17,10 +13,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final _sessionRepo = SessionRepository();
   bool _loading = true;
-  SurveyType? _nextType;
-  int _nextMonth = 0;
-  int _nextYear = 0;
-  bool _allDone = false;
+  bool _foundationalDone = false;
+  bool _monthlyDone = false;
 
   @override
   void initState() {
@@ -30,27 +24,15 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _checkStatus() async {
     try {
-      final next = await _sessionRepo.getNextSurvey();
-      // Check if the monthly for this month is already done
-      if (next.type == SurveyType.monthly) {
-        final now = DateTime.now();
-        final done = await _sessionRepo.hasCompletedMonthly(
-          month: now.month,
-          year: now.year,
-        );
-        if (done) {
-          setState(() {
-            _allDone = true;
-            _loading = false;
-          });
-          return;
-        }
-      }
-
+      final fDone = await _sessionRepo.hasCompletedFoundational();
+      final now = DateTime.now();
+      final mDone = await _sessionRepo.hasCompletedMonthly(
+        month: now.month,
+        year: now.year,
+      );
       setState(() {
-        _nextType = next.type;
-        _nextMonth = next.month;
-        _nextYear = next.year;
+        _foundationalDone = fDone;
+        _monthlyDone = mDone;
         _loading = false;
       });
     } catch (e) {
@@ -58,135 +40,240 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  void _startSurvey() {
-    if (_nextType == null) return;
-    Navigator.pushReplacement(
+  void _startSurvey(SurveyType type) {
+    final now = DateTime.now();
+    Navigator.push(
       context,
       MaterialPageRoute(
         builder: (_) => SurveyPage(
-          surveyType: _nextType!,
-          periodMonth: _nextMonth,
-          periodYear: _nextYear,
+          surveyType: type,
+          periodMonth: type == SurveyType.foundational ? 0 : now.month,
+          periodYear: type == SurveyType.foundational ? 0 : now.year,
         ),
       ),
-    );
+    ).then((_) => _checkStatus()); // refresh status on return
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.secondary,
-      appBar: AppBar(
-        backgroundColor: AppColors.primary,
-        elevation: 0,
-        title: const Center(
-          child: Text('Adaptive Assessment',
-              style: TextStyle(color: Colors.white, fontSize: 18)),
+      backgroundColor: AppColors.background,
+      body: SafeArea(
+        child: _loading
+            ? const Center(
+                child: CircularProgressIndicator(color: AppColors.primary))
+            : SingleChildScrollView(
+                child: Column(
+                  children: [
+                    _buildHeader(),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Your Health',
+                            style: TextStyle(
+                              color: AppColors.primary,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 1.2,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          _buildAssessmentCard(
+                            title: 'Foundational Assessment',
+                            subtitle:
+                                'One-time baseline health profile that covers all domains.',
+                            icon: Icons.assignment,
+                            completed: _foundationalDone,
+                            onTap: () =>
+                                _startSurvey(SurveyType.foundational),
+                          ),
+                          const SizedBox(height: 12),
+                          _buildAssessmentCard(
+                            title: 'Monthly Check-in',
+                            subtitle:
+                                'Recurring adaptive assessment — tracks changes over time.',
+                            icon: Icons.calendar_month,
+                            completed: _monthlyDone,
+                            onTap: () => _startSurvey(SurveyType.monthly),
+                          ),
+                          if (_monthlyDone) ...[
+                            const SizedBox(height: 12),
+                            _buildDemoCard(),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+      ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+      decoration: const BoxDecoration(
+        color: AppColors.primary,
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(28),
+          bottomRight: Radius.circular(28),
         ),
       ),
-      body: Center(
-        child: _loading
-            ? const CircularProgressIndicator()
-            : _allDone
-                ? _buildAllDone()
-                : _buildReadyToStart(),
-      ),
-    );
-  }
-
-  Widget _buildReadyToStart() {
-    final isFoundational = _nextType == SurveyType.foundational;
-    final title = isFoundational
-        ? 'Welcome!'
-        : 'Monthly Check-in';
-    final subtitle = isFoundational
-        ? 'Let\'s start with your foundational health assessment.'
-        : 'Time for your ${_monthName(_nextMonth)} $_nextYear check-in.';
-
-    return Padding(
-      padding: const EdgeInsets.all(32),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            isFoundational ? Icons.assignment : Icons.calendar_month,
-            size: 80,
-            color: AppColors.primary,
-          ),
-          const SizedBox(height: 24),
-          Text(title,
-              style:
-                  const TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 12),
-          Text(subtitle,
-              style: const TextStyle(fontSize: 16),
-              textAlign: TextAlign.center),
-          const SizedBox(height: 40),
-          ElevatedButton(
-            onPressed: _startSurvey,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary,
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
+          // Navigator logo area
+          Container(
+            width: 56,
+            height: 56,
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.2),
+              shape: BoxShape.circle,
             ),
-            child: Text(
-              isFoundational ? 'Start Assessment' : 'Start Check-in',
-              style: const TextStyle(fontSize: 18, color: Colors.white),
-            ),
+            child: const Icon(Icons.explore, color: Colors.white, size: 32),
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildAllDone() {
-    return Padding(
-      padding: const EdgeInsets.all(32),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(Icons.check_circle, size: 80, color: Colors.green),
-          const SizedBox(height: 24),
-          const Text('All caught up!',
-              style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
           const SizedBox(height: 12),
           const Text(
-            'You\'ve completed this month\'s assessment.\nCome back next month for your next check-in.',
-            style: TextStyle(fontSize: 16),
-            textAlign: TextAlign.center,
+            'Navigator',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 28,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-          const SizedBox(height: 40),
-          // Demo button: allow starting next month's survey for testing
-          OutlinedButton(
-            onPressed: () {
-              final now = DateTime.now();
-              final nextMonth = now.month == 12 ? 1 : now.month + 1;
-              final nextYear = now.month == 12 ? now.year + 1 : now.year;
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => SurveyPage(
-                    surveyType: SurveyType.monthly,
-                    periodMonth: nextMonth,
-                    periodYear: nextYear,
-                  ),
-                ),
-              );
-            },
-            child: const Text('(Demo) Start Next Month'),
+          const SizedBox(height: 6),
+          Text(
+            'Adaptive Assessments',
+            style: TextStyle(
+              color: Colors.white.withValues(alpha: 0.85),
+              fontSize: 14,
+            ),
           ),
         ],
       ),
     );
   }
 
-  String _monthName(int month) {
-    const names = [
-      '', 'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December',
-    ];
-    return month >= 1 && month <= 12 ? names[month] : 'Month $month';
+  Widget _buildAssessmentCard({
+    required String title,
+    required String subtitle,
+    required IconData icon,
+    required bool completed,
+    required VoidCallback onTap,
+  }) {
+    return Card(
+      elevation: 1,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Row(
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: completed
+                      ? Colors.green.withValues(alpha: 0.1)
+                      : AppColors.primary.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  completed ? Icons.check_circle : icon,
+                  color: completed ? Colors.green : AppColors.primary,
+                  size: 26,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.textPrimary,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      subtitle,
+                      style: const TextStyle(
+                        fontSize: 13,
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                    if (completed) ...[
+                      const SizedBox(height: 6),
+                      const Text(
+                        'Completed',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.green,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+              const Icon(Icons.chevron_right, color: AppColors.textSecondary),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDemoCard() {
+    return Card(
+      elevation: 0,
+      color: AppColors.divider.withValues(alpha: 0.5),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: () {
+          final now = DateTime.now();
+          final nextMonth = now.month == 12 ? 1 : now.month + 1;
+          final nextYear = now.month == 12 ? now.year + 1 : now.year;
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => SurveyPage(
+                surveyType: SurveyType.monthly,
+                periodMonth: nextMonth,
+                periodYear: nextYear,
+              ),
+            ),
+          ).then((_) => _checkStatus());
+        },
+        child: const Padding(
+          padding: EdgeInsets.all(16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.science, size: 18, color: AppColors.textSecondary),
+              SizedBox(width: 8),
+              Text(
+                '(Demo) Start Next Month',
+                style: TextStyle(
+                  fontSize: 13,
+                  color: AppColors.textSecondary,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

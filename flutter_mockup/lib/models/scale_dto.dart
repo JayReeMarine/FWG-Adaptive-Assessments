@@ -16,8 +16,8 @@ class ScaleDto {
   factory ScaleDto.fromMap(Map<String, dynamic> m) {
     return ScaleDto(
       id: m['id'] as int,
-      minValue: m['min_value'] as int,
-      maxValue: m['max_value'] as int,
+      minValue: (m['min_value'] as int?) ?? 0,
+      maxValue: (m['max_value'] as int?) ?? 1,
       labels: m['labels'] as Map<String, dynamic>?,
       reversed: m['reversed'] as bool? ?? false,
     );

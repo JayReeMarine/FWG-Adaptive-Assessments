@@ -34,11 +34,11 @@ class QuestionDto {
   factory QuestionDto.fromMap(Map<String, dynamic> m) {
     return QuestionDto(
       id: m['id'] as int,
-      questionnaireId: m['questionnaire_id'] as int,
+      questionnaireId: (m['questionnaire_id'] as int?) ?? 0,
       text: (m['text'] ?? '') as String,
       explanation: m['explanation'] as String?,
-      required: m['required'] as bool,
-      answerKind: m['answer_kind'] as String,
+      required: (m['required'] as bool?) ?? false,
+      answerKind: (m['answer_kind'] as String?) ?? 'SCALE',
       unitId: m['unit_id'] as int?,
       minNumeric: m['min_numeric'] as num?,
       maxNumeric: m['max_numeric'] as num?,

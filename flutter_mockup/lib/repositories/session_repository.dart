@@ -88,12 +88,14 @@ class SessionRepository {
   }
 
   /// Save a single response for a question in the current session.
+  /// Optionally includes a computed score for the response.
   Future<void> saveResponse({
     required int sessionId,
     required int questionId,
     num? valueNumber,
     int? valueScale,
     Map<String, dynamic>? raw,
+    int? score,
   }) async {
     final existing = await _sp
         .from('response')
@@ -102,19 +104,20 @@ class SessionRepository {
         .eq('question_id', questionId)
         .maybeSingle();
 
+    final data = {
+      'value_number': valueNumber,
+      'value_scale': valueScale,
+      'raw': raw,
+      'score': score,
+    };
+
     if (existing != null) {
-      await _sp.from('response').update({
-        'value_number': valueNumber,
-        'value_scale': valueScale,
-        'raw': raw,
-      }).eq('id', existing['id'] as int);
+      await _sp.from('response').update(data).eq('id', existing['id'] as int);
     } else {
       await _sp.from('response').insert({
         'session_id': sessionId,
         'question_id': questionId,
-        'value_number': valueNumber,
-        'value_scale': valueScale,
-        'raw': raw,
+        ...data,
       });
     }
   }

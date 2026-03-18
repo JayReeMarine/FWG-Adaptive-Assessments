@@ -8,20 +8,44 @@ class QuestionRepository {
   QuestionRepository({SupabaseClient? client})
       : _sp = client ?? Supabase.instance.client;
 
-  // Fetch questions by questionnaire and map them to UiQuestion
-  Future<List<UiQuestion>> fetchByQuestionnaire(int questionnaireId) async {
-    // 1) read questions
+  /// Fetch ALL active questions.
+  Future<List<UiQuestion>> fetchAllQuestions() async {
     final rows = await _sp
         .from('question')
         .select('*')
-        .eq('questionnaire_id', questionnaireId)
         .order('id', ascending: true);
 
-    final dtos = (rows as List)
+    return _mapToUiQuestions(rows as List);
+  }
+
+  /// Fetch foundational questions only (period_question = false).
+  Future<List<UiQuestion>> fetchFoundational() async {
+    final rows = await _sp
+        .from('question')
+        .select('*')
+        .eq('period_question', false)
+        .order('id', ascending: true);
+
+    return _mapToUiQuestions(rows as List);
+  }
+
+  /// Fetch monthly questions only (period_question = true).
+  Future<List<UiQuestion>> fetchMonthly() async {
+    final rows = await _sp
+        .from('question')
+        .select('*')
+        .eq('period_question', true)
+        .order('id', ascending: true);
+
+    return _mapToUiQuestions(rows as List);
+  }
+
+  Future<List<UiQuestion>> _mapToUiQuestions(List rows) async {
+    final dtos = rows
         .map((e) => QuestionDto.fromMap(e as Map<String, dynamic>))
         .toList();
 
-    // 2) batch-read scales (only for SCALE)
+    // batch-read scales
     final scaleIds = dtos
         .map((q) => q.scaleId)
         .where((id) => id != null)
@@ -38,14 +62,12 @@ class QuestionRepository {
       }
     }
 
-    // 3) map DTO → UiQuestion
     return dtos.map((q) {
       List<String> options = [];
 
-      if (q.answerKind == 'SCALE') {
+      if (q.answerKind == 'SCALE' || q.answerKind == 'MULTI') {
         final s = q.scaleId != null ? scales[q.scaleId!] : null;
         if (s != null) {
-          // If labels exist, use them in key order; otherwise generate numbers
           if (s.labels != null && s.labels!.isNotEmpty) {
             final sorted = s.labels!.entries.toList()
               ..sort((a, b) => a.key.toString().compareTo(b.key.toString()));
@@ -57,20 +79,6 @@ class QuestionRepository {
             );
           }
         }
-      } else {
-        // NUMERIC: show simple “ticks” for now (UI can switch to TextField later)
-        final min = (q.minNumeric ?? 0).toDouble();
-        final max = (q.maxNumeric ?? 10).toDouble();
-        final steps = 5; // simple equally spaced ticks for display
-        final step = steps > 0 ? (max - min) / steps : 1;
-        final values = <double>[];
-        for (var i = 0; i <= steps; i++) {
-          values.add((min + step * i));
-        }
-        options = values.map((v) {
-          final dp = (q.precisionDp ?? 0);
-          return v.toStringAsFixed(dp.clamp(0, 6));
-        }).toList();
       }
 
       return UiQuestion(
@@ -80,6 +88,8 @@ class QuestionRepository {
         options: options,
         answerKind: q.answerKind,
         required: q.required,
+        domain: q.domain,
+        periodQuestion: q.periodQuestion,
       );
     }).toList();
   }

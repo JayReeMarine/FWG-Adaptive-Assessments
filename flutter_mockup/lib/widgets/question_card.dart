@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../models/ui_question.dart'; // Use UiQuestion instead of mock Question
+import '../models/ui_question.dart';
 import '../utils/constants.dart';
 import 'help_dialog.dart';
 
@@ -25,7 +25,7 @@ class QuestionCard extends StatelessWidget {
   void _showHelpDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (BuildContext context) => HelpDialog(question: question), // pass UiQuestion
+      builder: (BuildContext context) => HelpDialog(question: question),
     );
   }
 
@@ -67,9 +67,9 @@ class QuestionCard extends StatelessWidget {
           ),
           const SizedBox(height: 20),
 
-          // Question text (UiQuestion.title)
+          // Question text
           Text(
-            question.title, // <- was question.question
+            question.title,
             style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w500,
@@ -78,47 +78,8 @@ class QuestionCard extends StatelessWidget {
 
           const SizedBox(height: 30),
 
-          // Options list
-          if (question.answerKind == 'NUMERIC') ...[
-            // Not a list; just a single numeric input field
-          TextField(
-            keyboardType: TextInputType.number,
-            inputFormatters: [
-              // allow integers or decimals (and optional leading minus)
-              FilteringTextInputFormatter.allow(RegExp(r'^-?\d*\.?\d*$')),
-            ],
-            decoration: const InputDecoration(
-              labelText: 'Enter a number',
-              border: OutlineInputBorder(),
-            ),
-            onChanged: (value) {
-              final n = num.tryParse(value);
-              question.numericAnswer = n;
-              onNumericChanged?.call(n);
-            },
-          ),
-          const SizedBox(height: 16),
-        ] else if (question.answerKind == 'SCALE') ...[
-          RadioGroup<int>(
-            groupValue:
-                question.selected.isNotEmpty ? question.selected.first : null,
-            onChanged: (int? value) {
-              if (value != null) {
-                onOptionToggle(value);
-              }
-            },
-            child: Column(
-              children: List.generate(
-                question.options.length,
-                (index) => RadioListTile<int>(
-                  value: index,
-                  title: Text(question.options[index]),
-                ),
-              ),
-            ),
-          ),
-        ],
-
+          // Answer input — depends on answerKind
+          Expanded(child: _buildAnswerInput()),
 
           // Navigation
           Row(
@@ -137,6 +98,82 @@ class QuestionCard extends StatelessWidget {
             ],
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildAnswerInput() {
+    switch (question.answerKind) {
+      case 'NUMERIC':
+        return _buildNumericInput();
+      case 'SCALE':
+        return _buildScaleInput();
+      case 'MULTI':
+        return _buildMultiSelectInput();
+      default:
+        return Center(child: Text('Unsupported type: ${question.answerKind}'));
+    }
+  }
+
+  Widget _buildNumericInput() {
+    return Column(
+      children: [
+        TextField(
+          keyboardType: TextInputType.number,
+          inputFormatters: [
+            FilteringTextInputFormatter.allow(RegExp(r'^-?\d*\.?\d*$')),
+          ],
+          decoration: const InputDecoration(
+            labelText: 'Enter a number',
+            border: OutlineInputBorder(),
+          ),
+          onChanged: (value) {
+            final n = num.tryParse(value);
+            question.numericAnswer = n;
+            onNumericChanged?.call(n);
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildScaleInput() {
+    return SingleChildScrollView(
+      child: RadioGroup<int>(
+        groupValue:
+            question.selected.isNotEmpty ? question.selected.first : null,
+        onChanged: (int? value) {
+          if (value != null) {
+            onOptionToggle(value);
+          }
+        },
+        child: Column(
+          children: List.generate(
+            question.options.length,
+            (index) => RadioListTile<int>(
+              value: index,
+              title: Text(question.options[index]),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMultiSelectInput() {
+    return SingleChildScrollView(
+      child: Column(
+        children: List.generate(
+          question.options.length,
+          (index) => CheckboxListTile(
+            value: question.selected.contains(index),
+            title: Text(question.options[index]),
+            onChanged: (bool? checked) {
+              onOptionToggle(index);
+            },
+            controlAffinity: ListTileControlAffinity.leading,
+          ),
+        ),
       ),
     );
   }

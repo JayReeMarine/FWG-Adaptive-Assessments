@@ -74,6 +74,7 @@ class QuestionRepository {
       }
 
       return UiQuestion(
+        questionId: q.id,
         title: q.text,
         help: q.explanation ?? '',
         options: options,

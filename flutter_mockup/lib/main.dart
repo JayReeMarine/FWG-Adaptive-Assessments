@@ -29,12 +29,6 @@ void main() async {
     print('[boot] supabase failed: $e');
     rethrow;
   }
-  
-  // Initialize Supabase SDK
-  await Supabase.initialize(
-    url: supabaseUrl,
-    anonKey: supabaseAnon,
-  );
 
   runApp(const MyApp());
 }

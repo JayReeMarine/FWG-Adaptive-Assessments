@@ -5,9 +5,10 @@ import '../utils/constants.dart';
 import 'help_dialog.dart';
 
 class QuestionCard extends StatelessWidget {
-  final UiQuestion question; // <- change type to UiQuestion
+  final UiQuestion question;
   final int questionNumber;
   final Function(int) onOptionToggle;
+  final Function(num?)? onNumericChanged;
   final VoidCallback? onPrevious;
   final VoidCallback? onNext;
 
@@ -16,6 +17,7 @@ class QuestionCard extends StatelessWidget {
     required this.question,
     required this.questionNumber,
     required this.onOptionToggle,
+    this.onNumericChanged,
     this.onPrevious,
     this.onNext,
   });
@@ -91,10 +93,8 @@ class QuestionCard extends StatelessWidget {
             ),
             onChanged: (value) {
               final n = num.tryParse(value);
-              // store on the model so parent can read later
-              // question.numericAnswer = n;
-              // If you want to notify parent that “answered” state changed,
-              // you can call onOptionToggle(-1); // (pick any sentinel you use)
+              question.numericAnswer = n;
+              onNumericChanged?.call(n);
             },
           ),
           const SizedBox(height: 16),

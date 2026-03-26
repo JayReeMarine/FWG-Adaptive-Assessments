@@ -1,5 +1,17 @@
 import 'package:flutter/material.dart';
 
+// ─── Survey mode ─────────────────────────────────────────────────────────────
+// Used to switch between the rule-based baseline and the mock enhanced path
+// for the research comparison demo (Step 5/6).
+enum SurveyMode {
+  /// Standard rule-based adaptive flow — the research baseline.
+  baseline,
+
+  /// Mock enhanced flow for the Mental Health comparison scenario.
+  /// Questions are hardcoded in MentalHealthScenario (config/comparison_scenario.dart).
+  enhanced,
+}
+
 class AppColors {
   // Navigator theme — orange/brown
   static const Color primary = Color(0xFFC0713A);       // warm brown-orange

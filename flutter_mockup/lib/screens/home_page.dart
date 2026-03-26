@@ -104,6 +104,8 @@ class _HomePageState extends State<HomePage> {
                             const SizedBox(height: 12),
                             _buildDemoCard(),
                           ],
+                          const SizedBox(height: 24),
+                          _buildComparisonSection(),
                         ],
                       ),
                     ),
@@ -227,6 +229,117 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               const Icon(Icons.chevron_right, color: AppColors.textSecondary),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ── Research comparison section ──────────────────────────────────────────
+  Widget _buildComparisonSection() {
+    final now = DateTime.now();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Research Comparison',
+          style: TextStyle(
+            color: AppColors.primary,
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 1.2,
+          ),
+        ),
+        const SizedBox(height: 10),
+        _buildComparisonCard(
+          label: 'Baseline',
+          subtitle: 'Rule-based adaptive path — standard branching engine',
+          color: AppColors.primary,
+          icon: Icons.rule,
+          mode: SurveyMode.baseline,
+          now: now,
+        ),
+        const SizedBox(height: 8),
+        _buildComparisonCard(
+          label: 'Enhanced',
+          subtitle: 'Mock LLM-style path — Mental Health scenario (Alex, Month 2)',
+          color: const Color(0xFF1565C0),
+          icon: Icons.auto_awesome,
+          mode: SurveyMode.enhanced,
+          now: now,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildComparisonCard({
+    required String label,
+    required String subtitle,
+    required Color color,
+    required IconData icon,
+    required SurveyMode mode,
+    required DateTime now,
+  }) {
+    return Card(
+      elevation: 1,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(14),
+        side: BorderSide(color: color.withValues(alpha: 0.3), width: 1.2),
+      ),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => SurveyPage(
+                surveyType: SurveyType.monthly,
+                periodMonth: now.month,
+                periodYear: now.year,
+                mode: mode,
+              ),
+            ),
+          );
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          child: Row(
+            children: [
+              Container(
+                width: 42,
+                height: 42,
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(icon, color: color, size: 22),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      label,
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        color: color,
+                      ),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      subtitle,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(Icons.chevron_right, color: color.withValues(alpha: 0.6)),
             ],
           ),
         ),

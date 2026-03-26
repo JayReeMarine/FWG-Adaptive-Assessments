@@ -8,6 +8,7 @@ import '../models/branch_rule.dart';
 import '../services/branching_engine.dart';
 import '../services/scoring_service.dart';
 import '../utils/constants.dart';
+import '../config/comparison_scenario.dart';
 import '../widgets/progress_bar.dart';
 import '../widgets/question_card.dart';
 import 'completion_page.dart';
@@ -17,11 +18,18 @@ class SurveyPage extends StatefulWidget {
   final int periodMonth;
   final int periodYear;
 
+  /// Research comparison mode.
+  /// - [SurveyMode.baseline] (default): uses BranchingEngine + live DB rules.
+  /// - [SurveyMode.enhanced]: replaces the Mental Health domain with the
+  ///   hardcoded mock enhanced path from comparison_scenario.dart.
+  final SurveyMode mode;
+
   const SurveyPage({
     super.key,
     required this.surveyType,
     required this.periodMonth,
     required this.periodYear,
+    this.mode = SurveyMode.baseline,
   });
 
   @override
@@ -57,6 +65,14 @@ class _SurveyPageState extends State<SurveyPage> {
       final List<UiQuestion> questions;
       if (widget.surveyType == SurveyType.foundational) {
         questions = await _questionRepo.fetchFoundational();
+      } else if (widget.mode == SurveyMode.enhanced) {
+        // Enhanced mode: replace Mental Health domain questions with the
+        // hardcoded mock path from comparison_scenario.dart, keep all others.
+        final allMonthly = await _questionRepo.fetchMonthly();
+        final nonMH = allMonthly
+            .where((q) => q.domain?.toUpperCase() != 'MENTAL HEALTH')
+            .toList();
+        questions = [...buildEnhancedMentalHealthQuestions(), ...nonMH];
       } else {
         questions = await _questionRepo.fetchMonthly();
       }
@@ -252,7 +268,9 @@ class _SurveyPageState extends State<SurveyPage> {
   Widget build(BuildContext context) {
     final typeLabel = widget.surveyType == SurveyType.foundational
         ? 'Foundational Assessment'
-        : 'Monthly Check-in';
+        : widget.mode == SurveyMode.enhanced
+            ? 'Monthly Check-in (Enhanced)'
+            : 'Monthly Check-in';
 
     return Scaffold(
       backgroundColor: AppColors.background,

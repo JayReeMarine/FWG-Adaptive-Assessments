@@ -38,4 +38,4 @@ jobs:
         run: npx vercel deploy --prod --yes --token=${{ secrets.VERCEL_TOKEN }}
         env:
           VERCEL_ORG_ID: team_HNgnIUAlK5c9QAvOUpR89ely
-          VERCEL_PROJECT_ID: prj_LQltILwId1iXs3Ub6oCsrZeWt6
+          VERCEL_PROJECT_ID: prj_LQltILwId1iXs3Ub6oCsrZiZeWt6

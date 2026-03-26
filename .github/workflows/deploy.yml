@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'flutter_mockup/**'
+      - '.github/workflows/deploy.yml'
 
 jobs:
   deploy:

@@ -115,27 +115,27 @@ const alexSeed = UserSeed(
 /// In Alex's scenario: Q18 answer = 1 (Several days) → Rule 13 NOT triggered
 ///   → Q39 is HIDDEN.  This is the core limitation the enhanced version fixes.
 const baselineMentalHealthPath = [
-  _BaselineQuestion(
+  BaselineQuestion(
     id: 18,
     text: 'In the past month, how often have you felt low mood, sad, '
         'hopeless, nervous, worried, or restless?',
     options: ['Not at all', 'Several days', 'More than half the days', 'Nearly every day'],
     note: 'Generic — identical phrasing every month for every user.',
   ),
-  _BaselineQuestion(
+  BaselineQuestion(
     id: 19,
     text: 'In the past month, how often have you felt that important things '
         'in your life were difficult to manage?',
     options: ['Never', 'Rarely', 'Sometimes', 'Often', 'Always'],
     note: 'No context from Month 1. "Important things" is vague.',
   ),
-  _BaselineQuestion(
+  BaselineQuestion(
     id: 20,
     text: 'In the past month, how often do you feel isolated from others?',
     options: ['Not at all', 'Several days', 'More than half the days', 'Nearly every day'],
     note: 'Same as Month 1. Not skipped even if Month 1 score was low.',
   ),
-  _BaselineQuestion(
+  BaselineQuestion(
     id: 39,
     text: '[HIDDEN — functional impact question not shown because '
         'Alex\'s Q18 score = 1 (Several days), which is below the ≥2 threshold '
@@ -157,7 +157,7 @@ const baselineMentalHealthPath = [
 ///   4. Q39 unlocked early based on two-month pattern, not hard score threshold
 ///   5. Q20 skipped — low & stable score from Month 1, no new information
 const enhancedMentalHealthPath = [
-  _EnhancedQuestion(
+  EnhancedQuestion(
     id: 18,
     text: 'Over the past month, have you continued to experience feelings like '
         'low mood, worry, or restlessness? Last month you reported this '
@@ -166,7 +166,7 @@ const enhancedMentalHealthPath = [
     why: 'References Month 1. Acknowledges continuity rather than repeating '
         'the same generic question.',
   ),
-  _EnhancedQuestion(
+  EnhancedQuestion(
     id: 19,
     text: 'In the past month, has it felt harder than usual to stay on top '
         'of your studies, daily responsibilities, or relationships?',
@@ -174,7 +174,7 @@ const enhancedMentalHealthPath = [
     why: 'Student-specific phrasing ("studies, responsibilities") replaces '
         'the vague "important things in your life". More relevant to Alex\'s context.',
   ),
-  _EnhancedQuestion(
+  EnhancedQuestion(
     id: -1, // mock — not yet in DB
     text: 'Since you\'ve reported similar feelings for two months in a row, '
         'how would you describe the change over the past month?',
@@ -183,7 +183,7 @@ const enhancedMentalHealthPath = [
         'Not based on a single-month score threshold. '
         'Captures longitudinal signal the baseline cannot detect.',
   ),
-  _EnhancedQuestion(
+  EnhancedQuestion(
     id: 39,
     text: 'Have these feelings made it harder for you to manage your daily life — '
         'for example, attending classes, completing work, or maintaining relationships?',
@@ -201,32 +201,32 @@ const enhancedMentalHealthPath = [
 
 /// Comparison of baseline vs enhanced for each of Zach's 6 evaluation dimensions.
 const comparisonSummary = [
-  _Dimension(
+  ComparisonDimension(
     name: 'Relevance',
     baseline: 'Generic questions for all users at any month',
     enhanced: 'Questions adapted to student context and Month 1 history',
   ),
-  _Dimension(
+  ComparisonDimension(
     name: 'Clarity',
     baseline: 'Clinical phrasing — "important things in your life were difficult to manage"',
     enhanced: 'Contextualised — "studies, daily responsibilities, or relationships"',
   ),
-  _Dimension(
+  ComparisonDimension(
     name: 'Non-repetitiveness',
     baseline: 'Q20 asked every month regardless of prior low stable score',
     enhanced: 'Q20 skipped — no new information expected based on Month 1',
   ),
-  _Dimension(
+  ComparisonDimension(
     name: 'Logical progression',
     baseline: 'Three standalone questions, no narrative link',
     enhanced: 'Q1 references Month 1 → trend Q → functional impact Q',
   ),
-  _Dimension(
+  ComparisonDimension(
     name: 'Perceived adaptiveness',
     baseline: 'No indication the system knows the user\'s history',
     enhanced: 'Q1 explicitly acknowledges Month 1: "Last month you reported…"',
   ),
-  _Dimension(
+  ComparisonDimension(
     name: 'Sensitivity / appropriateness',
     baseline: 'Identical clinical wording for all cultural backgrounds',
     enhanced: 'Softer tone reduces stigma barrier; student context reduces alienation',
@@ -235,13 +235,13 @@ const comparisonSummary = [
 
 // ─── Data classes (plain Dart — no Flutter dependencies) ─────────────────────
 
-class _BaselineQuestion {
+class BaselineQuestion {
   final int id;
   final String text;
   final List<String> options;
   final String note;
   final bool blocked;
-  const _BaselineQuestion({
+  const BaselineQuestion({
     required this.id,
     required this.text,
     required this.options,
@@ -250,12 +250,12 @@ class _BaselineQuestion {
   });
 }
 
-class _EnhancedQuestion {
+class EnhancedQuestion {
   final int id;
   final String text;
   final List<String> options;
   final String why;
-  const _EnhancedQuestion({
+  const EnhancedQuestion({
     required this.id,
     required this.text,
     required this.options,
@@ -263,11 +263,11 @@ class _EnhancedQuestion {
   });
 }
 
-class _Dimension {
+class ComparisonDimension {
   final String name;
   final String baseline;
   final String enhanced;
-  const _Dimension({
+  const ComparisonDimension({
     required this.name,
     required this.baseline,
     required this.enhanced,

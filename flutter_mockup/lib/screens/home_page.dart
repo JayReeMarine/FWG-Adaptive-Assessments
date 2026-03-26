@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../repositories/session_repository.dart';
 import '../utils/constants.dart';
 import 'survey_page.dart';
+import 'comparison_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -242,14 +243,41 @@ class _HomePageState extends State<HomePage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Research Comparison',
-          style: TextStyle(
-            color: AppColors.primary,
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-            letterSpacing: 1.2,
-          ),
+        Row(
+          children: [
+            const Text(
+              'Research Comparison',
+              style: TextStyle(
+                color: AppColors.primary,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 1.2,
+              ),
+            ),
+            const Spacer(),
+            GestureDetector(
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => const ComparisonPage()),
+              ),
+              child: Row(
+                children: [
+                  Text(
+                    'View Side-by-Side',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: AppColors.primary.withValues(alpha: 0.8),
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Icon(Icons.chevron_right,
+                      size: 16,
+                      color: AppColors.primary.withValues(alpha: 0.8)),
+                ],
+              ),
+            ),
+          ],
         ),
         const SizedBox(height: 10),
         _buildComparisonCard(

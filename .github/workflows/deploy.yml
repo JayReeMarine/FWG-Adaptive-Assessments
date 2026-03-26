@@ -1,0 +1,40 @@
+name: Build & Deploy to Vercel
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'flutter_mockup/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.29.2'
+          channel: 'stable'
+          cache: true
+
+      - name: Install dependencies
+        working-directory: flutter_mockup
+        run: flutter pub get
+
+      - name: Build Web
+        working-directory: flutter_mockup
+        run: |
+          flutter build web --release \
+            --dart-define=SUPABASE_URL=${{ secrets.SUPABASE_URL }} \
+            --dart-define=SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}
+
+      - name: Deploy to Vercel
+        working-directory: flutter_mockup/build/web
+        run: npx vercel deploy --prod --yes --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: team_HNgnIUAlK5c9QAvOUpR89ely
+          VERCEL_PROJECT_ID: prj_LQltILwId1iXs3Ub6oCsrZeWt6

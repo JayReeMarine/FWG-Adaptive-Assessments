@@ -9,6 +9,7 @@ import '../services/branching_engine.dart';
 import '../services/scoring_service.dart';
 import '../utils/constants.dart';
 import '../config/comparison_scenario.dart';
+import '../services/llm_service.dart';
 import '../widgets/progress_bar.dart';
 import '../widgets/question_card.dart';
 import 'completion_page.dart';
@@ -66,13 +67,20 @@ class _SurveyPageState extends State<SurveyPage> {
       if (widget.surveyType == SurveyType.foundational) {
         questions = await _questionRepo.fetchFoundational();
       } else if (widget.mode == SurveyMode.enhanced) {
-        // Enhanced mode: replace Mental Health domain questions with the
-        // hardcoded mock path from comparison_scenario.dart, keep all others.
+        // Enhanced mode: replace Mental Health domain questions with LLM-generated
+        // questions based on alexSeed. Falls back to hardcoded mock if API unavailable.
         final allMonthly = await _questionRepo.fetchMonthly();
+        final baselineMhQuestions = allMonthly
+            .where((q) => q.domain?.toUpperCase() == 'MENTAL HEALTH')
+            .toList();
         final nonMH = allMonthly
             .where((q) => q.domain?.toUpperCase() != 'MENTAL HEALTH')
             .toList();
-        questions = [...buildEnhancedMentalHealthQuestions(), ...nonMH];
+        final enhancedMH = await LlmService.generateEnhancedMentalHealthQuestions(
+          alexSeed,
+          baselineMhQuestions,
+        );
+        questions = [...enhancedMH, ...nonMH];
       } else {
         questions = await _questionRepo.fetchMonthly();
       }

@@ -15,7 +15,6 @@ class _HomePageState extends State<HomePage> {
   final _sessionRepo = SessionRepository();
   bool _loading = true;
   bool _foundationalDone = false;
-  bool _monthlyDone = false;
 
   @override
   void initState() {
@@ -26,14 +25,8 @@ class _HomePageState extends State<HomePage> {
   Future<void> _checkStatus() async {
     try {
       final fDone = await _sessionRepo.hasCompletedFoundational();
-      final now = DateTime.now();
-      final mDone = await _sessionRepo.hasCompletedMonthly(
-        month: now.month,
-        year: now.year,
-      );
       setState(() {
         _foundationalDone = fDone;
-        _monthlyDone = mDone;
         _loading = false;
       });
     } catch (e) {
@@ -41,7 +34,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  void _startSurvey(SurveyType type) {
+  void _startSurvey(SurveyType type, {SurveyMode mode = SurveyMode.baseline}) {
     final now = DateTime.now();
     Navigator.push(
       context,
@@ -50,9 +43,10 @@ class _HomePageState extends State<HomePage> {
           surveyType: type,
           periodMonth: type == SurveyType.foundational ? 0 : now.month,
           periodYear: type == SurveyType.foundational ? 0 : now.year,
+          mode: mode,
         ),
       ),
-    ).then((_) => _checkStatus()); // refresh status on return
+    ).then((_) => _checkStatus());
   }
 
   @override
@@ -69,44 +63,55 @@ class _HomePageState extends State<HomePage> {
                     _buildHeader(),
                     Padding(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 24, vertical: 16),
+                          horizontal: 24, vertical: 20),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'Your Health',
+                          // ── Section 1: Foundational Assessment ───────────
+                          _buildSectionLabel('Step 1 — Baseline Profile'),
+                          const SizedBox(height: 10),
+                          _buildFoundationalCard(),
+
+                          const SizedBox(height: 28),
+
+                          // ── Section 2: Monthly Check-In ──────────────────
+                          _buildSectionLabel('Step 2 — Monthly Check-In'),
+                          const SizedBox(height: 6),
+                          Text(
+                            'Choose your assessment approach. Each path uses the same questions '
+                            'but adapts them differently.',
                             style: TextStyle(
-                              color: AppColors.primary,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: 1.2,
+                              fontSize: 12,
+                              color: AppColors.textSecondary.withValues(alpha: 0.9),
                             ),
                           ),
-                          const SizedBox(height: 16),
-                          _buildAssessmentCard(
-                            title: 'Foundational Assessment',
-                            subtitle:
-                                'One-time baseline health profile that covers all domains.',
-                            icon: Icons.assignment,
-                            completed: _foundationalDone,
-                            onTap: () =>
-                                _startSurvey(SurveyType.foundational),
-                          ),
                           const SizedBox(height: 12),
-                          _buildAssessmentCard(
-                            title: 'Monthly Check-in',
+                          _buildMonthlyCard(
+                            label: 'Rule-based',
                             subtitle:
-                                'Recurring adaptive assessment — tracks changes over time.',
-                            icon: Icons.calendar_month,
-                            completed: _monthlyDone,
-                            onTap: () => _startSurvey(SurveyType.monthly),
+                                'Fixed branching logic — predefined rules control '
+                                'which follow-up questions appear.',
+                            icon: Icons.account_tree_outlined,
+                            color: AppColors.primary,
+                            mode: SurveyMode.baseline,
                           ),
-                          if (_monthlyDone) ...[
-                            const SizedBox(height: 12),
-                            _buildDemoCard(),
-                          ],
+                          const SizedBox(height: 10),
+                          _buildMonthlyCard(
+                            label: 'LLM-based',
+                            subtitle:
+                                'Personalised questions generated from your health '
+                                'profile using Gemini AI.',
+                            icon: Icons.auto_awesome_outlined,
+                            color: const Color(0xFF1565C0),
+                            mode: SurveyMode.enhanced,
+                          ),
+
+                          const SizedBox(height: 16),
+
+                          // ── Side-by-side comparison link ─────────────────
+                          _buildSideBySideLink(),
+
                           const SizedBox(height: 24),
-                          _buildComparisonSection(),
                         ],
                       ),
                     ),
@@ -116,6 +121,8 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+  // ── Header ────────────────────────────────────────────────────────────────
 
   Widget _buildHeader() {
     return Container(
@@ -130,7 +137,6 @@ class _HomePageState extends State<HomePage> {
       ),
       child: Column(
         children: [
-          // Navigator logo area
           Container(
             width: 56,
             height: 56,
@@ -151,7 +157,7 @@ class _HomePageState extends State<HomePage> {
           ),
           const SizedBox(height: 6),
           Text(
-            'Adaptive Assessments',
+            'Adaptive Health Assessments',
             style: TextStyle(
               color: Colors.white.withValues(alpha: 0.85),
               fontSize: 14,
@@ -162,19 +168,29 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildAssessmentCard({
-    required String title,
-    required String subtitle,
-    required IconData icon,
-    required bool completed,
-    required VoidCallback onTap,
-  }) {
+  // ── Section label ─────────────────────────────────────────────────────────
+
+  Widget _buildSectionLabel(String text) {
+    return Text(
+      text.toUpperCase(),
+      style: const TextStyle(
+        color: AppColors.primary,
+        fontSize: 11,
+        fontWeight: FontWeight.w700,
+        letterSpacing: 1.4,
+      ),
+    );
+  }
+
+  // ── Foundational Assessment card ──────────────────────────────────────────
+
+  Widget _buildFoundationalCard() {
     return Card(
       elevation: 1,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
-        onTap: onTap,
+        onTap: () => _startSurvey(SurveyType.foundational),
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: Row(
@@ -183,14 +199,14 @@ class _HomePageState extends State<HomePage> {
                 width: 48,
                 height: 48,
                 decoration: BoxDecoration(
-                  color: completed
+                  color: _foundationalDone
                       ? Colors.green.withValues(alpha: 0.1)
                       : AppColors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
-                  completed ? Icons.check_circle : icon,
-                  color: completed ? Colors.green : AppColors.primary,
+                  _foundationalDone ? Icons.check_circle : Icons.assignment_outlined,
+                  color: _foundationalDone ? Colors.green : AppColors.primary,
                   size: 26,
                 ),
               ),
@@ -199,26 +215,27 @@ class _HomePageState extends State<HomePage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      title,
-                      style: const TextStyle(
+                    const Text(
+                      'Foundational Assessment',
+                      style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                         color: AppColors.textPrimary,
                       ),
                     ),
                     const SizedBox(height: 4),
-                    Text(
-                      subtitle,
-                      style: const TextStyle(
-                        fontSize: 13,
+                    const Text(
+                      'One-time baseline profile — covers all 6 health domains. '
+                      'This feeds into your monthly check-in.',
+                      style: TextStyle(
+                        fontSize: 12,
                         color: AppColors.textSecondary,
                       ),
                     ),
-                    if (completed) ...[
+                    if (_foundationalDone) ...[
                       const SizedBox(height: 6),
                       const Text(
-                        'Completed',
+                        '✓ Completed',
                         style: TextStyle(
                           fontSize: 12,
                           color: Colors.green,
@@ -237,86 +254,25 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // ── Research comparison section ──────────────────────────────────────────
-  Widget _buildComparisonSection() {
-    final now = DateTime.now();
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            const Text(
-              'Research Comparison',
-              style: TextStyle(
-                color: AppColors.primary,
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 1.2,
-              ),
-            ),
-            const Spacer(),
-            GestureDetector(
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (_) => const ComparisonPage()),
-              ),
-              child: Row(
-                children: [
-                  Text(
-                    'View Side-by-Side',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: AppColors.primary.withValues(alpha: 0.8),
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  Icon(Icons.chevron_right,
-                      size: 16,
-                      color: AppColors.primary.withValues(alpha: 0.8)),
-                ],
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 10),
-        _buildComparisonCard(
-          label: 'Baseline',
-          subtitle: 'Rule-based adaptive path — standard branching engine',
-          color: AppColors.primary,
-          icon: Icons.rule,
-          mode: SurveyMode.baseline,
-          now: now,
-        ),
-        const SizedBox(height: 8),
-        _buildComparisonCard(
-          label: 'Enhanced',
-          subtitle: 'Mock LLM-style path — Mental Health scenario (Alex, Month 2)',
-          color: const Color(0xFF1565C0),
-          icon: Icons.auto_awesome,
-          mode: SurveyMode.enhanced,
-          now: now,
-        ),
-      ],
-    );
-  }
+  // ── Monthly Check-In card (rule-based / LLM-based) ────────────────────────
 
-  Widget _buildComparisonCard({
+  Widget _buildMonthlyCard({
     required String label,
     required String subtitle,
-    required Color color,
     required IconData icon,
+    required Color color,
     required SurveyMode mode,
-    required DateTime now,
   }) {
+    final now = DateTime.now();
+
     return Card(
       elevation: 1,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(14),
-        side: BorderSide(color: color.withValues(alpha: 0.3), width: 1.2),
+        borderRadius: BorderRadius.circular(16),
+        side: BorderSide(color: color.withValues(alpha: 0.25), width: 1.2),
       ),
       child: InkWell(
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(16),
         onTap: () {
           Navigator.push(
             context,
@@ -328,35 +284,56 @@ class _HomePageState extends State<HomePage> {
                 mode: mode,
               ),
             ),
-          );
+          ).then((_) => _checkStatus());
         },
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          padding: const EdgeInsets.all(20),
           child: Row(
             children: [
               Container(
-                width: 42,
-                height: 42,
+                width: 48,
+                height: 48,
                 decoration: BoxDecoration(
                   color: color.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(icon, color: color, size: 22),
+                child: Icon(icon, color: color, size: 26),
               ),
-              const SizedBox(width: 14),
+              const SizedBox(width: 16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      label,
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                        color: color,
-                      ),
+                    Row(
+                      children: [
+                        Text(
+                          label,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: color,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: color.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            'Monthly Check-In',
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w600,
+                              color: color.withValues(alpha: 0.8),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 3),
+                    const SizedBox(height: 4),
                     Text(
                       subtitle,
                       style: const TextStyle(
@@ -367,7 +344,8 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
-              Icon(Icons.chevron_right, color: color.withValues(alpha: 0.6)),
+              Icon(Icons.chevron_right,
+                  color: color.withValues(alpha: 0.5)),
             ],
           ),
         ),
@@ -375,44 +353,43 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildDemoCard() {
-    return Card(
-      elevation: 0,
-      color: AppColors.divider.withValues(alpha: 0.5),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(12),
-        onTap: () {
-          final now = DateTime.now();
-          final nextMonth = now.month == 12 ? 1 : now.month + 1;
-          final nextYear = now.month == 12 ? now.year + 1 : now.year;
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) => SurveyPage(
-                surveyType: SurveyType.monthly,
-                periodMonth: nextMonth,
-                periodYear: nextYear,
+  // ── Side-by-side comparison link ─────────────────────────────────────────
+
+  Widget _buildSideBySideLink() {
+    return GestureDetector(
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const ComparisonPage()),
+      ),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+        decoration: BoxDecoration(
+          border: Border.all(
+              color: AppColors.primary.withValues(alpha: 0.2), width: 1),
+          borderRadius: BorderRadius.circular(12),
+          color: AppColors.primary.withValues(alpha: 0.04),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.compare_arrows,
+                size: 18,
+                color: AppColors.primary.withValues(alpha: 0.8)),
+            const SizedBox(width: 8),
+            Text(
+              'View Rule-based vs LLM-based Side-by-Side',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: AppColors.primary.withValues(alpha: 0.8),
               ),
             ),
-          ).then((_) => _checkStatus());
-        },
-        child: const Padding(
-          padding: EdgeInsets.all(16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.science, size: 18, color: AppColors.textSecondary),
-              SizedBox(width: 8),
-              Text(
-                '(Demo) Start Next Month',
-                style: TextStyle(
-                  fontSize: 13,
-                  color: AppColors.textSecondary,
-                ),
-              ),
-            ],
-          ),
+            const SizedBox(width: 4),
+            Icon(Icons.chevron_right,
+                size: 16,
+                color: AppColors.primary.withValues(alpha: 0.6)),
+          ],
         ),
       ),
     );

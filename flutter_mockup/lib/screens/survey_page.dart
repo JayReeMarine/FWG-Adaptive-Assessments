@@ -65,24 +65,29 @@ class _SurveyPageState extends State<SurveyPage> {
     try {
       final List<UiQuestion> questions;
       if (widget.surveyType == SurveyType.foundational) {
-        questions = await _questionRepo.fetchFoundational();
+        // Exclude Women's Health for male users
+        final all = await _questionRepo.fetchFoundational();
+        questions = all
+            .where((q) => q.domain?.toUpperCase() != 'WOMEN HEALTH')
+            .toList();
       } else if (widget.mode == SurveyMode.enhanced) {
-        // Enhanced mode: replace Mental Health domain questions with LLM-generated
-        // questions based on alexSeed. Falls back to hardcoded mock if API unavailable.
+        // Enhanced monthly: Mental Health only, LLM-generated questions.
+        // Falls back to hardcoded mock if API unavailable.
         final allMonthly = await _questionRepo.fetchMonthly();
         final baselineMhQuestions = allMonthly
             .where((q) => q.domain?.toUpperCase() == 'MENTAL HEALTH')
-            .toList();
-        final nonMH = allMonthly
-            .where((q) => q.domain?.toUpperCase() != 'MENTAL HEALTH')
             .toList();
         final enhancedMH = await LlmService.generateEnhancedMentalHealthQuestions(
           alexSeed,
           baselineMhQuestions,
         );
-        questions = [...enhancedMH, ...nonMH];
+        questions = enhancedMH; // MH only — Step 3
       } else {
-        questions = await _questionRepo.fetchMonthly();
+        // Baseline monthly: Mental Health only — Step 3
+        final allMonthly = await _questionRepo.fetchMonthly();
+        questions = allMonthly
+            .where((q) => q.domain?.toUpperCase() == 'MENTAL HEALTH')
+            .toList();
       }
       // ignore: avoid_print
       print('[SurveyPage] loaded ${questions.length} ${widget.surveyType.name} questions');
@@ -277,8 +282,8 @@ class _SurveyPageState extends State<SurveyPage> {
     final typeLabel = widget.surveyType == SurveyType.foundational
         ? 'Foundational Assessment'
         : widget.mode == SurveyMode.enhanced
-            ? 'Monthly Check-in (Enhanced)'
-            : 'Monthly Check-in';
+            ? 'Monthly Check-in · LLM-based'
+            : 'Monthly Check-in · Rule-based';
 
     return Scaffold(
       backgroundColor: AppColors.background,

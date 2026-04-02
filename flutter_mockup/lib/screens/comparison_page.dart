@@ -47,7 +47,7 @@ class _ComparisonPageState extends State<ComparisonPage>
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: const Text(
-          'Baseline vs Enhanced',
+          'Rule-based vs LLM-based',
           style: TextStyle(color: Colors.white, fontSize: 16),
         ),
         centerTitle: true,
@@ -172,7 +172,7 @@ class _ComparisonPageState extends State<ComparisonPage>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _sectionHeader('BASELINE', AppColors.primary, Icons.rule),
+          _sectionHeader('RULE-BASED', AppColors.primary, Icons.account_tree_outlined),
           const SizedBox(height: 4),
           Text(
             '${baselineMentalHealthPath.length - 1} questions shown  ·  1 blocked by hard threshold',
@@ -182,7 +182,7 @@ class _ComparisonPageState extends State<ComparisonPage>
           ...baselineMentalHealthPath.map(_buildBaselineCard),
           const SizedBox(height: 20),
           _sectionHeader(
-              'ENHANCED', const Color(0xFF1565C0), Icons.auto_awesome),
+              'LLM-BASED', const Color(0xFF1565C0), Icons.auto_awesome_outlined),
           const SizedBox(height: 4),
           const Text(
             '4 questions shown  ·  1 skipped (low stable score)  ·  1 new question',

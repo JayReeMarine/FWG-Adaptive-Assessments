@@ -31,7 +31,8 @@ flutter pub get
 # 3. Run the app
 flutter run -d chrome \
   --dart-define=SUPABASE_URL=https://aqyrpgcssvczmzsojzpm.supabase.co \
-  --dart-define=SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFxeXJwZ2Nzc3Zjem16c29qenBtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyNTQyMDQsImV4cCI6MjA4ODgzMDIwNH0.XsQVkjm43yJf8CVRr57QGTq0soFZEOnpD4S03QG7q8g
+  --dart-define=SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFxeXJwZ2Nzc3Zjem16c29qenBtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyNTQyMDQsImV4cCI6MjA4ODgzMDIwNH0.XsQVkjm43yJf8CVRr57QGTq0soFZEOnpD4S03QG7q8g \
+  --dart-define=GEMINI_API_KEY=AIzaSyANvswtbiAfZrpch7rMY4HKv-YIPBMzR48
 ```
 
 ## Flow Diagram

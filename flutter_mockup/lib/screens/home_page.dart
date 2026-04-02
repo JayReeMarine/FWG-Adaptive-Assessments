@@ -108,6 +108,11 @@ class _HomePageState extends State<HomePage> {
 
                           const SizedBox(height: 16),
 
+                          // ── What's the difference? ────────────────────────
+                          _buildWhatsTheDifferenceCard(),
+
+                          const SizedBox(height: 12),
+
                           // ── Side-by-side comparison link ─────────────────
                           _buildSideBySideLink(),
 
@@ -350,6 +355,131 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
+    );
+  }
+
+  // ── What's the difference? ───────────────────────────────────────────────
+
+  Widget _buildWhatsTheDifferenceCard() {
+    return Theme(
+      data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(
+              color: AppColors.primary.withValues(alpha: 0.2), width: 1),
+          borderRadius: BorderRadius.circular(12),
+          color: AppColors.background,
+        ),
+        child: ExpansionTile(
+          tilePadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          childrenPadding:
+              const EdgeInsets.fromLTRB(16, 0, 16, 16),
+          leading: Icon(Icons.help_outline,
+              size: 18, color: AppColors.primary.withValues(alpha: 0.8)),
+          title: Text(
+            "What's the difference?",
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: AppColors.primary.withValues(alpha: 0.9),
+            ),
+          ),
+          iconColor: AppColors.primary,
+          collapsedIconColor: AppColors.primary.withValues(alpha: 0.6),
+          children: [
+            _diffRow(
+              icon: Icons.account_tree_outlined,
+              color: AppColors.primary,
+              label: 'Rule-based',
+              description:
+                  'Uses fixed rules to decide which questions appear. '
+                  'Every user sees the same set of questions each month — '
+                  'only certain follow-ups are unlocked based on your answers.',
+            ),
+            const SizedBox(height: 12),
+            _diffRow(
+              icon: Icons.auto_awesome_outlined,
+              color: const Color(0xFF1565C0),
+              label: 'LLM-based',
+              description:
+                  'Uses AI (Gemini) to personalise your questions based on '
+                  'what you reported last month. It skips questions that '
+                  'didn\'t change, unlocks follow-ups earlier if your history '
+                  'suggests it, and rewrites questions in language relevant to you.',
+            ),
+            const SizedBox(height: 14),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: AppColors.primary.withValues(alpha: 0.06),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Icon(Icons.lightbulb_outline,
+                      size: 14, color: AppColors.accent),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'Both approaches ask about the same health topics. '
+                      'The difference is how the questions are chosen and '
+                      'worded for you specifically.',
+                      style: const TextStyle(
+                          fontSize: 12, color: AppColors.textSecondary),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _diffRow({
+    required IconData icon,
+    required Color color,
+    required String label,
+    required String description,
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          width: 32,
+          height: 32,
+          decoration: BoxDecoration(
+            color: color.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Icon(icon, size: 16, color: color),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: color,
+                ),
+              ),
+              const SizedBox(height: 3),
+              Text(
+                description,
+                style: const TextStyle(
+                    fontSize: 12, color: AppColors.textSecondary, height: 1.4),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 

@@ -172,6 +172,10 @@ class _ComparisonPageState extends State<ComparisonPage>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          _buildHowToReadCard(),
+          const SizedBox(height: 16),
+          _buildKeyInsightCard(),
+          const SizedBox(height: 20),
           _sectionHeader('RULE-BASED', AppColors.primary, Icons.account_tree_outlined),
           const SizedBox(height: 4),
           Text(
@@ -179,6 +183,8 @@ class _ComparisonPageState extends State<ComparisonPage>
             style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
           ),
           const SizedBox(height: 10),
+          _buildRule13Card(),
+          const SizedBox(height: 8),
           ...baselineMentalHealthPath.map(_buildBaselineCard),
           const SizedBox(height: 20),
           _sectionHeader(
@@ -189,6 +195,8 @@ class _ComparisonPageState extends State<ComparisonPage>
             style: TextStyle(fontSize: 11, color: AppColors.textSecondary),
           ),
           const SizedBox(height: 10),
+          _buildLlmApproachCard(),
+          const SizedBox(height: 8),
           ...enhancedMentalHealthPath.map(_buildEnhancedCard),
           _buildSkippedNote(),
         ],
@@ -307,6 +315,180 @@ class _ComparisonPageState extends State<ComparisonPage>
     );
   }
 
+  // ── How to read this page ─────────────────────────────────────────────────
+
+  Widget _buildHowToReadCard() {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.grey.withValues(alpha: 0.06),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey.withValues(alpha: 0.2)),
+      ),
+      child: const Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.info_outline, size: 14, color: AppColors.textSecondary),
+              SizedBox(width: 6),
+              Text(
+                'HOW TO READ THIS PAGE',
+                style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.textSecondary,
+                  letterSpacing: 1.0,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 8),
+          Text(
+            'Same user. Same question bank. Different approach.\n'
+            'Scroll down to see what each system asks Alex — and why the '
+            'questions look different. The Evaluation tab scores each approach '
+            'on 6 research dimensions.',
+            style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ── Key Insight card ──────────────────────────────────────────────────────
+
+  Widget _buildKeyInsightCard() {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            AppColors.primary.withValues(alpha: 0.08),
+            const Color(0xFF1565C0).withValues(alpha: 0.08),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.primary.withValues(alpha: 0.18)),
+      ),
+      child: const Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.lightbulb_outline, size: 14, color: AppColors.accent),
+              SizedBox(width: 6),
+              Text(
+                'KEY INSIGHT',
+                style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.accent,
+                  letterSpacing: 1.0,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 8),
+          Text(
+            'Alex has been Mild risk for two months in a row. '
+            'The rule-based system doesn\'t know that — it blocks Q39 '
+            'because her single-month score never crossed the threshold. '
+            'The LLM-based system reads her Month\u00a01 history and unlocks '
+            'Q39 anyway, skips the question that didn\'t change, '
+            'and rewrites questions in student language.',
+            style: TextStyle(
+              fontSize: 12,
+              color: AppColors.textPrimary,
+              height: 1.5,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ── Step 4: Rule 13 callout ───────────────────────────────────────────────
+
+  Widget _buildRule13Card() {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: AppColors.primary.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Icon(Icons.rule, size: 14, color: AppColors.primary),
+          const SizedBox(width: 8),
+          Expanded(
+            child: RichText(
+              text: const TextSpan(
+                style: TextStyle(fontSize: 11, color: AppColors.textSecondary),
+                children: [
+                  TextSpan(
+                    text: 'Rule 13  ',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.primary,
+                    ),
+                  ),
+                  TextSpan(
+                    text: 'Q18 score ≥ 2 (More than half the days) ',
+                  ),
+                  TextSpan(
+                    text: '\u2192 show Q39',
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                  TextSpan(
+                    text: "  \u00b7  Single-month threshold only. "
+                        "No memory of prior months. "
+                        "Alex\u2019s score\u00a0=\u00a01 \u2192 Q39 is permanently blocked this run.",
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ── Step 5: LLM approach summary card ────────────────────────────────────
+
+  Widget _buildLlmApproachCard() {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: const Color(0xFF1565C0).withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+            color: const Color(0xFF1565C0).withValues(alpha: 0.2)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Icon(Icons.auto_awesome_outlined,
+              size: 14, color: Color(0xFF1565C0)),
+          const SizedBox(width: 8),
+          const Expanded(
+            child: Text(
+              'The LLM selects and refines the question set on the fly based on '
+              'the user\'s Month 1 seed. Rather than changing the branching logic, '
+              'it decides which questions are worth asking this month '
+              '(skipping low-signal ones like Q20), unlocks questions early when '
+              'longitudinal patterns justify it (Q39), and rewrites phrasing to '
+              'match the user\'s context (student-specific language, history reference).',
+              style: TextStyle(fontSize: 11, color: AppColors.textSecondary),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildSkippedNote() {
     return Card(
       elevation: 0,
@@ -348,7 +530,7 @@ class _ComparisonPageState extends State<ComparisonPage>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Zach\'s 6 Evaluation Dimensions',
+            '6 Evaluation Dimensions',
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w600,
@@ -357,7 +539,9 @@ class _ComparisonPageState extends State<ComparisonPage>
           ),
           const SizedBox(height: 4),
           const Text(
-            'How well does each path score on the criteria used in the user study?',
+            'Each card compares how the rule-based and LLM-based paths '
+            'perform on one quality dimension. These criteria are used '
+            'to evaluate both approaches in the user study.',
             style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
           ),
           const SizedBox(height: 12),
@@ -389,9 +573,9 @@ class _ComparisonPageState extends State<ComparisonPage>
               ),
             ),
             const SizedBox(height: 10),
-            _dimensionRow('Baseline', d.baseline, AppColors.primary),
+            _dimensionRow('Rule-based', d.baseline, AppColors.primary),
             const SizedBox(height: 6),
-            _dimensionRow('Enhanced', d.enhanced, const Color(0xFF1565C0)),
+            _dimensionRow('LLM-based', d.enhanced, const Color(0xFF1565C0)),
           ],
         ),
       ),

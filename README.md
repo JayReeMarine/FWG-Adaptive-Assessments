@@ -1,6 +1,6 @@
 # FWG Adaptive Assessments
 
-> FIT4702 - Adaptive Assessment Platform built with Flutter & Supabase
+> FIT4702 — Adaptive Assessment Platform comparing Rule-based vs LLM-based health questionnaires, built with Flutter & Supabase.
 
 ## Links
 
@@ -10,34 +10,51 @@
 | DB Diagram | https://dbdiagram.io/d/FWG-ADAPTIVE-Schema-68df3c08d2b621e422107095 |
 | Supabase Dashboard | https://aqyrpgcssvczmzsojzpm.supabase.co |
 
-## Supabase Credentials
-
-| Key | Value |
-|-----|-------|
-| URL | `https://aqyrpgcssvczmzsojzpm.supabase.co` |
-| Password | `apative123@` |
-| Anon Key | `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFxeXJwZ2Nzc3Zjem16c29qenBtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyNTQyMDQsImV4cCI6MjA4ODgzMDIwNH0.XsQVkjm43yJf8CVRr57QGTq0soFZEOnpD4S03QG7q8g` |
-
 ## Getting Started
 
-```bash
-# 1. Navigate to the Flutter project
-cd flutter_mockup
+### 1. Set up environment variables
 
-# 2. Clean & install dependencies
+Copy `.env.example` to `.env` and fill in your credentials:
+
+```bash
+cp .env.example .env
+```
+
+The `.env` file is gitignored — never commit it. Get the values from a team member or the shared team folder.
+
+```
+SUPABASE_URL=...
+SUPABASE_ANON_KEY=...
+SUPABASE_PASSWORD=...
+GEMINI_API_KEY=...       # Get a free key at https://aistudio.google.com/apikey
+```
+
+### 2. Run locally
+
+```bash
+cd flutter_mockup
 flutter clean
 flutter pub get
 
-# 3. Run the app
 flutter run -d chrome \
-  --dart-define=SUPABASE_URL=https://aqyrpgcssvczmzsojzpm.supabase.co \
-  --dart-define=SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFxeXJwZ2Nzc3Zjem16c29qenBtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyNTQyMDQsImV4cCI6MjA4ODgzMDIwNH0.XsQVkjm43yJf8CVRr57QGTq0soFZEOnpD4S03QG7q8g \
-  --dart-define=GEMINI_API_KEY=AIzaSyANvswtbiAfZrpch7rMY4HKv-YIPBMzR48
+  --dart-define=SUPABASE_URL=$SUPABASE_URL \
+  --dart-define=SUPABASE_ANON_KEY=$SUPABASE_ANON_KEY \
+  --dart-define=GEMINI_API_KEY=$GEMINI_API_KEY
 ```
 
-## Flow Diagram
+> On macOS/zsh you can load the `.env` first:
+> ```bash
+> source ../.env && flutter run -d chrome \
+>   --dart-define=SUPABASE_URL=$SUPABASE_URL \
+>   --dart-define=SUPABASE_ANON_KEY=$SUPABASE_ANON_KEY \
+>   --dart-define=GEMINI_API_KEY=$GEMINI_API_KEY
+> ```
 
-View the adaptive assessment flow diagram locally.
+### 3. Deploy
+
+Pushing to `main` triggers the GitHub Actions workflow which builds and deploys to Vercel automatically. Secrets are stored in GitHub repository settings (not in this file).
+
+## Flow Diagram
 
 ```bash
 cd docs/flow-diagram

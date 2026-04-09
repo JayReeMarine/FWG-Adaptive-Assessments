@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../repositories/question_repository.dart';
 import '../repositories/session_repository.dart';
 import '../repositories/rule_repository.dart';
@@ -11,7 +12,7 @@ import '../utils/constants.dart';
 import '../config/comparison_scenario.dart';
 import '../services/llm_service.dart';
 import '../widgets/progress_bar.dart';
-import '../widgets/question_card.dart';
+import '../widgets/help_dialog.dart';
 import 'completion_page.dart';
 
 class SurveyPage extends StatefulWidget {
@@ -22,7 +23,7 @@ class SurveyPage extends StatefulWidget {
   /// Research comparison mode.
   /// - [SurveyMode.baseline] (default): uses BranchingEngine + live DB rules.
   /// - [SurveyMode.enhanced]: replaces the Mental Health domain with the
-  ///   hardcoded mock enhanced path from comparison_scenario.dart.
+  ///   LLM-generated path from LlmService.
   final SurveyMode mode;
 
   const SurveyPage({
@@ -42,6 +43,7 @@ class _SurveyPageState extends State<SurveyPage> {
   final _sessionRepo = SessionRepository();
   final _ruleRepo = RuleRepository();
   final _flagRepo = FlagRepository();
+  final _scrollController = ScrollController();
 
   int _currentIndex = 0;
   List<UiQuestion> _allQuestions = [];
@@ -52,13 +54,16 @@ class _SurveyPageState extends State<SurveyPage> {
   int? _sessionId;
   late BranchingEngine _engine;
 
-  // Track previous domain for transition detection
-  String? _previousDomain;
-
   @override
   void initState() {
     super.initState();
     _load();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   Future<void> _load() async {
@@ -149,28 +154,40 @@ class _SurveyPageState extends State<SurveyPage> {
     });
   }
 
+  void _scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 350),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+  }
+
   double get progress =>
       _visibleQuestions.isEmpty
           ? 0.0
           : (_currentIndex + 1) / _visibleQuestions.length;
 
-  void toggleOption(int index) {
+  void toggleOption(int questionIndex, int optionIndex) {
     setState(() {
-      final q = _visibleQuestions[_currentIndex];
+      final q = _visibleQuestions[questionIndex];
       switch (q.answerKind) {
         case 'SCALE':
           q.selected.clear();
-          q.selected.add(index);
+          q.selected.add(optionIndex);
           break;
         case 'MULTI':
-          if (q.selected.contains(index)) {
-            q.selected.remove(index);
+          if (q.selected.contains(optionIndex)) {
+            q.selected.remove(optionIndex);
           } else {
-            q.selected.add(index);
+            q.selected.add(optionIndex);
           }
           break;
         default:
-          q.selected.add(index);
+          q.selected.add(optionIndex);
       }
     });
     _recalculateVisible();
@@ -224,11 +241,8 @@ class _SurveyPageState extends State<SurveyPage> {
     await _saveCurrentResponse();
 
     if (_currentIndex < _visibleQuestions.length - 1) {
-      final currentDomain = _visibleQuestions[_currentIndex].domain;
-      setState(() {
-        _previousDomain = currentDomain;
-        _currentIndex++;
-      });
+      setState(() => _currentIndex++);
+      _scrollToBottom();
     } else {
       List<DomainScore> domainScores = [];
 
@@ -271,11 +285,7 @@ class _SurveyPageState extends State<SurveyPage> {
     }
   }
 
-  void prev() {
-    if (_currentIndex > 0) {
-      setState(() => _currentIndex--);
-    }
-  }
+  // ── Build ─────────────────────────────────────────────────────────────────
 
   @override
   Widget build(BuildContext context) {
@@ -302,8 +312,7 @@ class _SurveyPageState extends State<SurveyPage> {
         builder: (_) {
           if (loading) {
             return const Center(
-                child:
-                    CircularProgressIndicator(color: AppColors.primary));
+                child: CircularProgressIndicator(color: AppColors.primary));
           }
           if (error != null) {
             return Center(
@@ -317,7 +326,8 @@ class _SurveyPageState extends State<SurveyPage> {
                     const SizedBox(height: 16),
                     Text('Load failed: $error',
                         textAlign: TextAlign.center,
-                        style: const TextStyle(color: AppColors.textSecondary)),
+                        style: const TextStyle(
+                            color: AppColors.textSecondary)),
                   ],
                 ),
               ),
@@ -332,11 +342,6 @@ class _SurveyPageState extends State<SurveyPage> {
               ? _domainLabel(currentQ.domain!)
               : null;
 
-          // Detect domain transition
-          final showDomainTransition = _previousDomain != null &&
-              currentQ.domain != null &&
-              _previousDomain != currentQ.domain;
-
           return Column(
             children: [
               SurveyProgressBar(
@@ -345,52 +350,17 @@ class _SurveyPageState extends State<SurveyPage> {
                 currentQuestion: _currentIndex + 1,
                 totalQuestions: _visibleQuestions.length,
               ),
-
-              // Domain transition banner
-              if (showDomainTransition && domainLabel != null)
-                Container(
-                  width: double.infinity,
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                  decoration: BoxDecoration(
-                    color: AppColors.accent.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                        color: AppColors.accent.withValues(alpha: 0.3)),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(Icons.swap_horiz,
-                          size: 18,
-                          color: AppColors.accent),
-                      const SizedBox(width: 8),
-                      Text(
-                        'Now entering: $domainLabel',
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.primaryDark,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
               Expanded(
-                child: QuestionCard(
-                  question: currentQ,
-                  questionNumber: _currentIndex + 1,
-                  onOptionToggle: toggleOption,
-                  onNumericChanged: (value) {
-                    currentQ.numericAnswer = value;
-                    _recalculateVisible();
+                child: ListView.builder(
+                  controller: _scrollController,
+                  padding: const EdgeInsets.fromLTRB(16, 14, 16, 32),
+                  itemCount: _currentIndex + 1,
+                  itemBuilder: (context, index) {
+                    final q = _visibleQuestions[index];
+                    return index < _currentIndex
+                        ? _buildAnsweredItem(q, index)
+                        : _buildActiveItem(q, index);
                   },
-                  onPrevious: _currentIndex > 0 ? prev : null,
-                  onNext: next,
-                  isLast:
-                      _currentIndex == _visibleQuestions.length - 1,
                 ),
               ),
             ],
@@ -400,11 +370,319 @@ class _SurveyPageState extends State<SurveyPage> {
     );
   }
 
+  // ── Answered question (locked, compact) ──────────────────────────────────
+
+  void _resetFrom(int index) {
+    // Clear answers for this question and all subsequent ones
+    for (int i = index; i < _visibleQuestions.length; i++) {
+      _visibleQuestions[i].selected.clear();
+      _visibleQuestions[i].numericAnswer = null;
+    }
+    setState(() => _currentIndex = index);
+    // Scroll back to top so the reset question is visible
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          0,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+  }
+
+  Widget _buildAnsweredItem(UiQuestion q, int index) {
+    String answerText;
+    if (q.answerKind == 'NUMERIC') {
+      answerText = q.numericAnswer?.toString() ?? '—';
+    } else {
+      answerText = q.selected.map((i) => q.options[i]).join(', ');
+    }
+
+    return Container(
+      key: ValueKey('answered_${q.questionId}'),
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.fromLTRB(16, 12, 8, 12),
+      decoration: BoxDecoration(
+        color: AppColors.cardBackground,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppColors.divider),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          _qBadge('Q${index + 1}'),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  q.title,
+                  style: const TextStyle(
+                      fontSize: 12, color: AppColors.textSecondary),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 3),
+                Text(
+                  answerText,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Edit / reset button
+          TextButton.icon(
+            onPressed: () => _resetFrom(index),
+            icon: const Icon(Icons.edit_outlined, size: 14),
+            label: const Text('Edit'),
+            style: TextButton.styleFrom(
+              foregroundColor: AppColors.primary,
+              textStyle: const TextStyle(fontSize: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ── Active question (interactive) ─────────────────────────────────────────
+
+  Widget _buildActiveItem(UiQuestion q, int index) {
+    final isLast = _currentIndex == _visibleQuestions.length - 1;
+    return Card(
+      key: ValueKey('active_${q.questionId}'),
+      elevation: 1,
+      margin: const EdgeInsets.only(bottom: 10),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      color: AppColors.cardBackground,
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _qBadge('Q${index + 1}'),
+                if (q.help.isNotEmpty)
+                  InkWell(
+                    onTap: () => showDialog(
+                      context: context,
+                      builder: (_) => HelpDialog(question: q),
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                    child: Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withValues(alpha: 0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Icons.help_outline,
+                          size: 18, color: AppColors.primary),
+                    ),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 14),
+
+            // Question text
+            Text(
+              q.title,
+              style: const TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.w500,
+                color: AppColors.textPrimary,
+                height: 1.4,
+              ),
+            ),
+            const SizedBox(height: 20),
+
+            // Answer input
+            _buildInlineAnswerInput(q, index),
+            const SizedBox(height: 16),
+
+            // Next / Submit button
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: next,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                  elevation: 0,
+                ),
+                child: Text(
+                  isLast ? 'Submit' : 'Next',
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.w600),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ── Inline answer inputs ──────────────────────────────────────────────────
+
+  Widget _buildInlineAnswerInput(UiQuestion q, int questionIndex) {
+    switch (q.answerKind) {
+      case 'NUMERIC':
+        return _buildInlineNumericInput(q);
+      case 'SCALE':
+      case 'MULTI':
+        return _buildInlineChoiceInput(q, questionIndex);
+      default:
+        return Text('Unsupported type: ${q.answerKind}',
+            style: const TextStyle(color: AppColors.textSecondary));
+    }
+  }
+
+  // Key on TextField prevents previous answer leaking into next numeric question
+  Widget _buildInlineNumericInput(UiQuestion q) {
+    return TextField(
+      key: ValueKey('numeric_${q.questionId}'),
+      keyboardType: TextInputType.number,
+      inputFormatters: [
+        FilteringTextInputFormatter.allow(RegExp(r'^-?\d*\.?\d*$')),
+      ],
+      decoration: InputDecoration(
+        labelText: 'Enter a number',
+        labelStyle: const TextStyle(color: AppColors.textSecondary),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: AppColors.divider),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: AppColors.primary, width: 2),
+        ),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      ),
+      onChanged: (value) {
+        final n = num.tryParse(value);
+        q.numericAnswer = n;
+        _recalculateVisible();
+      },
+    );
+  }
+
+  Widget _buildInlineChoiceInput(UiQuestion q, int questionIndex) {
+    return Column(
+      children: List.generate(q.options.length, (optionIndex) {
+        final selected = q.selected.contains(optionIndex);
+        final isMulti = q.answerKind == 'MULTI';
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 8),
+          child: Material(
+            color: selected
+                ? AppColors.primary.withValues(alpha: 0.08)
+                : Colors.transparent,
+            borderRadius: BorderRadius.circular(12),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(12),
+              onTap: () => toggleOption(questionIndex, optionIndex),
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 16, vertical: 14),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: selected ? AppColors.primary : AppColors.divider,
+                    width: selected ? 2 : 1,
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 22,
+                      height: 22,
+                      decoration: BoxDecoration(
+                        shape: isMulti
+                            ? BoxShape.rectangle
+                            : BoxShape.circle,
+                        borderRadius:
+                            isMulti ? BorderRadius.circular(4) : null,
+                        border: Border.all(
+                          color: selected
+                              ? AppColors.primary
+                              : AppColors.textSecondary,
+                          width: 2,
+                        ),
+                        color: selected
+                            ? AppColors.primary
+                            : Colors.transparent,
+                      ),
+                      child: selected
+                          ? const Icon(Icons.check,
+                              size: 14, color: Colors.white)
+                          : null,
+                    ),
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Text(
+                        q.options[optionIndex],
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: selected
+                              ? AppColors.primary
+                              : AppColors.textPrimary,
+                          fontWeight: selected
+                              ? FontWeight.w600
+                              : FontWeight.normal,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      }),
+    );
+  }
+
+  // ── Helpers ───────────────────────────────────────────────────────────────
+
+  Widget _qBadge(String label) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      decoration: BoxDecoration(
+        color: AppColors.primary.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Text(
+        label,
+        style: const TextStyle(
+          fontSize: 11,
+          fontWeight: FontWeight.w700,
+          color: AppColors.primary,
+        ),
+      ),
+    );
+  }
+
   Future<void> _showExitDialog(BuildContext context) async {
+    final nav = Navigator.of(context);
     final shouldExit = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: const Text('Leave Assessment?'),
         content: const Text(
             'Your progress so far has been saved, but the session will remain incomplete.'),
@@ -421,9 +699,8 @@ class _SurveyPageState extends State<SurveyPage> {
         ],
       ),
     );
-    if (shouldExit == true) {
-      if (!mounted) return;
-      Navigator.of(context).pop();
+    if (shouldExit == true && mounted) {
+      nav.pop();
     }
   }
 

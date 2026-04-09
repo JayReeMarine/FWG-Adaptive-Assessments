@@ -33,22 +33,11 @@ GEMINI_API_KEY=...       # Get a free key at https://aistudio.google.com/apikey
 
 ```bash
 cd flutter_mockup
-flutter clean
 flutter pub get
-
-flutter run -d chrome \
-  --dart-define=SUPABASE_URL=$SUPABASE_URL \
-  --dart-define=SUPABASE_ANON_KEY=$SUPABASE_ANON_KEY \
-  --dart-define=GEMINI_API_KEY=$GEMINI_API_KEY
+./run.sh
 ```
 
-> On macOS/zsh you can load the `.env` first:
-> ```bash
-> source ../.env && flutter run -d chrome \
->   --dart-define=SUPABASE_URL=$SUPABASE_URL \
->   --dart-define=SUPABASE_ANON_KEY=$SUPABASE_ANON_KEY \
->   --dart-define=GEMINI_API_KEY=$GEMINI_API_KEY
-> ```
+`run.sh` automatically loads credentials from `../.env` and starts the app on Chrome. No need to type keys manually.
 
 ### 3. Deploy
 

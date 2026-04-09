@@ -372,23 +372,14 @@ class _SurveyPageState extends State<SurveyPage> {
 
   // ── Answered question (locked, compact) ──────────────────────────────────
 
-  void _resetFrom(int index) {
-    // Clear answers for this question and all subsequent ones
-    for (int i = index; i < _visibleQuestions.length; i++) {
-      _visibleQuestions[i].selected.clear();
-      _visibleQuestions[i].numericAnswer = null;
-    }
-    setState(() => _currentIndex = index);
-    // Scroll back to top so the reset question is visible
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_scrollController.hasClients) {
-        _scrollController.animateTo(
-          0,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOut,
-        );
-      }
-    });
+  void _goToPrevious() {
+    if (_currentIndex <= 0) return;
+    // Clear the current question's answer, step back one
+    final current = _visibleQuestions[_currentIndex];
+    current.selected.clear();
+    current.numericAnswer = null;
+    setState(() => _currentIndex--);
+    _scrollToBottom();
   }
 
   Widget _buildAnsweredItem(UiQuestion q, int index) {
@@ -402,14 +393,14 @@ class _SurveyPageState extends State<SurveyPage> {
     return Container(
       key: ValueKey('answered_${q.questionId}'),
       margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.fromLTRB(16, 12, 8, 12),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
         color: AppColors.cardBackground,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: AppColors.divider),
       ),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _qBadge('Q${index + 1}'),
           const SizedBox(width: 10),
@@ -436,17 +427,9 @@ class _SurveyPageState extends State<SurveyPage> {
               ],
             ),
           ),
-          // Edit / reset button
-          TextButton.icon(
-            onPressed: () => _resetFrom(index),
-            icon: const Icon(Icons.edit_outlined, size: 14),
-            label: const Text('Edit'),
-            style: TextButton.styleFrom(
-              foregroundColor: AppColors.primary,
-              textStyle: const TextStyle(fontSize: 12),
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            ),
-          ),
+          const SizedBox(width: 8),
+          const Icon(Icons.check_circle_outline,
+              size: 18, color: AppColors.primary),
         ],
       ),
     );
@@ -509,25 +492,45 @@ class _SurveyPageState extends State<SurveyPage> {
             _buildInlineAnswerInput(q, index),
             const SizedBox(height: 16),
 
-            // Next / Submit button
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: next,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  elevation: 0,
+            // Buttons row
+            Row(
+              children: [
+                if (_currentIndex > 0)
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: _goToPrevious,
+                      icon: const Icon(Icons.arrow_back, size: 16),
+                      label: const Text('Previous'),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: AppColors.textSecondary,
+                        side: const BorderSide(color: AppColors.divider),
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12)),
+                      ),
+                    ),
+                  ),
+                if (_currentIndex > 0) const SizedBox(width: 10),
+                Expanded(
+                  flex: 2,
+                  child: ElevatedButton(
+                    onPressed: next,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                      elevation: 0,
+                    ),
+                    child: Text(
+                      isLast ? 'Submit' : 'Next',
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.w600),
+                    ),
+                  ),
                 ),
-                child: Text(
-                  isLast ? 'Submit' : 'Next',
-                  style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.w600),
-                ),
-              ),
+              ],
             ),
           ],
         ),

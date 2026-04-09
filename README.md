@@ -1,11 +1,12 @@
 # FWG Adaptive Assessments
 
-> FIT4702 — Adaptive Assessment Platform comparing Rule-based vs LLM-based health questionnaires, built with Flutter & Supabase.
+> FIT4701/FIT4702 — Adaptive Assessment Platform comparing Rule-based vs LLM-based health questionnaires, built with Flutter & Supabase.
 
 ## Links
 
 | Resource | URL |
 |----------|-----|
+| **Live Demo** | https://web-jet-one-86.vercel.app/ |
 | Team's Folder | https://drive.google.com/drive/u/1/folders/1g20YC3A-IQ8-JM6LBUzlJKDUFKCSX0sM |
 | DB Diagram | https://dbdiagram.io/d/FWG-ADAPTIVE-Schema-68df3c08d2b621e422107095 |
 | Supabase Dashboard | https://aqyrpgcssvczmzsojzpm.supabase.co |

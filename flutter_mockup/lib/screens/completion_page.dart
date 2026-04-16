@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../config/symptom_descriptions.dart';
 import '../repositories/session_repository.dart';
 import '../services/scoring_service.dart';
 import '../utils/constants.dart';
@@ -185,7 +186,7 @@ class CompletionPage extends StatelessWidget {
   }
 
   Widget _buildScoreCard(DomainScore ds) {
-    final description = _symptomDescription(ds.domain, ds.level);
+    final description = SymptomDescriptions.get(ds.domain, ds.level);
     final prev = _previousMonth[ds.domain.toUpperCase()];
 
     return Card(
@@ -334,25 +335,6 @@ class CompletionPage extends StatelessWidget {
     );
   }
 
-  String _symptomDescription(String domain, RiskLevel level) {
-    if (domain.toUpperCase() == 'MENTAL HEALTH') {
-      switch (level) {
-        case RiskLevel.none:
-          return 'No significant mental health concerns detected. '
-              'Keep maintaining your current wellbeing practices.';
-        case RiskLevel.mild:
-          return 'You may experience occasional low mood, but it does not '
-              'significantly affect your daily life.';
-        case RiskLevel.moderate:
-          return 'You may be experiencing persistent low mood that is starting '
-              'to affect daily activities such as studying or socialising.';
-        case RiskLevel.high:
-          return 'You may be experiencing significant distress that impacts '
-              'most daily activities. Please consider reaching out for support.';
-      }
-    }
-    return '';
-  }
 
   Color _riskColor(RiskLevel level) {
     switch (level) {

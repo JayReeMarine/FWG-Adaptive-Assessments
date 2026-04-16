@@ -83,7 +83,7 @@ class _SurveyPageState extends State<SurveyPage> {
             .where((q) => q.domain?.toUpperCase() == 'MENTAL HEALTH')
             .toList();
         final enhancedMH = await LlmService.generateEnhancedMentalHealthQuestions(
-          alexSeed,
+          sophieSeed,
           baselineMhQuestions,
         );
         questions = enhancedMH; // MH only — Step 3

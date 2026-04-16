@@ -13,7 +13,7 @@ Future<void> main(List<String> args) async {
 
   print('=== Gemini LLM Service Test ===\n');
 
-  // ── Mock alexSeed ──────────────────────────────────────────────────────────
+  // ── Mock sophieSeed ────────────────────────────────────────────────────────
   final seed = {
     'version': 'Month 1',
     'demographics': {

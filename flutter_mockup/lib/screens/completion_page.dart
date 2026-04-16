@@ -6,7 +6,7 @@ import '../utils/constants.dart';
 import 'home_page.dart';
 import 'survey_page.dart';
 
-// ─── Hardcoded Month 1 reference data (Alex persona) ──────────────────────
+// ─── Hardcoded Month 1 reference data (Sophie persona) ────────────────────
 // Only Mental Health had a non-zero risk in Month 1; all other domains were
 // "none" so they are omitted — the card will simply skip the comparison row.
 

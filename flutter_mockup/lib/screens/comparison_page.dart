@@ -4,7 +4,7 @@ import '../utils/constants.dart';
 
 /// Side-by-side research comparison screen.
 ///
-/// Shows the Mental Health domain question paths for Alex's Month 2 run:
+/// Shows the Mental Health domain question paths for Sophie's Month 2 run:
 ///   • Question Paths tab — Baseline questions (with blocked indicator)
 ///                          vs Enhanced questions (with why labels)
 ///   • Evaluation tab     — 6-dimension comparison table (Zach's criteria)
@@ -107,13 +107,13 @@ class _ComparisonPageState extends State<ComparisonPage>
                 ),
               ),
               const Spacer(),
-              _tagChip('v${alexSeed.version}', AppColors.primary),
+              _tagChip('v${sophieSeed.version}', AppColors.primary),
             ],
           ),
           const SizedBox(height: 8),
           Text(
-            '${alexSeed.demographics.background}  ·  '
-            'Age ${alexSeed.demographics.age}  ·  Month 2',
+            '${sophieSeed.demographics.background}  ·  '
+            'Age ${sophieSeed.demographics.age}  ·  Month 2',
             style: const TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w600,
@@ -128,7 +128,7 @@ class _ComparisonPageState extends State<ComparisonPage>
                 style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
               ),
               _tagChip(
-                alexSeed.domainRiskLevels['MENTAL HEALTH']!.toUpperCase(),
+                sophieSeed.domainRiskLevels['MENTAL HEALTH']!.toUpperCase(),
                 Colors.amber[700]!,
               ),
               const SizedBox(width: 6),
@@ -139,7 +139,7 @@ class _ComparisonPageState extends State<ComparisonPage>
             ],
           ),
           const SizedBox(height: 8),
-          ...alexSeed.contextNotes.map(
+          ...sophieSeed.contextNotes.map(
             (note) => Padding(
               padding: const EdgeInsets.only(bottom: 2),
               child: Row(
@@ -346,7 +346,7 @@ class _ComparisonPageState extends State<ComparisonPage>
           SizedBox(height: 8),
           Text(
             'Same user. Same question bank. Different approach.\n'
-            'Scroll down to see what each system asks Alex — and why the '
+            'Scroll down to see what each system asks Sophie — and why the '
             'questions look different. The Evaluation tab scores each approach '
             'on 6 research dimensions.',
             style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
@@ -391,7 +391,7 @@ class _ComparisonPageState extends State<ComparisonPage>
           ),
           SizedBox(height: 8),
           Text(
-            'Alex has been Mild risk for two months in a row. '
+            'Sophie has been Mild risk for two months in a row. '
             'The rule-based system doesn\'t know that — it blocks Q39 '
             'because her single-month score never crossed the threshold. '
             'The LLM-based system reads her Month\u00a01 history and unlocks '
@@ -445,7 +445,7 @@ class _ComparisonPageState extends State<ComparisonPage>
                   TextSpan(
                     text: "  \u00b7  Single-month threshold only. "
                         "No memory of prior months. "
-                        "Alex\u2019s score\u00a0=\u00a01 \u2192 Q39 is permanently blocked this run.",
+                        "Sophie\u2019s score\u00a0=\u00a01 \u2192 Q39 is permanently blocked this run.",
                   ),
                 ],
               ),

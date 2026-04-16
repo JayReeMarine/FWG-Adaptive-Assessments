@@ -8,7 +8,7 @@
 // from the live BranchingEngine so that the baseline DB logic is not modified.
 //
 // User profile (seed):
-//   Alex — 24F, East Asian international student
+//   Sophie — 24F, East Asian international student
 //   Month 1 result: Mental Health risk = Mild
 //   Month 2 context: same or slightly worsening trend
 //
@@ -72,14 +72,14 @@ class UserDemographics {
   });
 }
 
-// ─── Alex's Month 1 Seed (mock) ──────────────────────────────────────────────
+// ─── Sophie's Month 1 Seed (mock) ────────────────────────────────────────────
 
-/// The hardcoded seed representing Alex's health baseline after Month 1.
+/// The hardcoded seed representing Sophie's health baseline after Month 1.
 ///
 /// This seed is what the enhanced adaptive engine would consume at the start
 /// of Month 2 to personalise question selection and phrasing.
-const alexSeed = UserSeed(
-  userId: 'mock-alex-001',
+const sophieSeed = UserSeed(
+  userId: 'mock-sophie-001',
   version: 'Month 1',
   demographics: UserDemographics(
     age: 24,
@@ -104,7 +104,7 @@ const alexSeed = UserSeed(
 );
 
 /// Describes the Mental Health domain questions for ONE monthly check-in
-/// under the baseline rule-based system, for Alex's Month 2 run.
+/// under the baseline rule-based system, for Sophie's Month 2 run.
 ///
 /// These are the questions the BranchingEngine would return:
 ///   ID 18 — mood frequency (SCALE, scale_id=1)
@@ -112,7 +112,7 @@ const alexSeed = UserSeed(
 ///   ID 20 — isolated from others (SCALE, scale_id=1)
 ///   ID 39 — functional impact  [only shown if Q18 >= 2, per Rule 13]
 ///
-/// In Alex's scenario: Q18 answer = 1 (Several days) → Rule 13 NOT triggered
+/// In Sophie's scenario: Q18 answer = 1 (Several days) → Rule 13 NOT triggered
 ///   → Q39 is HIDDEN.  This is the core limitation the enhanced version fixes.
 const baselineMentalHealthPath = [
   BaselineQuestion(
@@ -138,7 +138,7 @@ const baselineMentalHealthPath = [
   BaselineQuestion(
     id: 39,
     text: '[HIDDEN — functional impact question not shown because '
-        'Alex\'s Q18 score = 1 (Several days), which is below the ≥2 threshold '
+        'Sophie\'s Q18 score = 1 (Several days), which is below the ≥2 threshold '
         'required by Rule 13. Even though two months of Mild scores indicate a '
         'persistent pattern, this question is never surfaced.]',
     options: [],
@@ -148,7 +148,7 @@ const baselineMentalHealthPath = [
 ];
 
 /// Describes the Mental Health domain questions for the SAME monthly check-in
-/// under the MOCK enhanced adaptive system, for Alex's Month 2 run.
+/// under the MOCK enhanced adaptive system, for Sophie's Month 2 run.
 ///
 /// Key differences from baseline:
 ///   1. Q18 phrasing references Month 1 history ("you reported…")
@@ -172,7 +172,7 @@ const enhancedMentalHealthPath = [
         'of your studies, daily responsibilities, or relationships?',
     options: ['Never', 'Rarely', 'Sometimes', 'Often', 'Always'],
     why: 'Student-specific phrasing ("studies, responsibilities") replaces '
-        'the vague "important things in your life". More relevant to Alex\'s context.',
+        'the vague "important things in your life". More relevant to Sophie\'s context.',
   ),
   EnhancedQuestion(
     id: -1, // mock — not yet in DB
@@ -193,7 +193,7 @@ const enhancedMentalHealthPath = [
         'Student-specific examples replace generic "work, daily tasks".',
   ),
   // Q20 (isolation) is deliberately skipped:
-  // Alex's Month 1 isolation score was low and stable.
+  // Sophie's Month 1 isolation score was low and stable.
   // The enhanced system de-prioritises questions unlikely to yield new information.
 ];
 

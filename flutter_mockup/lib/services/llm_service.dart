@@ -30,7 +30,7 @@ class LlmService {
 
   /// Generates personalised Month 2 Mental Health questions from the user's Seed.
   ///
-  /// [seed]             - the user's Month 1 health snapshot (e.g. alexSeed)
+  /// [seed]             - the user's Month 1 health snapshot (e.g. sophieSeed)
   /// [baselineMhQuestions] - the baseline monthly MH questions from the DB,
   ///                         used so the LLM knows what it is improving on.
   ///

@@ -238,6 +238,17 @@ class _SurveyPageState extends State<SurveyPage> {
   }
 
   void next() async {
+    final q = _visibleQuestions[_currentIndex];
+    if (q.required && !q.isAnswered) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please answer this question before continuing.'),
+          behavior: SnackBarBehavior.floating,
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
     await _saveCurrentResponse();
 
     if (_currentIndex < _visibleQuestions.length - 1) {

@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../repositories/session_repository.dart';
 import '../utils/constants.dart';
 import 'survey_page.dart';
 import 'comparison_page.dart';
+
+// ── Update this URL once the PDF is hosted (e.g. GitHub raw or Vercel static) ─
+// For local Flutter web dev, place user_guide.pdf in flutter_mockup/web/ and
+// set this to '/user_guide.pdf'. For production, use the full hosted URL.
+const _kUserGuideUrl = '/user_guide.pdf';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -67,6 +73,10 @@ class _HomePageState extends State<HomePage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          // ── User Guide banner ────────────────────────────
+                          _buildUserGuideBanner(),
+                          const SizedBox(height: 20),
+
                           // ── Section 1: Foundational Assessment ───────────
                           _buildSectionLabel('Step 1 — Baseline Profile'),
                           const SizedBox(height: 10),
@@ -480,6 +490,64 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ],
+    );
+  }
+
+  // ── User Guide banner ─────────────────────────────────────────────────────
+
+  Widget _buildUserGuideBanner() {
+    return GestureDetector(
+      onTap: () async {
+        final uri = Uri.base.resolve(_kUserGuideUrl);
+        final launched = await launchUrl(uri, webOnlyWindowName: '_blank');
+
+        if (!launched && mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Could not open the User Guide.'),
+            ),
+          );
+        }
+      },
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+        decoration: BoxDecoration(
+          color: const Color(0xFFFFF8E1),
+          border: Border.all(color: const Color(0xFFFFCC02), width: 1),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          children: [
+            const Icon(Icons.menu_book_rounded,
+                size: 20, color: Color(0xFFF57F17)),
+            const SizedBox(width: 12),
+            const Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'New here? Read the User Guide',
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFFF57F17),
+                    ),
+                  ),
+                  SizedBox(height: 2),
+                  Text(
+                    'Step-by-step instructions for completing the study tasks.',
+                    style: TextStyle(
+                        fontSize: 11, color: AppColors.textSecondary),
+                  ),
+                ],
+              ),
+            ),
+            const Icon(Icons.open_in_new,
+                size: 14, color: Color(0xFFF57F17)),
+          ],
+        ),
+      ),
     );
   }
 

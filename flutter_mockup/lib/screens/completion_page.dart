@@ -5,6 +5,21 @@ import '../utils/constants.dart';
 import 'home_page.dart';
 import 'survey_page.dart';
 
+// ─── Hardcoded Month 1 reference data (Alex persona) ──────────────────────
+// Only Mental Health had a non-zero risk in Month 1; all other domains were
+// "none" so they are omitted — the card will simply skip the comparison row.
+
+class _PrevMonth {
+  final int score;
+  final int max;
+  final RiskLevel level;
+  const _PrevMonth(this.score, this.max, this.level);
+}
+
+const _previousMonth = <String, _PrevMonth>{
+  'MENTAL HEALTH': _PrevMonth(3, 10, RiskLevel.mild),
+};
+
 class CompletionPage extends StatelessWidget {
   final SurveyType completedType;
   final int periodMonth;
@@ -170,6 +185,9 @@ class CompletionPage extends StatelessWidget {
   }
 
   Widget _buildScoreCard(DomainScore ds) {
+    final description = _symptomDescription(ds.domain, ds.level);
+    final prev = _previousMonth[ds.domain.toUpperCase()];
+
     return Card(
       elevation: 0,
       margin: const EdgeInsets.only(bottom: 8),
@@ -179,57 +197,161 @@ class CompletionPage extends StatelessWidget {
       ),
       child: Padding(
         padding: const EdgeInsets.all(16),
-        child: Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              width: 36,
-              height: 36,
-              decoration: BoxDecoration(
-                color: _riskColor(ds.level).withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Icon(_riskIcon(ds.level),
-                  color: _riskColor(ds.level), size: 20),
-            ),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(_domainLabel(ds.domain),
-                      style: const TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 14,
-                          color: AppColors.textPrimary)),
-                  const SizedBox(height: 2),
-                  Text(
-                    'Score: ${ds.totalScore}/${ds.maxPossible}',
-                    style: const TextStyle(
-                        fontSize: 12, color: AppColors.textSecondary),
+            // ── Top row (icon + name + badge) — unchanged ──
+            Row(
+              children: [
+                Container(
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    color: _riskColor(ds.level).withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                ],
-              ),
+                  child: Icon(_riskIcon(ds.level),
+                      color: _riskColor(ds.level), size: 20),
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(_domainLabel(ds.domain),
+                          style: const TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
+                              color: AppColors.textPrimary)),
+                      const SizedBox(height: 2),
+                      Text(
+                        'Score: ${ds.totalScore}/${ds.maxPossible}',
+                        style: const TextStyle(
+                            fontSize: 12, color: AppColors.textSecondary),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: _riskColor(ds.level).withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    _riskLabel(ds.level),
+                    style: TextStyle(
+                      color: _riskColor(ds.level),
+                      fontWeight: FontWeight.w600,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+              ],
             ),
-            Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-              decoration: BoxDecoration(
-                color: _riskColor(ds.level).withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Text(
-                _riskLabel(ds.level),
-                style: TextStyle(
-                  color: _riskColor(ds.level),
-                  fontWeight: FontWeight.w600,
-                  fontSize: 12,
+
+            // ── Symptom description ──
+            if (description.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              Text(
+                description,
+                style: const TextStyle(
+                  fontSize: 13,
+                  color: AppColors.textSecondary,
+                  height: 1.4,
                 ),
               ),
-            ),
+            ],
+
+            // ── Previous month comparison ──
+            if (prev != null) ...[
+              const SizedBox(height: 12),
+              const Divider(height: 1, color: AppColors.divider),
+              const SizedBox(height: 12),
+              _buildPreviousMonthRow(ds, prev),
+            ],
           ],
         ),
       ),
     );
+  }
+
+  Widget _buildPreviousMonthRow(DomainScore current, _PrevMonth prev) {
+    final curIdx = RiskLevel.values.indexOf(current.level);
+    final prevIdx = RiskLevel.values.indexOf(prev.level);
+
+    String trendText;
+    IconData trendIcon;
+    Color trendColor;
+
+    if (curIdx > prevIdx) {
+      trendText = 'Increased from last month';
+      trendIcon = Icons.trending_up;
+      trendColor = Colors.orange;
+    } else if (curIdx < prevIdx) {
+      trendText = 'Improved from last month';
+      trendIcon = Icons.trending_down;
+      trendColor = Colors.green;
+    } else {
+      trendText = 'Same as last month';
+      trendIcon = Icons.trending_flat;
+      trendColor = AppColors.textSecondary;
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            const Icon(Icons.bar_chart_rounded,
+                size: 16, color: AppColors.textSecondary),
+            const SizedBox(width: 6),
+            Text(
+              'Last month: ${_riskLabel(prev.level)} (${prev.score}/${prev.max})',
+              style: const TextStyle(
+                  fontSize: 12, color: AppColors.textSecondary),
+            ),
+          ],
+        ),
+        const SizedBox(height: 4),
+        Row(
+          children: [
+            const SizedBox(width: 22),
+            Icon(trendIcon, size: 14, color: trendColor),
+            const SizedBox(width: 4),
+            Text(
+              trendText,
+              style: TextStyle(
+                fontSize: 12,
+                color: trendColor,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  String _symptomDescription(String domain, RiskLevel level) {
+    if (domain.toUpperCase() == 'MENTAL HEALTH') {
+      switch (level) {
+        case RiskLevel.none:
+          return 'No significant mental health concerns detected. '
+              'Keep maintaining your current wellbeing practices.';
+        case RiskLevel.mild:
+          return 'You may experience occasional low mood, but it does not '
+              'significantly affect your daily life.';
+        case RiskLevel.moderate:
+          return 'You may be experiencing persistent low mood that is starting '
+              'to affect daily activities such as studying or socialising.';
+        case RiskLevel.high:
+          return 'You may be experiencing significant distress that impacts '
+              'most daily activities. Please consider reaching out for support.';
+      }
+    }
+    return '';
   }
 
   Color _riskColor(RiskLevel level) {

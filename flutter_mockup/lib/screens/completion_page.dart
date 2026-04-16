@@ -146,38 +146,38 @@ class CompletionPage extends StatelessWidget {
                 ),
               ),
 
-              if (!isFoundational) ...[
-                const SizedBox(height: 12),
-                SizedBox(
-                  width: double.infinity,
-                  child: OutlinedButton(
-                    onPressed: () {
-                      final nextMonth =
-                          periodMonth == 12 ? 1 : periodMonth + 1;
-                      final nextYear =
-                          periodMonth == 12 ? periodYear + 1 : periodYear;
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => SurveyPage(
-                            surveyType: SurveyType.monthly,
-                            periodMonth: nextMonth,
-                            periodYear: nextYear,
-                          ),
-                        ),
-                      );
-                    },
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: AppColors.textSecondary,
-                      side: const BorderSide(color: AppColors.divider),
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
-                    ),
-                    child: const Text('(Demo) Next Month Survey'),
-                  ),
-                ),
-              ],
+              // TODO: re-enable when longitudinal demo is needed
+              // if (!isFoundational) ...[
+              //   const SizedBox(height: 12),
+              //   SizedBox(
+              //     width: double.infinity,
+              //     child: OutlinedButton(
+              //       onPressed: () {
+              //         final nextMonth = periodMonth == 12 ? 1 : periodMonth + 1;
+              //         final nextYear = periodMonth == 12 ? periodYear + 1 : periodYear;
+              //         Navigator.pushReplacement(
+              //           context,
+              //           MaterialPageRoute(
+              //             builder: (_) => SurveyPage(
+              //               surveyType: SurveyType.monthly,
+              //               periodMonth: nextMonth,
+              //               periodYear: nextYear,
+              //             ),
+              //           ),
+              //         );
+              //       },
+              //       style: OutlinedButton.styleFrom(
+              //         foregroundColor: AppColors.textSecondary,
+              //         side: const BorderSide(color: AppColors.divider),
+              //         padding: const EdgeInsets.symmetric(vertical: 14),
+              //         shape: RoundedRectangleBorder(
+              //             borderRadius: BorderRadius.circular(12)),
+              //       ),
+              //       child: const Text('(Demo) Next Month Survey'),
+              //     ),
+              //   ),
+              // ],
+
             ],
           ),
         ),

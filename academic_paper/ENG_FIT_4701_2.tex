@@ -1,12 +1,14 @@
 \documentclass[letterpaper,11pt]{article}
 
-% All these packages you need, if you need any others you can
-% add them here.
+% All these packages you need, if you need any others you can add them here.
 \usepackage{authblk}
 \usepackage{natbib}
-\usepackage{authblk}
 \usepackage{geometry}
 \usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{hyperref}
 
 % Do not change the bibliography style.
 \bibliographystyle{ENG_FIT_4701_2}
@@ -17,117 +19,138 @@
 \geometry{left=1cm,right=1cm}
 \geometry{footskip=0.5cm}
 
-% Here you enter your project data. Make sure not to
-% list the same Department more than once.
-\title{Intelligent Adaptive Assessment}
+% ── Project Data ──────────────────────────────────────────────────────────────
+% TODO: Replace Author names and Department below.
+\title{Dynamic Platoon Formation of Multi-Type Autonomous Vehicles\\
+       for Sustainable Urban Mobility}
 \author[1]{Author 1}
 \author[2]{Author 2}
 \author[3]{Author 3}
-\affil[1,3]{Department of Civil and Environmental Engineering}
-\affil[2]{Department of Mechanical and Aerospace Engineering}
+\affil[1,2,3]{Department of Software and Computer Engineering, Monash University}
 \date{}
+
+% ─────────────────────────────────────────────────────────────────────────────
 
 \begin{document}
 
 \maketitle
 
+% ── Abstract ─────────────────────────────────────────────────────────────────
 \begin{abstract}
-Write your abstract here.
+% TODO: Write abstract (~150 words)
+% Hint: Cover (1) problem motivation, (2) proposed approach, (3) key results.
 \end{abstract}
 
+% ── Section 1: Introduction ───────────────────────────────────────────────────
 \section{Introduction}
+\label{sec:intro}
 
-From here on you start writing your paper. You are free to choose
-any structure you want, the only three sections that you need are
-\begin{itemize}
-\item
-Abstract
-\item
-Introduction
-\item
-Conclusion
-\end{itemize}
-The references are automatically generated. Examples of tables
-and figures are given in Section \ref{sec:fig_tab}.
-Section \ref{sec:oth_imp} lists some more things
-to pay attention to.
-You can cite a reference at the end of a sentence
-as \citep{nashandsutcliffe70}.
-\citet{nashandsutcliffe70} is the way to cite a reference in
-a sentence.
+% TODO: ~0.5 page
+% Subsections to cover:
+%   - Background: single-occupancy travel inefficiency, AV proliferation
+%   - Problem: energy waste without physical coordination between vehicles
+%   - Our approach: towing-based platoon formation (Active Vehicles tow Passive Vehicles)
+%   - Contributions: (1) problem formulation, (2) Greedy algorithm,
+%                    (3) Iterative Linear Assignment (ILA) algorithm
+%   - Paper structure overview
 
-\section{Examples of Figures and Tables}
-\label{sec:fig_tab}
+% ── Section 2: Related Work ───────────────────────────────────────────────────
+\section{Related Work}
+\label{sec:related}
 
-Table \ref{tab:C8_R2} shows an example of a table.
-Figure \ref{fig:Wat_Dens} shows an example of a figure.
-\begin{table}[h]
-\begin{center}
-\caption{An example of a table with 8 columns and 2 rows.}
-\label{tab:C8_R2}
-\begin{tabular}{l|llllll|l}
-\hline
- & \multicolumn{6}{c|}{Columns with a merged heading} &
-\\
-Index & C2 & C3 & C4 & C5 & C6 & C7 & Last column
-\\
-\hline
-1 & R12 & R13 & R14 & R15 & R16 & R17 & R18
-\\
-2 & R22 & R23 & R24 & R25 & R26 & R27 & R28
-\\
-\hline
-\end{tabular}
-\end{center}
-\end{table}
+\subsection{Vehicle Platooning and Drafting}
+\label{subsec:platooning}
+% TODO: ~0.3 page
+% Cover: aerodynamic platooning, cooperative adaptive cruise control,
+%        key difference from our model (physical towing vs. aerodynamic drafting)
 
-\begin{figure}
-\begin{center}
-\includegraphics[width=14cm]{Water_Density.jpg}
-\caption{The density of water as a function of the temperature.}
-\label{fig:Wat_Dens}
-\end{center}
-\end{figure}
+\subsection{Ridesharing and Vehicle Coordination}
+\label{subsec:ridesharing}
+% TODO: ~0.2 page
+% Cover: dial-a-ride, passenger-to-vehicle matching, multi-agent intersection control
+%        key difference: we do vehicle-to-vehicle coupling, not passenger placement
 
-\section{Other Things to Pay Attention to}
-\label{sec:oth_imp}
+% ── Section 3: System Model and Problem Formulation ───────────────────────────
+\section{System Model and Problem Formulation}
+\label{sec:formulation}
 
-\begin{itemize}
-\item
-{\bf For FYP A the page limit is strictly 4 pages,
-while for FYP B the page limit is strictly 10 pages. Appendices are
-\underline{not} allowed.}
-\item
-Make sure to write the nouns and verbs in the project title, Department names,
-and section and subsection headings with an uppercase first letter.
-\item
-An equation can be written like this:
-\begin{equation}
-q_i = \displaystyle \frac{K_i}{c_i} e^{-c_i z_i} \textup{tan} ( \beta_i)
-\label{eq:q_i}
-\end{equation}
-$q_i$ is the baseflow per unit width (m$^2$s$^{-1}$),
-$K_i$ the hydraulic conductivity (ms$^{-1}$),
-$c_i$ the exponential decay coefficient (m$^{-1}$),
-$z_i$ the depth to the water table (m),
-and $\beta_i$ the slope of the land surface.
-As is shown for Equation \ref{eq:q_i},
-always make sure to explain all the variables in your equations,
-and also to add the units or dimensions.
-\item
-It is recommended to write in the passive as much as possible.
-Thus, write ``The measurements were taken with a temporal interval of
-15 seconds" instead of ``we took the measurements with a temporal
-interval of 15 seconds".
-\item
-In the tab ``Getting Started" on moodle there is a large
-amount of information on how to perform a literature search.
-\end{itemize}
+\subsection{Notation and Vehicle Definitions}
+\label{subsec:notation}
+% TODO: Define Active Vehicles (AVs) and Passive Vehicles (PVs)
+%       Include Table I: Notation Summary
 
-\input{section_in_a_separate_file}
+\subsection{Shared Path and Energy Model}
+\label{subsec:energy}
+% TODO: Define shared path distance d_ij, coupling/decoupling points (cp, dp),
+%       energy saving model S_ij = alpha * d_ij
 
+\subsection{Optimization Problem}
+\label{subsec:optproblem}
+% TODO: Formulate as constrained optimisation (Equations 2--5)
+%       Constraints: point-wise capacity, non-overlap, minimum segment length
+
+\subsection{Temporal Synchronisation Constraints}
+\label{subsec:temporal}
+% TODO: Equation (6): |t_i^a(cp) - t_j^p(cp)| <= tau
+%       Explain why spatial overlap alone is insufficient
+
+% ── Section 4: Proposed Algorithms ───────────────────────────────────────────
+\section{Proposed Algorithms}
+\label{sec:algorithms}
+
+\subsection{Greedy Maximum-Weight Matching}
+\label{subsec:greedy}
+% TODO: Algorithm 1 pseudocode, three phases (Initialisation, Candidate Generation, Greedy Selection)
+%       Complexity: O((NM)^2 log(NM))
+
+\subsection{Iterative Linear Assignment}
+\label{subsec:ila}
+% TODO: Algorithm 2 pseudocode, virtual-slot expansion, Jonker--Volgenant method
+%       Complexity: O(NM * max(K,M)^3)
+
+\subsection{Theoretical Analysis}
+\label{subsec:theory}
+% TODO: Theorem 1 (Per-Iteration Optimality of ILA)
+%       Lemma 2 (Global Optimality Gap)
+
+% ── Section 5: Experimental Evaluation ───────────────────────────────────────
+\section{Experimental Evaluation}
+\label{sec:experiments}
+
+\subsection{Experimental Setup}
+\label{subsec:setup}
+% TODO: Implementation (Python 3.11, NumPy, SciPy), synthetic scenario generation
+%       Include Table II: Experimental Parameters
+%       Metrics: Baseline Distance, Total Saving, Matched Ratio, Saving \%, Runtime
+
+\subsection{Results}
+\label{subsec:results}
+% TODO: Capacity Sweep (Table III), Highway Length Sweep (Table IV)
+%       Include Figures: Saving \% vs capacity, Saving \% vs highway length
+
+\subsection{Discussion}
+\label{subsec:discussion}
+% TODO: ILA vs Greedy comparison, capacity impact, length effect,
+%       runtime observations (ILA 2.8--11.5x faster in practice)
+
+\subsection{Limitations}
+\label{subsec:limitations}
+% TODO: 1-D highway abstraction, distance-based proxy, offline setting,
+%       per-iteration (not global) optimality of ILA
+
+% ── Section 6: Conclusion ─────────────────────────────────────────────────────
 \section{Conclusion}
+\label{sec:conclusion}
 
+% TODO: ~0.3 page
+% Summarise: dynamic towing-based platoon formation framework,
+%            25--52\% coverage gains, ILA consistently matches/exceeds Greedy
+
+\subsection*{Future Work}
+% TODO: 2-D road networks, online/uncertain traffic, decentralised coordination,
+%       physics-based energy models, real-world trajectory validation
+
+% ── References ────────────────────────────────────────────────────────────────
 \bibliography{ENG_FIT_4701_2.bib}
- 
+
 \end{document}

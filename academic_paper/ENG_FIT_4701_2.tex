@@ -49,23 +49,33 @@
 \label{sec:intro}
 
 Mental health is increasingly recognised as a critical component of overall well-being,
-yet the tools used to assess it in digital health applications have seen limited
-innovation. Most existing health-tracking applications rely on fixed, repetitive
-questionnaires — typically presented as weekly or monthly check-ins — that ask the same
-set of questions regardless of a user's current condition or history
-\citep{aihw2012, malanin2025}.
-This static approach fails to capture how a person's mental state evolves over time,
-often producing assessments that feel irrelevant or burdensome and recommendations that
-may be inaccurate or potentially harmful \citep{wang2023}.
+and digital health applications are playing a growing role in routine screening and
+self-monitoring. In practice, most of these applications rely on standardised static
+instruments such as the PHQ-9 \citep{kroenke2001} and the GAD-7 \citep{spitzer2006},
+which present the same fixed set of items at every check-in regardless of the user's
+current condition, prior responses, or longitudinal history. While these instruments
+are clinically validated, their rigid format can feel repetitive and burdensome, and
+often fails to reflect how a person's mental state evolves over time
+\citep{malanin2025}.
 
-The emergence of Large Language Models (LLMs) offers a new opportunity to address this
-limitation. Unlike fixed rule-based branching logic, LLMs can dynamically generate
-context-aware questions informed by a user's individual health profile, prior responses,
-and longitudinal history \citep{tamquest2024, parkrobot2025}.
-This enables a more personalised and human-centric assessment experience, where questions
-adapt to what matters most for each individual at each point in time.
+Adaptive questionnaire techniques — such as branching logic and computerised adaptive
+testing — have been introduced to partially address this limitation by tailoring item
+sequences to user input \citep{wang2023}. However, these rule-based mechanisms remain
+bounded by predefined decision trees and cannot generate new items or reframe questions
+based on a user's individual context. Recent advances in Large Language Models (LLMs)
+open a new design space for adaptive assessment: LLMs can synthesise context-aware
+questions informed by a user's health profile and prior responses, and have begun to
+be explored as engines for patient-reported outcome measures \citep{terheyden2025}.
 
-To evaluate this opportunity, we developed \emph{Navigator}, a web-based prototype that
+Despite this promise, the use of LLMs in mental health remains at an early stage. A
+recent systematic review of mental health chatbots highlights that most existing systems
+are still rule-based, and that LLM-based designs — while more flexible — introduce
+new concerns around safety, appropriateness, and clinical reliability
+\citep{hua2025, li2025llm, shen2026}. To our knowledge, no prior work has directly
+compared rule-based and LLM-based adaptive mental health questionnaires within a
+single unified application using a controlled, human-centric evaluation.
+
+To address this gap, we developed \emph{Navigator}, a web-based prototype that
 implements two distinct monthly mental health check-in methods within the same
 application environment:
 \begin{itemize}
@@ -74,9 +84,11 @@ application environment:
   \item \textbf{LLM-based method:} Google Gemini 2.5 Flash dynamically generates
         personalised questions from the user's health profile and prior assessment data.
 \end{itemize}
-Using a within-subjects study design, participants interacted with both methods and
-completed a structured feedback survey evaluating each approach across three dimensions:
-\emph{Clarity}, \emph{Quality}, and \emph{Relevance}.
+Using a within-subjects study design, participants interacted with both methods via a
+standardised persona (Sophie) and completed a structured feedback survey. Evaluation
+metrics are grounded in the COSMIN content-validity framework \citep{terwee2018},
+which identifies \emph{Clarity}, \emph{Quality}, and \emph{Relevance} as core
+dimensions of questionnaire content validity.
 
 This study aims to answer the following research questions:
 \begin{itemize}
@@ -89,12 +101,12 @@ This study aims to answer the following research questions:
 \end{itemize}
 
 The main contributions of this work are:
-(1) the Navigator prototype — a Flutter web application implementing both methods within
-a unified interface;
-(2) a within-subjects user study design using a standardised persona (Sophie) to ensure
-fair comparison across conditions; and
-(3) an empirical evaluation of user perceptions of Clarity, Quality, and Relevance for
-LLM-based versus rule-based adaptive mental health questionnaires.
+(1) the Navigator prototype — a Flutter web application implementing both rule-based
+and LLM-based adaptive questionnaires within a unified interface;
+(2) a within-subjects user study design using a standardised persona to ensure fair
+comparison across conditions; and
+(3) an empirical, COSMIN-grounded evaluation of user perceptions of Clarity, Quality,
+and Relevance for LLM-based versus rule-based adaptive mental health questionnaires.
 
 The remainder of this paper is organised as follows.
 Section~\ref{sec:related} reviews related work on mental health questionnaire systems,

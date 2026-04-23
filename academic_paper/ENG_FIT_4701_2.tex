@@ -6,7 +6,6 @@
 \usepackage{geometry}
 \usepackage{graphicx}
 \usepackage{amsmath}
-\usepackage{amssymb}
 \usepackage{booktabs}
 \usepackage{hyperref}
 
@@ -20,15 +19,16 @@
 \geometry{footskip=0.5cm}
 
 % ── Project Data ──────────────────────────────────────────────────────────────
-% TODO: Replace Author names and Department below.
-\title{Dynamic Platoon Formation of Multi-Type Autonomous Vehicles\\
-       for Sustainable Urban Mobility}
-\author[1]{Author 1}
-\author[2]{Author 2}
-\author[3]{Author 3}
-\affil[1,2,3]{Department of Software and Computer Engineering, Monash University}
+% TODO: Confirm full legal names for Khang and Zachary before submission.
+\title{Evaluating LLM-Based and Rule-Based Adaptive Mental Health\\
+       Questionnaires: A Human-Centric User Study}
+\author[1]{Jaeyun Ree}
+\author[2]{Khang Nguyen}
+\author[3]{Zachary Yeap}
+\author[4]{ABM Russel}         % Supervisor
+\affil[1,2,3,4]{Department of Software Systems and Cybersecurity,
+                Faculty of Information Technology, Monash University}
 \date{}
-
 % ─────────────────────────────────────────────────────────────────────────────
 
 \begin{document}
@@ -37,118 +37,225 @@
 
 % ── Abstract ─────────────────────────────────────────────────────────────────
 \begin{abstract}
-% TODO: Write abstract (~150 words)
-% Hint: Cover (1) problem motivation, (2) proposed approach, (3) key results.
+% TODO: ~150 words
+% Hint: Cover (1) problem — static questionnaires fail to reflect changing conditions,
+%       (2) approach — Navigator prototype with rule-based and LLM-based methods,
+%       (3) study — within-subjects user study, metrics: Clarity / Quality / Relevance,
+%       (4) key findings.
 \end{abstract}
 
 % ── Section 1: Introduction ───────────────────────────────────────────────────
 \section{Introduction}
 \label{sec:intro}
 
-% TODO: ~0.5 page
-% Subsections to cover:
-%   - Background: single-occupancy travel inefficiency, AV proliferation
-%   - Problem: energy waste without physical coordination between vehicles
-%   - Our approach: towing-based platoon formation (Active Vehicles tow Passive Vehicles)
-%   - Contributions: (1) problem formulation, (2) Greedy algorithm,
-%                    (3) Iterative Linear Assignment (ILA) algorithm
-%   - Paper structure overview
+Mental health is increasingly recognised as a critical component of overall well-being,
+yet the tools used to assess it in digital health applications have seen limited
+innovation. Most existing health-tracking applications rely on fixed, repetitive
+questionnaires — typically presented as weekly or monthly check-ins — that ask the same
+set of questions regardless of a user's current condition or history
+\citep{aihw2012, malanin2025}.
+This static approach fails to capture how a person's mental state evolves over time,
+often producing assessments that feel irrelevant or burdensome and recommendations that
+may be inaccurate or potentially harmful \citep{wang2023}.
+
+The emergence of Large Language Models (LLMs) offers a new opportunity to address this
+limitation. Unlike fixed rule-based branching logic, LLMs can dynamically generate
+context-aware questions informed by a user's individual health profile, prior responses,
+and longitudinal history \citep{tamquest2024, parkrobot2025}.
+This enables a more personalised and human-centric assessment experience, where questions
+adapt to what matters most for each individual at each point in time.
+
+To evaluate this opportunity, we developed \emph{Navigator}, a web-based prototype that
+implements two distinct monthly mental health check-in methods within the same
+application environment:
+\begin{itemize}
+  \item \textbf{Rule-based method:} predefined branching logic determines which
+        follow-up questions appear based on fixed risk-level thresholds.
+  \item \textbf{LLM-based method:} Google Gemini 2.5 Flash dynamically generates
+        personalised questions from the user's health profile and prior assessment data.
+\end{itemize}
+Using a within-subjects study design, participants interacted with both methods and
+completed a structured feedback survey evaluating each approach across three dimensions:
+\emph{Clarity}, \emph{Quality}, and \emph{Relevance}.
+
+This study aims to answer the following research questions:
+\begin{itemize}
+  \item \textbf{RQ1 (Clarity):} Do LLM-generated questionnaires produce higher perceived
+        clarity than rule-based questionnaires?
+  \item \textbf{RQ2 (Quality):} Do LLM-generated questionnaires produce higher perceived
+        quality than rule-based questionnaires?
+  \item \textbf{RQ3 (Relevance):} Do LLM-generated questionnaires produce higher perceived
+        relevance than rule-based questionnaires?
+\end{itemize}
+
+The main contributions of this work are:
+(1) the Navigator prototype — a Flutter web application implementing both methods within
+a unified interface;
+(2) a within-subjects user study design using a standardised persona (Sophie) to ensure
+fair comparison across conditions; and
+(3) an empirical evaluation of user perceptions of Clarity, Quality, and Relevance for
+LLM-based versus rule-based adaptive mental health questionnaires.
+
+The remainder of this paper is organised as follows.
+Section~\ref{sec:related} reviews related work on mental health questionnaire systems,
+LLMs in healthcare, and adaptive survey design.
+Section~\ref{sec:system} describes the system architecture and both methods.
+Section~\ref{sec:study} details the study design and evaluation metrics.
+Section~\ref{sec:results} presents the results, followed by discussion in
+Section~\ref{sec:discussion}, and conclusions in Section~\ref{sec:conclusion}.
 
 % ── Section 2: Related Work ───────────────────────────────────────────────────
 \section{Related Work}
 \label{sec:related}
 
-\subsection{Vehicle Platooning and Drafting}
-\label{subsec:platooning}
+\subsection{Mental Health Questionnaire Systems}
+\label{subsec:rw_mhq}
 % TODO: ~0.3 page
-% Cover: aerodynamic platooning, cooperative adaptive cruise control,
-%        key difference from our model (physical towing vs. aerodynamic drafting)
+% Cover: existing digital mental health check-in tools (PHQ-9, GAD-7),
+%        limitations of static question banks, periodic repetition fatigue.
 
-\subsection{Ridesharing and Vehicle Coordination}
-\label{subsec:ridesharing}
+\subsection{Large Language Models in Healthcare}
+\label{subsec:rw_llm}
+% TODO: ~0.3 page
+% Cover: LLM applications in clinical NLP, patient communication,
+%        personalised health information retrieval.
+%        Key gap: LLMs have not been evaluated for adaptive questionnaire
+%        generation in a controlled within-subjects study.
+
+\subsection{Adaptive Survey and Questionnaire Design}
+\label{subsec:rw_adaptive}
 % TODO: ~0.2 page
-% Cover: dial-a-ride, passenger-to-vehicle matching, multi-agent intersection control
-%        key difference: we do vehicle-to-vehicle coupling, not passenger placement
+% Cover: Computerised Adaptive Testing (CAT), branching logic in surveys,
+%        rule-based filtering vs. AI-driven personalisation.
 
-% ── Section 3: System Model and Problem Formulation ───────────────────────────
-\section{System Model and Problem Formulation}
-\label{sec:formulation}
+% ── Section 3: System Design ──────────────────────────────────────────────────
+\section{System Design}
+\label{sec:system}
 
-\subsection{Notation and Vehicle Definitions}
-\label{subsec:notation}
-% TODO: Define Active Vehicles (AVs) and Passive Vehicles (PVs)
-%       Include Table I: Notation Summary
+\subsection{Architecture Overview}
+\label{subsec:architecture}
+% TODO: ~0.3 page
+% Cover: Flutter web frontend, Supabase (PostgreSQL) backend,
+%        Google Gemini 2.5 Flash API for LLM question generation.
+%        Include system diagram figure.
 
-\subsection{Shared Path and Energy Model}
-\label{subsec:energy}
-% TODO: Define shared path distance d_ij, coupling/decoupling points (cp, dp),
-%       energy saving model S_ij = alpha * d_ij
+\subsection{Rule-Based Method}
+\label{subsec:rule_based}
+% TODO: ~0.3 page
+% Cover: BranchingEngine — predefined conditional logic,
+%        6 health domains (Mental Health, Dietary, Physical Activity,
+%        Alcohol, Smoking/Vaping, Women's Health),
+%        risk-level thresholds (None / Mild / Moderate / High),
+%        fixed follow-up question visibility rules.
 
-\subsection{Optimization Problem}
-\label{subsec:optproblem}
-% TODO: Formulate as constrained optimisation (Equations 2--5)
-%       Constraints: point-wise capacity, non-overlap, minimum segment length
+\subsection{LLM-Based Method}
+\label{subsec:llm_based}
+% TODO: ~0.3 page
+% Cover: Gemini 2.5 Flash prompt construction,
+%        personalised question generation from Sophie's Month-1 health snapshot,
+%        domain-level risk descriptions (SymptomDescriptions class),
+%        dynamic question adaptation based on longitudinal profile.
 
-\subsection{Temporal Synchronisation Constraints}
-\label{subsec:temporal}
-% TODO: Equation (6): |t_i^a(cp) - t_j^p(cp)| <= tau
-%       Explain why spatial overlap alone is insufficient
+\subsection{Persona-Based Scenario: Sophie}
+\label{subsec:sophie}
+% TODO: ~0.2 page
+% Cover: Mock participant profile — 24F, East Asian university student,
+%        Mild mental health risk (Month 1 baseline),
+%        rationale for using a fixed persona to ensure comparability
+%        across rule-based and LLM-based conditions.
 
-% ── Section 4: Proposed Algorithms ───────────────────────────────────────────
-\section{Proposed Algorithms}
-\label{sec:algorithms}
+% ── Section 4: Study Design ───────────────────────────────────────────────────
+\section{Study Design}
+\label{sec:study}
 
-\subsection{Greedy Maximum-Weight Matching}
-\label{subsec:greedy}
-% TODO: Algorithm 1 pseudocode, three phases (Initialisation, Candidate Generation, Greedy Selection)
-%       Complexity: O((NM)^2 log(NM))
+\subsection{Research Design}
+\label{subsec:research_design}
+% TODO: ~0.2 page
+% Cover: within-subjects design — all participants experience both methods,
+%        order counterbalanced to mitigate order effects.
 
-\subsection{Iterative Linear Assignment}
-\label{subsec:ila}
-% TODO: Algorithm 2 pseudocode, virtual-slot expansion, Jonker--Volgenant method
-%       Complexity: O(NM * max(K,M)^3)
+\subsection{Participants}
+\label{subsec:participants}
+% Cover: 18+ years old, university students and working professionals,
+%        recruited via Monash forums and LinkedIn,
+%        exclusion: Malaysian and Indonesian participants (ethics restriction),
+%        target N < 50 per group.
 
-\subsection{Theoretical Analysis}
-\label{subsec:theory}
-% TODO: Theorem 1 (Per-Iteration Optimality of ILA)
-%       Lemma 2 (Global Optimality Gap)
+\subsection{Procedure}
+\label{subsec:procedure}
+% TODO: ~0.3 page
+% Cover: Step 1 — Foundational Assessment (baseline health profile),
+%        Step 2a — Rule-based Monthly Check-In,
+%        Step 2b — LLM-based Monthly Check-In,
+%        Step 3 — Feedback survey (Google Form, Sections A--D),
+%        estimated total time: 10--15 minutes.
 
-% ── Section 5: Experimental Evaluation ───────────────────────────────────────
-\section{Experimental Evaluation}
-\label{sec:experiments}
+\subsection{Evaluation Metrics}
+\label{subsec:metrics}
+% TODO: ~0.2 page
+% Cover: 5-point Likert scale for each metric,
+%        Clarity  — question wording is clear and easy to understand,
+%        Quality  — questions are well-formed and meaningful,
+%        Relevance — questions are relevant to the participant's health context.
+%        Also: open-ended questions for qualitative feedback.
 
-\subsection{Experimental Setup}
-\label{subsec:setup}
-% TODO: Implementation (Python 3.11, NumPy, SciPy), synthetic scenario generation
-%       Include Table II: Experimental Parameters
-%       Metrics: Baseline Distance, Total Saving, Matched Ratio, Saving \%, Runtime
+% ── Section 5: Results and Analysis ──────────────────────────────────────────
+\section{Results and Analysis}
+\label{sec:results}
 
-\subsection{Results}
-\label{subsec:results}
-% TODO: Capacity Sweep (Table III), Highway Length Sweep (Table IV)
-%       Include Figures: Saving \% vs capacity, Saving \% vs highway length
+\subsection{Participant Demographics}
+\label{subsec:demographics}
+% TODO: Summarise age, occupation, gender distribution of final sample.
 
-\subsection{Discussion}
-\label{subsec:discussion}
-% TODO: ILA vs Greedy comparison, capacity impact, length effect,
-%       runtime observations (ILA 2.8--11.5x faster in practice)
+\subsection{Quantitative Results}
+\label{subsec:quant}
+% TODO: Report mean Likert scores (Clarity / Quality / Relevance)
+%       for Rule-based vs.\ LLM-based.
+%       Include Table: mean $\pm$ SD per metric per method.
+%       Statistical test (e.g., Wilcoxon signed-rank or paired t-test).
+
+\subsection{Qualitative Findings}
+\label{subsec:qual}
+% TODO: Thematic analysis of open-ended responses.
+%       Key themes: personalisation, question relevance, wording clarity,
+%       perceived usefulness.
+
+\subsection{Comparative Analysis}
+\label{subsec:comparison}
+% TODO: Side-by-side comparison of both methods across all three metrics.
+%       Highlight where LLM-based outperforms / underperforms rule-based.
+
+% ── Section 6: Discussion ─────────────────────────────────────────────────────
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{Interpretation of Results}
+\label{subsec:interpretation}
+% TODO: Relate findings back to RQ1--RQ3.
+%       Discuss why LLM-based may/may not outperform rule-based on each metric.
 
 \subsection{Limitations}
 \label{subsec:limitations}
-% TODO: 1-D highway abstraction, distance-based proxy, offline setting,
-%       per-iteration (not global) optimality of ILA
+% TODO:
+%   - Small sample size (< 50 per group)
+%   - Prototype fidelity (mock persona Sophie, not real patient data)
+%   - Single LLM provider (Gemini 2.5 Flash)
+%   - 1-D health snapshot; does not capture full longitudinal history
+%   - Self-reported metrics (perception, not clinical outcome)
 
-% ── Section 6: Conclusion ─────────────────────────────────────────────────────
+% ── Section 7: Conclusion ─────────────────────────────────────────────────────
 \section{Conclusion}
 \label{sec:conclusion}
-
 % TODO: ~0.3 page
-% Summarise: dynamic towing-based platoon formation framework,
-%            25--52\% coverage gains, ILA consistently matches/exceeds Greedy
+% Summarise: problem, approach, key findings, implications for adaptive
+% health questionnaire design.
 
 \subsection*{Future Work}
-% TODO: 2-D road networks, online/uncertain traffic, decentralised coordination,
-%       physics-based energy models, real-world trajectory validation
+% TODO:
+%   - Real patient data integration (beyond mock persona)
+%   - Longitudinal study across multiple monthly check-ins
+%   - Multiple LLM providers comparison
+%   - Clinical validation of question quality with domain experts
 
 % ── References ────────────────────────────────────────────────────────────────
 \bibliography{ENG_FIT_4701_2.bib}

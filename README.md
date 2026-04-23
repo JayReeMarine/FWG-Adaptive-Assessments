@@ -51,3 +51,24 @@ cd docs/flow-diagram
 npm install   # first time only
 npm run dev   # opens at http://localhost:5173
 ```
+
+## Academic Paper
+
+Source files are in `academic_paper/`. Requires [MacTeX](https://www.tug.org/mactex/) (already installed).
+
+### Compile
+
+```bash
+cd academic_paper
+
+# First time, or after adding new references to the .bib file:
+/Library/TeX/texbin/pdflatex ENG_FIT_4701_2.tex
+/Library/TeX/texbin/bibtex   ENG_FIT_4701_2
+/Library/TeX/texbin/pdflatex ENG_FIT_4701_2.tex
+/Library/TeX/texbin/pdflatex ENG_FIT_4701_2.tex
+
+# Quick recompile (no .bib changes):
+/Library/TeX/texbin/pdflatex ENG_FIT_4701_2.tex
+```
+
+Output: `academic_paper/ENG_FIT_4701_2.pdf`

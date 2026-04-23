@@ -1,0 +1,133 @@
+\documentclass[letterpaper,11pt]{article}
+
+% All these packages you need, if you need any others you can
+% add them here.
+\usepackage{authblk}
+\usepackage{natbib}
+\usepackage{authblk}
+\usepackage{geometry}
+\usepackage{graphicx}
+
+% Do not change the bibliography style.
+\bibliographystyle{ENG_FIT_4701_2}
+
+% Do not change the paper geometry.
+\geometry{top=1cm}
+\geometry{bottom=1cm}
+\geometry{left=1cm,right=1cm}
+\geometry{footskip=0.5cm}
+
+% Here you enter your project data. Make sure not to
+% list the same Department more than once.
+\title{Intelligent Adaptive Assessment}
+\author[1]{Author 1}
+\author[2]{Author 2}
+\author[3]{Author 3}
+\affil[1,3]{Department of Civil and Environmental Engineering}
+\affil[2]{Department of Mechanical and Aerospace Engineering}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Write your abstract here.
+\end{abstract}
+
+\section{Introduction}
+
+From here on you start writing your paper. You are free to choose
+any structure you want, the only three sections that you need are
+\begin{itemize}
+\item
+Abstract
+\item
+Introduction
+\item
+Conclusion
+\end{itemize}
+The references are automatically generated. Examples of tables
+and figures are given in Section \ref{sec:fig_tab}.
+Section \ref{sec:oth_imp} lists some more things
+to pay attention to.
+You can cite a reference at the end of a sentence
+as \citep{nashandsutcliffe70}.
+\citet{nashandsutcliffe70} is the way to cite a reference in
+a sentence.
+
+\section{Examples of Figures and Tables}
+\label{sec:fig_tab}
+
+Table \ref{tab:C8_R2} shows an example of a table.
+Figure \ref{fig:Wat_Dens} shows an example of a figure.
+\begin{table}[h]
+\begin{center}
+\caption{An example of a table with 8 columns and 2 rows.}
+\label{tab:C8_R2}
+\begin{tabular}{l|llllll|l}
+\hline
+ & \multicolumn{6}{c|}{Columns with a merged heading} &
+\\
+Index & C2 & C3 & C4 & C5 & C6 & C7 & Last column
+\\
+\hline
+1 & R12 & R13 & R14 & R15 & R16 & R17 & R18
+\\
+2 & R22 & R23 & R24 & R25 & R26 & R27 & R28
+\\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=14cm]{Water_Density.jpg}
+\caption{The density of water as a function of the temperature.}
+\label{fig:Wat_Dens}
+\end{center}
+\end{figure}
+
+\section{Other Things to Pay Attention to}
+\label{sec:oth_imp}
+
+\begin{itemize}
+\item
+{\bf For FYP A the page limit is strictly 4 pages,
+while for FYP B the page limit is strictly 10 pages. Appendices are
+\underline{not} allowed.}
+\item
+Make sure to write the nouns and verbs in the project title, Department names,
+and section and subsection headings with an uppercase first letter.
+\item
+An equation can be written like this:
+\begin{equation}
+q_i = \displaystyle \frac{K_i}{c_i} e^{-c_i z_i} \textup{tan} ( \beta_i)
+\label{eq:q_i}
+\end{equation}
+$q_i$ is the baseflow per unit width (m$^2$s$^{-1}$),
+$K_i$ the hydraulic conductivity (ms$^{-1}$),
+$c_i$ the exponential decay coefficient (m$^{-1}$),
+$z_i$ the depth to the water table (m),
+and $\beta_i$ the slope of the land surface.
+As is shown for Equation \ref{eq:q_i},
+always make sure to explain all the variables in your equations,
+and also to add the units or dimensions.
+\item
+It is recommended to write in the passive as much as possible.
+Thus, write ``The measurements were taken with a temporal interval of
+15 seconds" instead of ``we took the measurements with a temporal
+interval of 15 seconds".
+\item
+In the tab ``Getting Started" on moodle there is a large
+amount of information on how to perform a literature search.
+\end{itemize}
+
+\input{section_in_a_separate_file}
+
+\section{Conclusion}
+
+\bibliography{ENG_FIT_4701_2.bib}
+ 
+\end{document}

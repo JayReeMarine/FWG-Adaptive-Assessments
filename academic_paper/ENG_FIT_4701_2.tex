@@ -120,25 +120,162 @@ Section~\ref{sec:discussion}, and conclusions in Section~\ref{sec:conclusion}.
 \section{Related Work}
 \label{sec:related}
 
-\subsection{Mental Health Questionnaire Systems}
-\label{subsec:rw_mhq}
-% TODO: ~0.3 page
-% Cover: existing digital mental health check-in tools (PHQ-9, GAD-7),
-%        limitations of static question banks, periodic repetition fatigue.
+Although the broader Navigator project was initially framed around adaptive
+assessment across multiple chronic-disease domains \citep{aihw2012}, this paper
+narrows the evaluation to mental health check-ins, which provide a concrete,
+high-impact, and survey-feasible context for comparing rule-based and LLM-based
+adaptation methods. We accordingly organise prior work along three lines that
+progressively narrow toward our research question. We first review the dominant
+paradigm of static, validated mental health instruments and the limitations
+they impose on longitudinal self-report. We then survey existing adaptive
+questionnaire strategies --- from computerised adaptive testing to rule-based
+interface adaptation, and most recently to LLM-generated patient-reported
+outcome measures. Finally, we examine the emerging body of work on LLM-based
+mental health systems, identifying both their promise and the safety
+considerations that constrain their design. We conclude by introducing the
+COSMIN content-validity framework \citep{terwee2018}, which provides the three
+evaluation dimensions used in this study.
 
-\subsection{Large Language Models in Healthcare}
-\label{subsec:rw_llm}
-% TODO: ~0.3 page
-% Cover: LLM applications in clinical NLP, patient communication,
-%        personalised health information retrieval.
-%        Key gap: LLMs have not been evaluated for adaptive questionnaire
-%        generation in a controlled within-subjects study.
+\subsection{Mental Health Assessment and Static Instruments}
+\label{subsec:rw_static}
 
-\subsection{Adaptive Survey and Questionnaire Design}
+Mental health screening in primary care and digital health applications has
+long relied on standardised, fixed-item self-report instruments. The Patient
+Health Questionnaire-9 (PHQ-9) for depression \citep{kroenke2001} and the
+Generalised Anxiety Disorder-7 (GAD-7) scale \citep{spitzer2006} remain
+among the most widely used tools, demonstrating strong sensitivity and specificity
+(both 88\% for PHQ-9 $\geq 10$; 89\% and 82\% for GAD-7 $\geq 10$) and
+providing interpretable severity cut-offs across diverse populations. Their
+brevity, transparency, and validated scoring make them attractive for
+integration into digital platforms aimed at routine, longitudinal mental
+health monitoring.
+
+However, the very stability that gives these instruments their psychometric
+Strength also imposes meaningful limitations on user experience. Static
+questionnaires repeat the same items at every administration, regardless of a
+user's current state or response history. Repeated exposure to identical
+wording can lead to response fatigue and reduced engagement, particularly in
+longitudinal self-report scenarios where users complete the same scale weekly
+or monthly \citep{gibbons2008, choi2010, malanin2025}. Ecological momentary assessment studies have
+documented this problem directly: in a 28-day smartphone-based depression
+study, only seven of eleven participants completed the full protocol and the
+average daily response rate was 62.5\% \citep{maatoug2021}, suggesting that
+Repeated digital self-report can suffer from engagement and completion issues
+challenges, even when the underlying measures are clinically meaningful.
+
+Beyond engagement, fixed wording can raise concerns about content validity.
+\citet{baas2011} demonstrated that one PHQ-9 item exhibited measurement
+non-invariance across ethnic groups, revealing cultural bias in supposedly
+universal items. \citet{wild2005} similarly argues that questionnaire wording
+must be treated as a structured design and validation problem rather than a
+literal translation. These findings indicate that even well-validated
+instruments carry implicit assumptions about who the respondent is and how
+they interpret each item --- assumptions that adaptive systems may help identify and mitigate through
+more context-sensitive wording and item selection.
+
+\subsection{Adaptive Questionnaire Approaches}
 \label{subsec:rw_adaptive}
-% TODO: ~0.2 page
-% Cover: Computerised Adaptive Testing (CAT), branching logic in surveys,
-%        rule-based filtering vs. AI-driven personalisation.
+
+To mitigate the burden and rigidity of static instruments, prior work has
+explored adaptive questioning strategies. The most established approach is
+Computerised Adaptive Testing (CAT), which uses item response theory to select
+The most informative items based on prior responses. \citet{gibbons2008}
+demonstrated that the CAT-based assessment of mood and anxiety disorders reduced
+the number of administered items by approximately 95\% relative to a full
+item bank, while preserving strong correlation with the full-scale score.
+\citet{choi2010} likewise compared static short forms, two-stage branching,
+and CAT against the full PROMIS depression item bank, finding that CAT
+outperformed static short forms on most performance criteria, with two-stage
+semi-adaptive testing approaching CAT-level performance.
+
+A parallel line of work has examined rule-based adaptive interfaces in broader
+health contexts. In a systematic review of adaptive user interfaces for
+chronic disease, \citet{wang2023} identify three dominant adaptation
+strategies: rule-based ``if--then'' logic, machine-learning-driven prediction,
+and feedback-loop systems that revise content based on accumulating user
+data. Although rule-based approaches dominate the surveyed literature due to
+Their interpretability and low computational overhead, they are bounded by
+The comprehensiveness of their predefined rules prevents them from adapting to contexts
+The designer did not anticipate. Closed-loop systems, which integrate
+continuous data collection with iterative refinement remains comparatively
+rare \citep{brown2022}.
+
+A more recent direction extends adaptation beyond item selection toward item
+generation. \citet{terheyden2025} introduces the concept of LLM-powered
+Patient-Reported Outcome Measures (LLM-PROMs), in which large language models
+generate personalised open-ended items and interpret responses against
+established psychometric scaffolds. Their framework argues that LLM-based
+PROMs should be developed from validated content and benchmarked against
+fixed instruments to preserve content validity. This conceptual shift ---
+from \emph{selecting} items in a finite bank to \emph{generating} items
+conditioned on user context --- defines the design space we examine in this
+paper. Unlike CAT, which adapts by selecting from a validated item bank,
+LLM-based methods can also alter wording or generate new follow-up prompts,
+creating both opportunities for personalisation and additional risks for
+validity.
+
+\subsection{LLM-Based Systems in Mental Health}
+\label{subsec:rw_llm_mh}
+
+The emergence of large language models has accelerated interest in
+conversational and adaptive mental health tools, but evidence on their
+efficacy and safety remains preliminary. In the most comprehensive review to
+date, \citet{hua2025} surveyed 160 mental health chatbot studies published
+between 2020 and 2024, classifying them as rule-based, machine-learning-based,
+or LLM-based. Their analysis reveals an important asymmetry: although LLM-based
+Systems grew rapidly in 2024, they remain concentrated in early-stage
+validation, while rule-based systems still dominate later-stage human and
+clinical testing. This positioning motivates our study as a pilot, user-centred
+feasibility evaluation rather than a clinical efficacy trial.
+
+User-facing evidence further suggests that LLM behaviour in mental health is
+highly condition-dependent. \citet{li2025llm} analysed 112{,}698 social-media
+posts about LLM use for mental health and found that sentiment varied
+substantially across conditions: users with ADHD and ASD reported strongly
+positive experiences (sentiment scores of 0.722 and 0.557 respectively),
+whereas schizophrenia-spectrum discussions reported strongly negative
+sentiment ($-0.569$), often describing chatbot responses that appeared to
+intensify delusional thinking. Complementing this, \citet{shen2026} conducted
+a clinician-blind evaluation of multiple LLM versions on 158 prompts and found
+that no tested model reliably produced appropriate responses to psychotic
+content. Together, these findings establish two requirements for any LLM-based
+mental health tool: condition-aware framing and explicit safety boundaries.
+This distinction is also important for our setting: questionnaire systems do
+not aim to provide therapeutic dialogue, but rather to elicit structured,
+interpretable self-reports through clear and relevant prompts. The risks
+identified in conversational LLM use therefore translate, but do not transfer
+directly, into the design constraints for LLM-generated questionnaire items.
+
+Despite this growing body of work, limited prior research has directly
+compared rule-based and LLM-based adaptive questionnaires within a unified
+application using a controlled, within-subjects evaluation. Existing
+comparisons either contrast different chatbot generations against one another
+\citep{hua2025}, study LLM use in unstructured user discussions
+\citep{li2025llm}, or evaluate adaptive item \emph{selection} without
+addressing LLM-generated \emph{wording} \citep{gibbons2008, choi2010}. Our
+work addresses this gap by holding the application environment, the evaluation
+persona, and the participant group constant, thereby isolating the effect of
+the adaptation method itself.
+
+\subsection{Evaluation Framework: Content Validity via COSMIN}
+\label{subsec:rw_cosmin}
+
+To evaluate the two adaptation methods on common ground, we adopt the COSMIN
+content-validity framework \citep{terwee2018}. Drawing on an international
+Delphi study of 159 experts, COSMIN formalises content validity along three
+dimensions --- \emph{relevance}, \emph{comprehensiveness}, and
+\emph{comprehensibility} --- for the target population and context of use. We
+map these directly onto the three evaluation metrics used in this paper:
+\emph{comprehensibility} corresponds to \emph{Clarity} (whether the wording is
+easy to understand), \emph{relevance} corresponds to \emph{Relevance} (whether
+the items fit the participant's context), and \emph{comprehensiveness}
+corresponds to perceived \emph{Quality} --- since participants are asked to
+judge whether each adaptive question appears complete, appropriate, and
+useful within the monthly mental-health check-in context (see
+Section~\ref{subsec:metrics}). This grounding provides a principled basis for
+comparing rule-based and LLM-based adaptive questionnaires that draws on
+established patient-reported-outcome methodology rather than ad-hoc usability
+heuristics.
 
 % ── Section 3: System Design ──────────────────────────────────────────────────
 \section{System Design}

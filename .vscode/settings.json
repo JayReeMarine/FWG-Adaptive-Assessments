@@ -1,0 +1,23 @@
+{
+  "latex-workshop.latex.tools": [
+    {
+      "name": "pdflatex",
+      "command": "/Library/TeX/texbin/pdflatex",
+      "args": ["-interaction=nonstopmode", "-synctex=1", "%DOC%"]
+    },
+    {
+      "name": "bibtex",
+      "command": "/Library/TeX/texbin/bibtex",
+      "args": ["%DOCFILE%"]
+    }
+  ],
+  "latex-workshop.latex.recipes": [
+    {
+      "name": "pdflatex → bibtex → pdflatex × 2",
+      "tools": ["pdflatex", "bibtex", "pdflatex", "pdflatex"]
+    }
+  ],
+  "latex-workshop.latex.recipe.default": "pdflatex → bibtex → pdflatex × 2",
+  "latex-workshop.view.pdf.viewer": "browser",
+  "latex-workshop.latex.outDir": "%DIR%"
+}

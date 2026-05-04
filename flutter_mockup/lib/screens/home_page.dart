@@ -200,12 +200,11 @@ class _HomePageState extends State<HomePage> {
   // ── Foundational Assessment card ──────────────────────────────────────────
 
   Widget _buildFoundationalCard() {
-    return Card(
-      elevation: 1,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(16),
-        onTap: () => _startSurvey(SurveyType.foundational),
+    return Opacity(
+      opacity: 0.5,
+      child: Card(
+        elevation: 0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: Row(
@@ -214,14 +213,12 @@ class _HomePageState extends State<HomePage> {
                 width: 48,
                 height: 48,
                 decoration: BoxDecoration(
-                  color: _foundationalDone
-                      ? Colors.green.withValues(alpha: 0.1)
-                      : AppColors.primary.withValues(alpha: 0.1),
+                  color: Colors.green.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(
-                  _foundationalDone ? Icons.check_circle : Icons.assignment_outlined,
-                  color: _foundationalDone ? Colors.green : AppColors.primary,
+                child: const Icon(
+                  Icons.check_circle,
+                  color: Colors.green,
                   size: 26,
                 ),
               ),
@@ -231,11 +228,11 @@ class _HomePageState extends State<HomePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      'Foundational Assessment',
+                      'Foundational Assessment  (Pre-filled — not part of the survey)',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.textPrimary,
+                        color: AppColors.textSecondary,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -247,21 +244,19 @@ class _HomePageState extends State<HomePage> {
                         color: AppColors.textSecondary,
                       ),
                     ),
-                    if (_foundationalDone) ...[
-                      const SizedBox(height: 6),
-                      const Text(
-                        '✓ Completed',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.green,
-                          fontWeight: FontWeight.w600,
-                        ),
+                    const SizedBox(height: 6),
+                    const Text(
+                      '✓ Pre-filled with Sophie\'s persona',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.green,
+                        fontWeight: FontWeight.w600,
                       ),
-                    ],
+                    ),
                   ],
                 ),
               ),
-              const Icon(Icons.chevron_right, color: AppColors.textSecondary),
+              const Icon(Icons.lock_outline, color: AppColors.textSecondary),
             ],
           ),
         ),

@@ -476,34 +476,130 @@ remaining relatable to the predominantly university-aged participant pool.
 \subsection{Research Design}
 \label{subsec:research_design}
 \label{sec:study}
-% TODO: ~0.2 page
-% Cover: within-subjects design, with all participants experiencing both methods,
-%        order counterbalanced to mitigate order effects.
+
+This study uses a within-subjects design: every participant interacts
+with both the rule-based and the LLM-based monthly check-in methods and
+then rates each on the same set of evaluation items. The within-subjects
+approach was chosen because it allows each participant to serve as their
+own control, increasing statistical sensitivity to differences between
+methods while requiring fewer participants than a between-subjects
+design.
+
+Participants completed the rule-based check-in first, followed by the
+LLM-based check-in. This fixed presentation order was adopted because
+the rule-based condition establishes a baseline context that participants
+can reference when evaluating the LLM-based adaptations; the LLM method
+is designed to improve upon the specific limitations of the rule-based
+output (see Table~\ref{tab:comparison}), and viewing the baseline first
+makes these improvements interpretable. Counterbalancing was not
+implemented. We acknowledge this as a limitation: order effects cannot be
+fully ruled out, and this is discussed further in
+Section~\ref{subsec:limitations}.
+
+The study was approved by the Monash University Human Research Ethics
+Committee (MUHREC) under a Non-HREC (Lower Risk) review (Project
+ID~51664). All participants were fully informed of the study's purpose
+and provided consent via a written explanatory statement before
+beginning.
 
 \subsection{Participants}
 \label{subsec:participants}
-% Cover: 18+ years old, university students and working professionals,
-%        recruited via Monash forums and LinkedIn,
-%        exclusion: Malaysian and Indonesian participants (ethics restriction),
-%        target N < 50 per group.
+
+Participants were recruited through convenience sampling via direct
+contact with peers, classmates, and personal networks. Eligible
+participants were adults aged 18 years or older, comprising university
+students and working professionals. No monetary compensation or
+reimbursement was offered. In accordance with the ethics approval,
+students enrolled at Monash University Malaysia and Indonesia campuses
+were excluded from recruitment, as the approval was scoped to the
+Australian campus.
+
+% TODO: Report actual sample size and demographics once data collection
+% is complete (e.g., total N, age range, gender distribution).
 
 \subsection{Procedure}
 \label{subsec:procedure}
-% TODO: ~0.3 page
-% Cover: Step 1, Foundational Assessment (baseline health profile),
-%        Step 2a, Rule-based Monthly Check-In,
-%        Step 2b, LLM-based Monthly Check-In,
-%        Step 3, Feedback survey (Google Form, Sections A--D),
-%        estimated total time: 10--15 minutes.
+
+Each participant completed the study independently in a single
+session, following a four-step procedure:
+
+\begin{enumerate}
+  \item \textbf{Orientation.} Participants received a link to the
+        Navigator prototype along with a user guide explaining the
+        application interface and the Sophie persona. The guide
+        described Sophie's demographics, her Month~1 health snapshot,
+        and the purpose of the monthly check-in. Participants were
+        instructed to evaluate the questionnaire from Sophie's
+        perspective.
+
+  \item \textbf{Rule-based check-in.} Participants completed Sophie's
+        Month~2 mental health check-in using the rule-based method. The
+        branching engine determined which follow-up questions appeared
+        based on their responses to the pre-filled baseline items.
+        Three questions were presented; the functional-impact item
+        remained hidden because the branching rule's threshold was not
+        met (Table~\ref{tab:comparison}).
+
+  \item \textbf{LLM-based check-in.} Participants then completed the
+        same Month~2 check-in using the LLM-based method, which
+        presented the transformed questions generated from Sophie's
+        longitudinal profile. The interface layout and interaction
+        pattern were identical to the rule-based condition.
+
+  \item \textbf{Feedback survey.} After completing both check-ins,
+        participants were directed to an external Google Form survey
+        comprising five sections:
+        \emph{Section~A} (Demographics) collected age range, gender,
+        health-app usage frequency, and student/professional status;
+        \emph{Section~B} (Clarity), \emph{Section~C} (Relevance), and
+        \emph{Section~D} (Quality) each contained three 5-point Likert
+        items, where every item was rated for both the rule-based and
+        LLM-based methods side by side;
+        \emph{Section~E} (Overall Experience) asked participants to
+        indicate their overall preference among four options (rule-based,
+        LLM-based, both, or neither) and to provide free-text feedback.
+        Sections~B and~D also included an open-ended question each,
+        yielding three open-ended prompts in total.
+\end{enumerate}
+
+The entire session, including prototype interaction and survey
+completion, was estimated to take 10--15 minutes.
 
 \subsection{Evaluation Metrics}
 \label{subsec:metrics}
-% TODO: ~0.2 page
-% Cover: 5-point Likert scale for each metric,
-%        Clarity: question wording is clear and easy to understand,
-%        Quality: questions are well-formed and meaningful,
-%        Relevance: questions are relevant to the participant's health context.
-%        Also: open-ended questions for qualitative feedback.
+
+Evaluation metrics are grounded in the three content-validity dimensions
+identified by the COSMIN framework \cite{terwee2018}, mapped to the
+study context as follows:
+
+\begin{itemize}
+  \item \textbf{Clarity} (COSMIN \emph{comprehensibility}): whether the
+        questionnaire wording is clear and easy to understand.
+  \item \textbf{Quality} (COSMIN \emph{comprehensiveness}): whether the
+        questions are well-formed, meaningful, and complete within the
+        monthly check-in context.
+  \item \textbf{Relevance} (COSMIN \emph{relevance}): whether the
+        questions are appropriate and pertinent to Sophie's health
+        profile and circumstances.
+\end{itemize}
+
+Each dimension was measured using three Likert-scale items rated from~1
+(\emph{Strongly Disagree}) to~5 (\emph{Strongly Agree}). Each item was
+presented as a side-by-side matrix in which participants rated both the
+rule-based and LLM-based methods on the same screen, yielding nine
+paired ratings (18~data points) per participant. The three items within
+each dimension were averaged to produce a single composite score for
+Clarity, Quality, and Relevance for each method.
+
+In addition, three open-ended questions were embedded across the survey
+sections: one within the Clarity section (asking about confusing or
+unclear questions), one within the Quality section (asking participants
+to compare how each version felt to complete), and one in the Overall
+Experience section (inviting general feedback on both methods). These
+qualitative responses supplement the Likert data by surfacing themes
+that structured items may not capture. A final preference item asked
+participants to select among four options: rule-based method, LLM-based
+method, both, or neither.
 
 % ── Section 5: Results and Analysis ──────────────────────────────────────────
 \section{Results and Analysis}

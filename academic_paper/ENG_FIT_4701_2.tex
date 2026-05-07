@@ -6,6 +6,12 @@
 \usepackage{booktabs}
 \usepackage{hyperref}
 
+% Reduce aggressive end-of-line hyphenation so the prose reads more naturally.
+\pretolerance=10000
+\hyphenpenalty=9000
+\exhyphenpenalty=9000
+\emergencystretch=2em
+
 % Do not change the bibliography style.
 \bibliographystyle{IEEEtran}
 
@@ -15,7 +21,7 @@
        Questionnaires: A Human-Centric User Study}
 
 \author{
-  \IEEEauthorblockN{Jaeyun Ree, Khang Nguyen, Zachary Yeap, ABM Russel}
+  \IEEEauthorblockN{Jaeyun Ree, Khang Nguyen, Zachary Yeap}
   \IEEEauthorblockA{Department of Software Systems and Cybersecurity\\
                     Faculty of Information Technology, Monash University}
 }
@@ -28,9 +34,9 @@
 % ── Abstract ─────────────────────────────────────────────────────────────────
 \begin{abstract}
 % TODO: ~150 words
-% Hint: Cover (1) problem — static questionnaires fail to reflect changing conditions,
-%       (2) approach — Navigator prototype with rule-based and LLM-based methods,
-%       (3) study — within-subjects user study, metrics: Clarity / Quality / Relevance,
+% Hint: Cover (1) problem: static questionnaires fail to reflect changing conditions,
+%       (2) approach: Navigator prototype with rule-based and LLM-based methods,
+%       (3) study: within-subjects user study, metrics: Clarity / Quality / Relevance,
 %       (4) key findings.
 \end{abstract}
 
@@ -48,8 +54,8 @@ are clinically validated, their rigid format can feel repetitive and burdensome,
 often fails to reflect how a person's mental state evolves over time
 \cite{malanin2025}.
 
-Adaptive questionnaire techniques — such as branching logic and computerised adaptive
-testing — have been introduced to partially address this limitation by tailoring item
+Adaptive questionnaire techniques, such as branching logic and computerised adaptive
+testing, have been introduced to partially address this limitation by tailoring item
 sequences to user input \cite{wang2023}. However, these rule-based mechanisms remain
 bounded by predefined decision trees and cannot generate new items or reframe questions
 based on a user's individual context. Recent advances in Large Language Models (LLMs)
@@ -59,7 +65,7 @@ be explored as engines for patient-reported outcome measures \cite{terheyden2025
 
 Despite this promise, the use of LLMs in mental health remains at an early stage. A
 recent systematic review of mental health chatbots highlights that most existing systems
-are still rule-based, and that LLM-based designs — while more flexible — introduce
+are still rule-based, and that LLM-based designs, while more flexible, introduce
 new concerns around safety, appropriateness, and clinical reliability
 \cite{hua2025, li2025llm, shen2026}. To our knowledge, no prior work has directly
 compared rule-based and LLM-based adaptive mental health questionnaires within a
@@ -91,7 +97,7 @@ This study aims to answer the following research questions:
 \end{itemize}
 
 The main contributions of this work are:
-(1) the Navigator prototype — a Flutter web application implementing both rule-based
+(1) the Navigator prototype, a Flutter web application implementing both rule-based
 and LLM-based adaptive questionnaires within a unified interface;
 (2) a within-subjects user study design using a standardised persona to ensure fair
 comparison across conditions; and
@@ -101,8 +107,9 @@ and Relevance for LLM-based versus rule-based adaptive mental health questionnai
 The remainder of this paper is organised as follows.
 Section~\ref{sec:related} reviews related work on mental health questionnaire systems,
 LLMs in healthcare, and adaptive survey design.
-Section~\ref{sec:system} describes the system architecture and both methods.
-Section~\ref{sec:study} details the study design and evaluation metrics.
+Section~\ref{sec:system} presents the methodology, covering the research
+approach, system design, controlled scenario, study design, and
+evaluation metrics.
 Section~\ref{sec:results} presents the results, followed by discussion in
 Section~\ref{sec:discussion}, and conclusions in Section~\ref{sec:conclusion}.
 
@@ -118,7 +125,7 @@ adaptation methods. We accordingly organise prior work along three lines that
 progressively narrow toward our research question. We first review the dominant
 paradigm of static, validated mental health instruments and the limitations
 they impose on longitudinal self-report. We then survey existing adaptive
-questionnaire strategies --- from computerised adaptive testing to rule-based
+questionnaire strategies, from computerised adaptive testing to rule-based
 interface adaptation, and most recently to LLM-generated patient-reported
 outcome measures. Finally, we examine the emerging body of work on LLM-based
 mental health systems, identifying both their promise and the safety
@@ -160,8 +167,8 @@ universal items. Wild et al.\ \cite{wild2005} similarly argues that questionnair
 must be treated as a structured design and validation problem rather than a
 literal translation. These findings indicate that even well-validated
 instruments carry implicit assumptions about who the respondent is and how
-they interpret each item --- assumptions that adaptive systems may help identify and mitigate through
-more context-sensitive wording and item selection.
+they interpret each item. Adaptive systems may help identify and mitigate these
+assumptions through more context-sensitive wording and item selection.
 
 \subsection{Adaptive Questionnaire Approaches}
 \label{subsec:rw_adaptive}
@@ -196,9 +203,9 @@ Patient-Reported Outcome Measures (LLM-PROMs), in which large language models
 generate personalised open-ended items and interpret responses against
 established psychometric scaffolds. Their framework argues that LLM-based
 PROMs should be developed from validated content and benchmarked against
-fixed instruments to preserve content validity. This conceptual shift ---
-from \emph{selecting} items in a finite bank to \emph{generating} items
-conditioned on user context --- defines the design space we examine in this
+fixed instruments to preserve content validity. This conceptual shift, from
+\emph{selecting} items in a finite bank to \emph{generating} items
+conditioned on user context, defines the design space we examine in this
 paper. Unlike CAT, which adapts by selecting from a validated item bank,
 LLM-based methods can also alter wording or generate new follow-up prompts,
 creating both opportunities for personalisation and additional risks for
@@ -253,13 +260,13 @@ the adaptation method itself.
 To evaluate the two adaptation methods on common ground, we adopt the COSMIN
 content-validity framework \cite{terwee2018}. Drawing on an international
 Delphi study of 159 experts, COSMIN formalises content validity along three
-dimensions --- \emph{relevance}, \emph{comprehensiveness}, and
-\emph{comprehensibility} --- for the target population and context of use. We
+dimensions: \emph{relevance}, \emph{comprehensiveness}, and
+\emph{comprehensibility}, for the target population and context of use. We
 map these directly onto the three evaluation metrics used in this paper:
 \emph{comprehensibility} corresponds to \emph{Clarity} (whether the wording is
 easy to understand), \emph{relevance} corresponds to \emph{Relevance} (whether
 the items fit the participant's context), and \emph{comprehensiveness}
-corresponds to perceived \emph{Quality} --- since participants are asked to
+corresponds to perceived \emph{Quality}, since participants are asked to
 judge whether each adaptive question appears complete, appropriate, and
 useful within the monthly mental-health check-in context (see
 Section~\ref{subsec:metrics}). This grounding provides a principled basis for
@@ -267,50 +274,210 @@ comparing rule-based and LLM-based adaptive questionnaires that draws on
 established patient-reported-outcome methodology rather than ad-hoc usability
 heuristics.
 
-% ── Section 3: System Design ──────────────────────────────────────────────────
-\section{System Design}
+% ── Section 3: Methodology ───────────────────────────────────────────────────
+\section{Methodology}
 \label{sec:system}
+
+This section presents the end-to-end methodology used in this study.
+The research proceeded through six stages: (1)~a literature review of
+static and adaptive mental health instruments to identify the limitations
+that motivate this work (Section~\ref{sec:related}); (2)~identification
+of validated questionnaire items, drawing primarily on the PHQ-9
+\cite{kroenke2001} and GAD-7 \cite{spitzer2006}, and a decision to
+focus the evaluation on the mental health domain; (3)~design and
+implementation of two adaptation methods, rule-based and LLM-based,
+within a unified web-based prototype
+(Sections~\ref{subsec:architecture}--\ref{subsec:llm_based});
+(4)~construction of a controlled evaluation scenario using a standardised
+persona (Section~\ref{subsec:sophie}); (5)~design of a within-subjects
+user study with a COSMIN-grounded feedback survey
+(Sections~\ref{subsec:research_design}--\ref{subsec:metrics}); and
+(6)~data collection and analysis (Section~\ref{sec:results}).
+
+The prototype was designed as an evaluation instrument rather than a
+production system: its purpose is to present both methods within a
+single, controlled application environment so that user perceptions can
+be compared fairly. Architectural choices, including a shared interface, fixed
+persona, and identical health domains, were therefore driven by the
+evaluation design.
 
 \subsection{Architecture Overview}
 \label{subsec:architecture}
-% TODO: ~0.3 page
-% Cover: Flutter web frontend, Supabase (PostgreSQL) backend,
-%        Google Gemini 2.5 Flash API for LLM question generation.
-%        Include system diagram figure.
+
+Navigator is implemented as a Flutter web application backed by Supabase
+(PostgreSQL) for question storage and branching-rule definitions. A
+single-page interface presents foundational intake questions, monthly
+check-ins for six health domains (Mental Health, Dietary, Physical
+Activity, Alcohol, Smoking/Vaping, and Women's Health), and a results
+dashboard. Although the broader prototype supports all six domains, the
+present study evaluates only the Mental Health monthly check-in pathway,
+which provides a concrete and high-impact context for comparing
+adaptation methods. Both the rule-based and LLM-based monthly check-in methods
+share the same front-end layout, question rendering components, and
+scoring pipeline, so that any difference participants observe can be
+attributed to the adaptation method itself rather than to interface
+variation.
+
+For LLM-based question generation, the application calls the Google
+Gemini~2.5 Flash API. This model was selected for its low latency and
+structured-output support (native JSON response mode), which are
+practical requirements for generating questionnaire items in real time
+within a web application. A deterministic fallback path returns
+pre-authored enhanced questions if the API is unavailable, ensuring that
+every participant in the study receives the same enhanced questionnaire
+content regardless of network conditions.
 
 \subsection{Rule-Based Method}
 \label{subsec:rule_based}
-% TODO: ~0.3 page
-% Cover: BranchingEngine — predefined conditional logic,
-%        6 health domains (Mental Health, Dietary, Physical Activity,
-%        Alcohol, Smoking/Vaping, Women's Health),
-%        risk-level thresholds (None / Mild / Moderate / High),
-%        fixed follow-up question visibility rules.
+
+The rule-based method adapts monthly check-in questionnaires through a
+branching engine that evaluates predefined conditional rules after each
+user response. Each rule is a triple of \emph{trigger question},
+\emph{boolean expression}, and \emph{target action}. When a user answers
+the trigger question, the engine evaluates the expression against the
+response value; if the condition is met, the target questions are shown
+or hidden accordingly. This approach mirrors the ``if--then'' rule-based
+adaptation strategy identified as the dominant paradigm in chronic-disease
+adaptive interfaces \cite{wang2023}.
+
+Rules operate on single-question, single-timepoint data: a rule can
+reference the current answer to one question but cannot access prior
+month responses or aggregate longitudinal patterns. For the Mental Health
+domain, risk levels are classified at the domain level using
+project-specific percentage-based thresholds loosely inspired by the
+PHQ-9 severity bands \cite{kroenke2001}: scores below 25\% of the
+domain maximum are classified as \emph{None}, 25--50\% as \emph{Mild},
+50--75\% as \emph{Moderate}, and above 75\% as \emph{High}. These
+thresholds are a simplified mapping for the prototype and do not
+correspond directly to the validated PHQ-9 cut-off scores.
+
+A concrete example illustrates the method's limitation.
+Table~\ref{tab:comparison} lists the mental health questions presented
+under each method in Sophie's scenario
+(Section~\ref{subsec:sophie}). Under the rule-based method, Rule~13
+specifies that the functional-impact question is shown only when the mood
+frequency response is $\geq 2$ on a 0--3 scale. Sophie's Month~2
+response of~1 (``Several days'') does not meet this threshold, so the
+functional-impact item remains hidden, even though two consecutive
+months of Mild risk may warrant exploring it. The rule-based system
+cannot detect this longitudinal pattern because each rule evaluates a
+single response in isolation.
 
 \subsection{LLM-Based Method}
 \label{subsec:llm_based}
-% TODO: ~0.3 page
-% Cover: Gemini 2.5 Flash prompt construction,
-%        personalised question generation from Sophie's Month-1 health snapshot,
-%        domain-level risk descriptions (SymptomDescriptions class),
-%        dynamic question adaptation based on longitudinal profile.
 
-\subsection{Persona-Based Scenario: Sophie}
+The LLM-based method generates personalised monthly check-in questions by
+conditioning a large language model on the user's prior health snapshot.
+At the start of a monthly check-in, the system constructs a structured
+prompt containing two inputs: (1)~a \emph{UserSeed}, a versioned summary of
+the user's demographics, domain-level risk
+classifications, and free-text context notes from the previous assessment
+period; and (2)~the baseline rule-based questions for the current domain,
+so the model understands what it is improving upon.
+
+The prompt instructs the model to produce questions that are
+\emph{more relevant, clearer, and less repetitive} than the rule-based
+baseline, grounding the generation task in the same content-validity
+dimensions (Clarity, Quality, Relevance) used in the evaluation
+(Section~\ref{subsec:metrics}). The model returns a JSON array of
+question objects, each containing the question text, response options, and
+a brief rationale for the adaptation. Generation uses a low temperature
+setting ($T = 0.3$) to favour consistency and structured output over
+creative variation.
+
+This design aligns with the LLM-PROM framework proposed by Terheyden
+et~al.\ \cite{terheyden2025}, which argues that LLM-generated
+patient-reported outcome items should be developed from validated content
+and benchmarked against fixed instruments. In Navigator, the LLM does not
+generate questions from scratch; it \emph{transforms} the existing
+validated baseline questions using the user's longitudinal context.
+Table~\ref{tab:comparison} presents the five specific transformations
+applied in Sophie's scenario: history-aware rephrasing of the mood
+frequency item, occupation-specific language for the manageability item,
+a new trend-direction item that captures the two-month persistent Mild
+pattern, early unlocking of the functional-impact item based on
+longitudinal rather than single-month thresholds, and omission of the
+isolation item where Month~1 data showed no change was expected.
+
+\begin{table*}[t]
+\caption{Mental health check-in questions under each adaptation method for Sophie's Month~2 scenario. The rule-based column shows the questions produced by the branching engine; the LLM-based column shows the Gemini-generated transformations. Dashes indicate items not presented.}
+\label{tab:comparison}
+\centering
+\small
+\begin{tabular}{@{}p{1.6cm}p{3.8cm}p{4.2cm}p{4.6cm}@{}}
+\toprule
+\textbf{Item} & \textbf{Rule-Based} & \textbf{LLM-Based} & \textbf{Transformation Rationale} \\
+\midrule
+Mood frequency
+& ``In the past month, how often have you felt low mood, sad, hopeless, nervous, worried, or restless?''
+& ``Over the past month, have you continued to experience feelings like low mood, worry, or restlessness? Last month you reported this happening on several days.''
+& References Month~1 history; acknowledges continuity rather than repeating identical wording. \\
+\addlinespace
+Managing life
+& ``\ldots how often have you felt that important things in your life were difficult to manage?''
+& ``\ldots has it felt harder than usual to stay on top of your studies, daily responsibilities, or relationships?''
+& Replaces generic ``important things'' with student-specific language. \\
+\addlinespace
+Trend direction
+& Not asked
+& ``Since you've reported similar feelings for two months in a row, how would you describe the change over the past month?''
+& New item capturing longitudinal signal (two-month Mild pattern) that rule-based thresholds cannot detect. \\
+\addlinespace
+Functional impact
+& \emph{Hidden} because the mood score of~1 does not meet the $\geq 2$ threshold required by the branching rule.
+& ``Have these feelings made it harder for you to manage your daily life, for example, attending classes, completing work, or maintaining relationships?''
+& Unlocked early based on persistent pattern; phrasing adapted to student context. \\
+\addlinespace
+Isolation
+& ``In the past month, how often do you feel isolated from others?''
+& \emph{Skipped} because the Month~1 score was low and stable, so no new information was expected.
+& De-prioritises items unlikely to yield new signal, reducing respondent burden. \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\subsection{Controlled Scenario: Sophie}
 \label{subsec:sophie}
-% TODO: ~0.2 page
-% Cover: Mock participant profile — 24F, East Asian university student,
-%        Mild mental health risk (Month 1 baseline),
-%        rationale for using a fixed persona to ensure comparability
-%        across rule-based and LLM-based conditions.
 
-% ── Section 4: Study Design ───────────────────────────────────────────────────
-\section{Study Design}
-\label{sec:study}
+To enable a fair within-subjects comparison, both methods are evaluated
+using a single standardised persona rather than participants' own health
+data. ``Sophie'' is a fictional 24-year-old female East Asian
+international university student whose Month~1 foundational assessment
+produced a Mild mental health risk classification and None across all
+other domains. Her context notes record specific response details: a mood
+frequency score of~1 (``Several days''), a low and stable isolation
+score, and no triggered functional-impact questions.
 
+The decision to use a fixed persona serves three evaluation purposes.
+First, it eliminates between-participant variation in health profiles,
+ensuring that every participant sees the same rule-based and LLM-based
+questionnaire outputs and that observed differences in Clarity, Quality,
+and Relevance ratings reflect the adaptation method rather than
+individual health circumstances. Second, it avoids the ethical
+complications of collecting real mental health data in a prototype
+evaluation context. Third, it provides a scenario that concretely
+illustrates the limitation of rule-based adaptation: Sophie's profile
+is designed so that the branching rule's hard threshold blocks the
+functional-impact question despite a clinically meaningful two-month
+pattern (see Table~\ref{tab:comparison}), creating a clear point of
+contrast for participants to evaluate.
+
+The persona was designed with attention to measurement validity
+considerations identified in prior work. Baas et~al.\ \cite{baas2011}
+demonstrated that PHQ-9 responses can exhibit measurement non-invariance
+across demographic groups, and Wild et~al.\ \cite{wild2005} emphasised
+that questionnaire wording must account for cultural context. Sophie's
+profile, an East Asian international student, was therefore chosen
+to represent a demographic for whom culturally adapted wording (as
+produced by the LLM method) might be particularly relevant, while
+remaining relatable to the predominantly university-aged participant pool.
+
+% ── Study Design (subsections within Methodology) ────────────────────────────
 \subsection{Research Design}
 \label{subsec:research_design}
+\label{sec:study}
 % TODO: ~0.2 page
-% Cover: within-subjects design — all participants experience both methods,
+% Cover: within-subjects design, with all participants experiencing both methods,
 %        order counterbalanced to mitigate order effects.
 
 \subsection{Participants}
@@ -323,19 +490,19 @@ heuristics.
 \subsection{Procedure}
 \label{subsec:procedure}
 % TODO: ~0.3 page
-% Cover: Step 1 — Foundational Assessment (baseline health profile),
-%        Step 2a — Rule-based Monthly Check-In,
-%        Step 2b — LLM-based Monthly Check-In,
-%        Step 3 — Feedback survey (Google Form, Sections A--D),
+% Cover: Step 1, Foundational Assessment (baseline health profile),
+%        Step 2a, Rule-based Monthly Check-In,
+%        Step 2b, LLM-based Monthly Check-In,
+%        Step 3, Feedback survey (Google Form, Sections A--D),
 %        estimated total time: 10--15 minutes.
 
 \subsection{Evaluation Metrics}
 \label{subsec:metrics}
 % TODO: ~0.2 page
 % Cover: 5-point Likert scale for each metric,
-%        Clarity  — question wording is clear and easy to understand,
-%        Quality  — questions are well-formed and meaningful,
-%        Relevance — questions are relevant to the participant's health context.
+%        Clarity: question wording is clear and easy to understand,
+%        Quality: questions are well-formed and meaningful,
+%        Relevance: questions are relevant to the participant's health context.
 %        Also: open-ended questions for qualitative feedback.
 
 % ── Section 5: Results and Analysis ──────────────────────────────────────────

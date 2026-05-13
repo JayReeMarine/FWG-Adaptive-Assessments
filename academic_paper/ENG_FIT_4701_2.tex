@@ -50,9 +50,11 @@ self-monitoring. In practice, most of these applications rely on standardised st
 instruments such as the PHQ-9 \cite{kroenke2001} and the GAD-7 \cite{spitzer2006},
 which present the same fixed set of items at every check-in regardless of the user's
 current condition, prior responses, or longitudinal history. While these instruments
-are clinically validated, their rigid format can feel repetitive and burdensome, and
-often fails to reflect how a person's mental state evolves over time
-\cite{malanin2025}.
+are clinically validated, repeated administration of fixed items can increase
+self-report burden. Prior work on ecological momentary assessment and computerised
+adaptive testing therefore motivates designs that reduce item burden or adjust
+item selection during repeated assessment
+\cite{maatoug2021,gibbons2008,choi2010,malanin2025}.
 
 Adaptive questionnaire techniques, such as branching logic and computerised adaptive
 testing, have been introduced to partially address this limitation by tailoring item
@@ -150,10 +152,13 @@ health monitoring.
 However, the very stability that gives these instruments their psychometric
 strength also imposes meaningful limitations on user experience. Static
 questionnaires repeat the same items at every administration, regardless of a
-user's current state or response history. Repeated exposure to identical
-wording can lead to response fatigue and reduced engagement, particularly in
-longitudinal self-report scenarios where users complete the same scale weekly
-or monthly \cite{gibbons2008, choi2010, malanin2025}. Ecological momentary
+user's current state or response history. Longitudinal self-report can suffer
+from fatigue and completion challenges when users complete the same scale
+weekly or monthly. Computerised adaptive testing studies have shown that
+adaptive item selection can reduce item burden while preserving
+depressive-symptom measurement performance \cite{gibbons2008, choi2010}, and
+recent work has argued for more adaptive health questionnaires
+\cite{malanin2025}. Ecological momentary
 assessment studies have documented this problem directly: in a 28-day
 smartphone-based depression study, only seven of eleven participants
 completed the full protocol and the average daily response rate was 62.5\%
@@ -194,9 +199,7 @@ and feedback-loop systems that revise content based on accumulating user
 data. Although rule-based approaches dominate the surveyed literature due to
 their interpretability and low computational overhead, they are inherently
 bounded by the comprehensiveness of their predefined rules and cannot adapt
-to contexts the designer did not anticipate. Closed-loop systems, which
-integrate continuous data collection with iterative refinement, remain
-comparatively rare \cite{brown2022}.
+to contexts the designer did not anticipate.
 
 A more recent direction extends adaptation beyond item selection toward item
 generation. Terheyden et al.\ \cite{terheyden2025} introduce the concept of LLM-powered
@@ -227,13 +230,11 @@ clinical testing. This positioning motivates our study as a pilot, user-centred
 feasibility evaluation rather than a clinical efficacy trial.
 
 User-facing evidence further suggests that LLM behaviour in mental health is
-highly condition-dependent. Li et al.\ \cite{li2025llm} analysed 112{,}698 social-media
-posts about LLM use for mental health and found that sentiment varied
-substantially across conditions: users with ADHD and ASD reported strongly
-positive experiences (sentiment scores of 0.722 and 0.557 respectively),
-whereas schizophrenia-spectrum discussions reported strongly negative
-sentiment ($-0.569$), often describing chatbot responses that appeared to
-intensify delusional thinking. Complementing this, Shen et al.\ \cite{shen2026} conducted
+highly condition-dependent. Li et al.\ \cite{li2025llm} analysed a large dataset of
+online discussions about LLM use for mental health and reported
+condition-specific differences in user sentiment and concerns. This indicates
+that LLM acceptability should not be treated as uniform across mental health
+contexts. Complementing this, Shen et al.\ \cite{shen2026} conducted
 a clinician-blind evaluation of multiple LLM versions on 158 prompts and found
 that no tested model reliably produced appropriate responses to psychotic
 content. Together, these findings establish two requirements for any LLM-based
@@ -390,8 +391,9 @@ This design aligns with the LLM-PROM framework proposed by Terheyden
 et~al.\ \cite{terheyden2025}, which argues that LLM-generated
 patient-reported outcome items should be developed from validated content
 and benchmarked against fixed instruments. In Navigator, the LLM does not
-generate questions from scratch; it \emph{transforms} the existing
-validated baseline questions using the user's longitudinal context.
+generate questions from scratch; it \emph{transforms} baseline questions derived
+from validated instruments together with project-specific follow-up items,
+using the user's longitudinal context.
 Table~\ref{tab:comparison} presents the five specific transformations
 applied in Sophie's scenario: history-aware rephrasing of the mood
 frequency item, occupation-specific language for the manageability item,
@@ -688,42 +690,98 @@ method, both, or neither.
 
 \subsection{Static vs Dynamic Adaptation}
 \label{subsec:static_dynamic}
-% TODO: Core discussion point (Russel + Mark Week 9 feedback).
-%       The meaningful distinction is NOT "LLM is better" but:
-%         - Rule-based = static, predefined branching, single-timepoint
-%         - LLM-based  = dynamic, context-aware, longitudinal profile
-%       Relevance gap (+0.40) is the clearest evidence: participants noticed
-%       that LLM questions reflected prior history and adapted to Sophie's
-%       student context, which rule-based rules cannot do.
-%       Clarity gap (+0.14) is small -- static method can match LLM on clarity
-%       when questions are carefully designed.
-%       Implication: value of LLM is in scalability and contextual adaptation,
-%       not in replacing well-designed static questions.
 
-\subsection{Interpretation of RQ1--RQ3}
+The central interpretation of this study is not that LLM-based questionnaires
+are categorically better than rule-based questionnaires. Rather, the meaningful
+contrast in Navigator is between a static branching design and a dynamically
+context-aware design. The rule-based method used predefined question text and
+fixed branching rules. This made it transparent and predictable, but also
+limited its ability to respond to Sophie's previous-month profile unless each
+possible pathway had been anticipated by the designer. By contrast, the
+LLM-based method used the same assessment context to rewrite, prioritise, or add
+questions that referred more directly to Sophie's profile and longitudinal
+state.
+
+This distinction helps explain the observed pattern of results. The LLM-based
+method was perceived most strongly in the Relevance dimension, where
+participants evaluated whether questions reflected Sophie's persona, current
+situation, and previous-month condition. In comparison, the difference in
+Clarity was smaller, suggesting that carefully designed rule-based questions can
+still be clear and understandable. The main value of the LLM-based approach in
+this prototype is therefore not surface-level wording improvement, but the
+ability to scale context-aware adaptation without requiring every possible
+question pathway to be manually authored in advance. This interpretation is
+consistent with the broader motivation for adaptive assessment and
+LLM-supported patient-reported outcome measures \cite{wang2023,terheyden2025}.
+
+\subsection{Interpretation of Research Questions}
 \label{subsec:interpretation}
-% TODO: Answer each research question directly.
-%       RQ1 (Clarity):   LLM slightly higher but small gap -- partial support.
-%       RQ2 (Quality):   LLM significantly higher (p=0.001) -- supported.
-%       RQ3 (Relevance): LLM significantly higher, largest gap (p=0.001) -- strongly supported.
+
+For RQ1, the findings provide only cautious support for the LLM-based method.
+Both versions were rated positively for Clarity, and the difference between
+methods was the smallest among the three evaluation dimensions. This suggests
+that clarity depends strongly on the quality of question writing, not only on
+whether a questionnaire is generated by an LLM. A static rule-based method can
+remain clear when its items are carefully designed.
+
+For RQ2, the findings suggest that participants perceived the LLM-based method
+as somewhat higher in Quality. This may reflect the way the generated questions
+were framed around Sophie's student background and ongoing mental health
+pattern. However, this result should be interpreted as perceived questionnaire
+quality rather than evidence of clinical validity. The study did not evaluate
+whether either method produced more accurate mental health assessment outcomes.
+
+For RQ3, the findings provide the strongest support for the LLM-based method.
+Relevance is the dimension most directly connected to contextual adaptation,
+and participants appeared to recognise when questions reflected Sophie's
+previous-month condition or current circumstances. This supports the argument
+that LLMs may be particularly useful when questionnaire systems need to connect
+standard assessment content with individual history, rather than simply present
+the same static items at each check-in.
 
 \subsection{Limitations}
 \label{subsec:limitations}
-% TODO:
-%   - Fixed presentation order (rule-based first): order effects cannot be
-%     ruled out; participants may have rated the second method more favourably.
-%   - AI expectation bias: knowing one method is "LLM/AI" may have inflated
-%     LLM ratings independent of actual question quality.
-%   - Small convenience sample (n=39): university-student-heavy, may not
-%     generalise to clinical populations or older demographics.
-%   - Prototype fidelity: Sophie is a mock persona, not real patient data;
-%     LLM output may differ with real longitudinal health histories.
-%   - Single LLM provider (Gemini 2.5 Flash): results may not generalise
-%     to other models.
-%   - Self-reported perception metrics, not clinical outcome measures.
-%   - Prototype safety: the prototype does not provide clinical diagnosis.
-%     Any risk indication is a demonstrative feedback mechanism only.
-%     Participants are directed to appropriate support resources.
+
+Several limitations should be considered when interpreting these results.
+First, the study used a fixed presentation order: participants completed the
+rule-based version before the LLM-based version. This design ensured that all
+participants experienced the same comparison sequence, but it also introduces a
+possible order effect. Participants may have rated the second method more
+favourably because it appeared later, felt more novel, or was implicitly
+perceived as an improved version of the first method. Relatedly, the label
+``LLM-based'' may have created an expectation that the AI version would be more
+advanced, which could have influenced subjective ratings independently of the
+actual question content.
+
+Second, the prototype exposure was intentionally short. Each method presented
+only five monthly check-in questions, and the full study was designed to take
+approximately 10--15 minutes. This kept the task practical for anonymous online
+participation, but it may also have limited participants' ability to experience
+strong differences between the two methods. A longer questionnaire or repeated
+monthly use might reveal clearer differences in adaptation, but it would also
+increase participant burden. This is an important design trade-off: prior work
+on digital self-report has shown that repeated assessment can face completion
+and response-rate challenges \cite{maatoug2021}, while computerised adaptive
+testing research has specifically aimed to reduce item burden in mental health
+assessment \cite{gibbons2008,choi2010}.
+
+Third, the study used a fixed persona rather than participants' own health
+data. The Sophie scenario improved experimental control because every
+participant evaluated the same profile, but it reduced ecological validity.
+Participants were judging whether questions felt appropriate for a fictional
+case, not whether they felt personally understood by the system. Real
+longitudinal use may produce different reactions, especially when questions
+refer to sensitive personal experiences.
+
+Fourth, the study measured perceived clarity, quality, relevance, and
+preference rather than clinical accuracy or health outcomes. The results
+therefore cannot show that the LLM-based method provides better diagnosis,
+risk assessment, or mental health intervention. The prototype also focused only
+on the mental health pathway, used a single LLM provider, and was evaluated with
+a small convenience sample. Future studies should use counterbalanced
+presentation orders, larger and more diverse participant groups, longer
+longitudinal scenarios, and clinician review of generated questions before
+making claims about clinical suitability.
 
 % ── Section 7: Conclusion ─────────────────────────────────────────────────────
 \section{Conclusion}

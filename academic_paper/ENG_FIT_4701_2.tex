@@ -6,11 +6,11 @@
 \usepackage{booktabs}
 \usepackage{hyperref}
 
-% Reduce aggressive end-of-line hyphenation so the prose reads more naturally.
-\pretolerance=10000
-\hyphenpenalty=9000
-\exhyphenpenalty=9000
-\emergencystretch=2em
+% Reduce hyphenation while keeping inter-word spacing tight.
+\pretolerance=2000
+\hyphenpenalty=800
+\exhyphenpenalty=500
+\emergencystretch=1em
 
 % Do not change the bibliography style.
 \bibliographystyle{IEEEtran}
@@ -148,22 +148,23 @@ integration into digital platforms aimed at routine, longitudinal mental
 health monitoring.
 
 However, the very stability that gives these instruments their psychometric
-Strength also imposes meaningful limitations on user experience. Static
+strength also imposes meaningful limitations on user experience. Static
 questionnaires repeat the same items at every administration, regardless of a
 user's current state or response history. Repeated exposure to identical
 wording can lead to response fatigue and reduced engagement, particularly in
 longitudinal self-report scenarios where users complete the same scale weekly
-or monthly \cite{gibbons2008, choi2010, malanin2025}. Ecological momentary assessment studies have
-documented this problem directly: in a 28-day smartphone-based depression
-study, only seven of eleven participants completed the full protocol and the
-average daily response rate was 62.5\% \cite{maatoug2021}, suggesting that
-Repeated digital self-report can suffer from engagement and completion issues
-challenges, even when the underlying measures are clinically meaningful.
+or monthly \cite{gibbons2008, choi2010, malanin2025}. Ecological momentary
+assessment studies have documented this problem directly: in a 28-day
+smartphone-based depression study, only seven of eleven participants
+completed the full protocol and the average daily response rate was 62.5\%
+\cite{maatoug2021}, suggesting that repeated digital self-report can suffer
+from engagement and completion challenges, even when the underlying measures
+are clinically meaningful.
 
 Beyond engagement, fixed wording can raise concerns about content validity.
 Baas et al.\ \cite{baas2011} demonstrated that one PHQ-9 item exhibited measurement
 non-invariance across ethnic groups, revealing cultural bias in supposedly
-universal items. Wild et al.\ \cite{wild2005} similarly argues that questionnaire wording
+universal items. Wild et al.\ \cite{wild2005} similarly argue that questionnaire wording
 must be treated as a structured design and validation problem rather than a
 literal translation. These findings indicate that even well-validated
 instruments carry implicit assumptions about who the respondent is and how
@@ -176,7 +177,7 @@ assumptions through more context-sensitive wording and item selection.
 To mitigate the burden and rigidity of static instruments, prior work has
 explored adaptive questioning strategies. The most established approach is
 Computerised Adaptive Testing (CAT), which uses item response theory to select
-The most informative items based on prior responses. Gibbons et al.\ \cite{gibbons2008}
+the most informative items based on prior responses. Gibbons et al.\ \cite{gibbons2008}
 demonstrated that the CAT-based assessment of mood and anxiety disorders reduced
 the number of administered items by approximately 95\% relative to a full
 item bank, while preserving strong correlation with the full-scale score.
@@ -191,14 +192,14 @@ chronic disease, Wang et al.\ \cite{wang2023} identify three dominant adaptation
 strategies: rule-based ``if--then'' logic, machine-learning-driven prediction,
 and feedback-loop systems that revise content based on accumulating user
 data. Although rule-based approaches dominate the surveyed literature due to
-Their interpretability and low computational overhead, they are bounded by
-The comprehensiveness of their predefined rules prevents them from adapting to contexts
-The designer did not anticipate. Closed-loop systems, which integrate
-continuous data collection with iterative refinement remains comparatively
-rare \cite{brown2022}.
+their interpretability and low computational overhead, they are inherently
+bounded by the comprehensiveness of their predefined rules and cannot adapt
+to contexts the designer did not anticipate. Closed-loop systems, which
+integrate continuous data collection with iterative refinement, remain
+comparatively rare \cite{brown2022}.
 
 A more recent direction extends adaptation beyond item selection toward item
-generation. Terheyden et al.\ \cite{terheyden2025} introduces the concept of LLM-powered
+generation. Terheyden et al.\ \cite{terheyden2025} introduce the concept of LLM-powered
 Patient-Reported Outcome Measures (LLM-PROMs), in which large language models
 generate personalised open-ended items and interpret responses against
 established psychometric scaffolds. Their framework argues that LLM-based
@@ -220,7 +221,7 @@ efficacy and safety remains preliminary. In the most comprehensive review to
 date, Hua et al.\ \cite{hua2025} surveyed 160 mental health chatbot studies published
 between 2020 and 2024, classifying them as rule-based, machine-learning-based,
 or LLM-based. Their analysis reveals an important asymmetry: although LLM-based
-Systems grew rapidly in 2024, they remain concentrated in early-stage
+systems grew rapidly in 2024, they remain concentrated in early-stage
 validation, while rule-based systems still dominate later-stage human and
 clinical testing. This positioning motivates our study as a pilot, user-centred
 feasibility evaluation rather than a clinical efficacy trial.
@@ -514,8 +515,10 @@ students enrolled at Monash University Malaysia and Indonesia campuses
 were excluded from recruitment, as the approval was scoped to the
 Australian campus.
 
-% TODO: Report actual sample size and demographics once data collection
-% is complete (e.g., total N, age range, gender distribution).
+A total of 41 responses were received between 25~April and 13~May~2026.
+After excluding one non-consent response and one invalid submission, 39
+valid responses were retained. Demographic details are reported in
+Section~\ref{subsec:demographics}.
 
 \subsection{Procedure}
 \label{subsec:procedure}
@@ -607,57 +610,142 @@ method, both, or neither.
 
 \subsection{Participant Demographics}
 \label{subsec:demographics}
-% TODO: Summarise age, occupation, gender distribution of final sample.
+% TODO: Report final sample (n=39 valid responses after excluding 1 non-consent
+%       and 1 invalid/troll response).
+%       Age: 21-25 (66.7%), 18-20 (17.9%), 26-34 (15.4%)
+%       Gender: Female 20 (51.3%), Male 19 (48.7%)
+%       Role: Student 27 (69.2%), Working professional 12 (30.8%)
+%       Data collected: 25 April 2026 -- 13 May 2026
 
-\subsection{Quantitative Results}
+\subsection{Quantitative Comparison}
 \label{subsec:quant}
-% TODO: Report mean Likert scores (Clarity / Quality / Relevance)
-%       for Rule-based vs.\ LLM-based.
-%       Include Table: mean $\pm$ SD per metric per method.
-%       Statistical test (e.g., Wilcoxon signed-rank or paired t-test).
+% TODO: Overview table of mean ± SD for all three dimensions, both methods.
+%       Cite paired t-test results.
+%       Results (n=39):
+%         Clarity:   LLM 4.077 ± 0.723  vs  Rule 3.940 ± 0.841  (diff +0.137, p=0.014*)
+%         Relevance: LLM 4.085 ± 0.639  vs  Rule 3.684 ± 0.772  (diff +0.402, p=0.001*)
+%         Quality:   LLM 3.957 ± 0.663  vs  Rule 3.684 ± 0.733  (diff +0.274, p=0.001*)
+%       All three dimensions statistically significant (p < 0.05, paired t-test).
+
+\subsection{Clarity}
+\label{subsec:clarity_results}
+% TODO: Report per-item and composite Clarity scores.
+%       LLM mean 4.08 vs Rule 3.94 -- smallest gap of the three dimensions.
+%       Both methods rated positively; suggests both were clearly worded.
+%       Interpret: wording clarity is less sensitive to static vs dynamic distinction.
+
+\subsection{Relevance}
+\label{subsec:relevance_results}
+% TODO: Report per-item and composite Relevance scores.
+%       LLM mean 4.09 vs Rule 3.68 -- LARGEST gap (+0.40).
+%       Key item: "Reflected changes since previous month" shows biggest LLM advantage.
+%       Interpret: context-awareness and longitudinal history drive relevance perception.
+%       This is the dimension where static vs dynamic distinction is most visible.
+
+\subsection{Quality}
+\label{subsec:quality_results}
+% TODO: Report per-item and composite Quality scores.
+%       LLM mean 3.96 vs Rule 3.68 -- moderate gap (+0.27).
+%       Interpret: LLM questions felt more meaningful and well-designed overall.
+
+\subsection{Overall Preference}
+\label{subsec:preference_results}
+% TODO: Report preference distribution (n=39):
+%       Satisfied with both:    17 (43.6%)
+%       Dynamic LLM-based:      12 (30.8%)
+%       Static Rule-based:       8 (20.5%)
+%       Neither:                  2 (5.1%)
+%       Interpretation: largest group preferred both -- rule-based was not poor.
+%       Combined LLM preference (LLM only + both) = 74.4%.
 
 \subsection{Qualitative Findings}
 \label{subsec:qual}
-% TODO: Thematic analysis of open-ended responses.
-%       Key themes: personalisation, question relevance, wording clarity,
-%       perceived usefulness.
+% TODO: Thematic analysis of open-ended responses (theme → code → % → quote).
+%       Q2 themes (n=39):
+%         Personalisation/Relevance       8 (20.5%) -- "The LLM felt more specific and tailored" (P23)
+%         No strong preference / Both OK 11 (28.2%) -- "Both were easy to complete" (P33)
+%         Longitudinal awareness          4 (10.3%) -- "LLM linked back to Month 1 questions" (P16)
+%         Simplicity/Transparency (Rule)  4 (10.3%) -- "Rule-based gave more context of prev. month" (P38)
+%         Natural/Conversational          3  (7.7%) -- "LLM feels more human-like" (P05)
+%       Q3 improvement themes:
+%         More personalisation in LLM     3  (7.7%)
+%         Better guidance/instructions    2  (5.1%)
+%         User control/flexibility        1  (2.6%)
 
-\subsection{Comparative Analysis}
-\label{subsec:comparison}
-% TODO: Side-by-side comparison of both methods across all three metrics.
-%       Highlight where LLM-based outperforms / underperforms rule-based.
+\subsection{Summary of Key Observations}
+\label{subsec:summary}
+% TODO: Synthesise quantitative + qualitative findings in 1 paragraph.
+%       Key message: LLM-based method was perceived as more relevant and
+%       context-aware (especially on Relevance dimension), but both methods
+%       performed well on Clarity, confirming that the static rule-based
+%       questions were competently designed. The primary advantage of the
+%       LLM-based method lies in its dynamic, context-aware adaptation
+%       rather than in surface-level wording quality.
 
 % ── Section 6: Discussion ─────────────────────────────────────────────────────
 \section{Discussion}
 \label{sec:discussion}
 
-\subsection{Interpretation of Results}
+\subsection{Static vs Dynamic Adaptation}
+\label{subsec:static_dynamic}
+% TODO: Core discussion point (Russel + Mark Week 9 feedback).
+%       The meaningful distinction is NOT "LLM is better" but:
+%         - Rule-based = static, predefined branching, single-timepoint
+%         - LLM-based  = dynamic, context-aware, longitudinal profile
+%       Relevance gap (+0.40) is the clearest evidence: participants noticed
+%       that LLM questions reflected prior history and adapted to Sophie's
+%       student context, which rule-based rules cannot do.
+%       Clarity gap (+0.14) is small -- static method can match LLM on clarity
+%       when questions are carefully designed.
+%       Implication: value of LLM is in scalability and contextual adaptation,
+%       not in replacing well-designed static questions.
+
+\subsection{Interpretation of RQ1--RQ3}
 \label{subsec:interpretation}
-% TODO: Relate findings back to RQ1--RQ3.
-%       Discuss why LLM-based may/may not outperform rule-based on each metric.
+% TODO: Answer each research question directly.
+%       RQ1 (Clarity):   LLM slightly higher but small gap -- partial support.
+%       RQ2 (Quality):   LLM significantly higher (p=0.001) -- supported.
+%       RQ3 (Relevance): LLM significantly higher, largest gap (p=0.001) -- strongly supported.
 
 \subsection{Limitations}
 \label{subsec:limitations}
 % TODO:
-%   - Small sample size (< 50 per group)
-%   - Prototype fidelity (mock persona Sophie, not real patient data)
-%   - Single LLM provider (Gemini 2.5 Flash)
-%   - 1-D health snapshot; does not capture full longitudinal history
-%   - Self-reported metrics (perception, not clinical outcome)
+%   - Fixed presentation order (rule-based first): order effects cannot be
+%     ruled out; participants may have rated the second method more favourably.
+%   - AI expectation bias: knowing one method is "LLM/AI" may have inflated
+%     LLM ratings independent of actual question quality.
+%   - Small convenience sample (n=39): university-student-heavy, may not
+%     generalise to clinical populations or older demographics.
+%   - Prototype fidelity: Sophie is a mock persona, not real patient data;
+%     LLM output may differ with real longitudinal health histories.
+%   - Single LLM provider (Gemini 2.5 Flash): results may not generalise
+%     to other models.
+%   - Self-reported perception metrics, not clinical outcome measures.
+%   - Prototype safety: the prototype does not provide clinical diagnosis.
+%     Any risk indication is a demonstrative feedback mechanism only.
+%     Participants are directed to appropriate support resources.
 
 % ── Section 7: Conclusion ─────────────────────────────────────────────────────
 \section{Conclusion}
 \label{sec:conclusion}
 % TODO: ~0.3 page
-% Summarise: problem, approach, key findings, implications for adaptive
-% health questionnaire design.
+% Summarise: problem (static questionnaires), approach (Navigator prototype,
+% rule-based vs LLM-based, Sophie persona, COSMIN evaluation),
+% key findings (LLM significantly higher on Relevance and Quality;
+% static vs dynamic distinction more explanatory than wording quality),
+% implications (adaptive health questionnaire design should prioritise
+% context-awareness and longitudinal integration over cosmetic wording changes).
 
-\subsection*{Future Work}
+\subsection{Future Work}
+\label{subsec:future}
 % TODO:
-%   - Real patient data integration (beyond mock persona)
-%   - Longitudinal study across multiple monthly check-ins
+%   - Broader participant pool (clinical populations, older demographics)
+%   - Counterbalanced study design to control for order effects
 %   - Multiple LLM providers comparison
-%   - Clinical validation of question quality with domain experts
+%   - Longitudinal study: same participants across multiple monthly check-ins
+%   - Real patient data integration (beyond mock persona)
+%   - Clinical validation of LLM-generated questions with domain experts
+%   - Expansion to other health domains (dietary, physical activity, etc.)
 
 % ── References ────────────────────────────────────────────────────────────────
 \bibliography{ENG_FIT_4701_2.bib}

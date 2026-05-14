@@ -16,7 +16,6 @@
 \bibliographystyle{IEEEtran}
 
 % ── Project Data ──────────────────────────────────────────────────────────────
-% TODO: Confirm full legal names for Khang and Zachary before submission.
 \title{Evaluating LLM-Based and Rule-Based Adaptive Mental Health\\
        Questionnaires: A Human-Centric User Study}
 
@@ -517,8 +516,8 @@ students enrolled at Monash University Malaysia and Indonesia campuses
 were excluded from recruitment, as the approval was scoped to the
 Australian campus.
 
-A total of 41 responses were received between 25~April and 13~May~2026.
-After excluding one non-consent response and one invalid submission, 39
+A total of 42 responses were received between 25~April and 13~May~2026.
+After excluding one non-consent response and one invalid submission, 40
 valid responses were retained. Demographic details are reported in
 Section~\ref{subsec:demographics}.
 
@@ -612,22 +611,88 @@ method, both, or neither.
 
 \subsection{Participant Demographics}
 \label{subsec:demographics}
-% TODO: Report final sample (n=39 valid responses after excluding 1 non-consent
-%       and 1 invalid/troll response).
-%       Age: 21-25 (66.7%), 18-20 (17.9%), 26-34 (15.4%)
-%       Gender: Female 20 (51.3%), Male 19 (48.7%)
-%       Role: Student 27 (69.2%), Working professional 12 (30.8%)
-%       Data collected: 25 April 2026 -- 13 May 2026
+
+A total of 42 survey responses were collected between 25~April and
+13~May~2026. Two responses were excluded: one participant did not
+provide consent, and one submission was identified as invalid based on
+uniform extreme ratings across all 18~Likert items (all ``Strongly
+Disagree'') combined with non-substantive open-ended answers, a
+pattern consistent with straight-lining \cite{malanin2025}. The final
+analysis sample comprised $n = 40$ valid responses.
+
+Table~\ref{tab:demographics} summarises the sample characteristics.
+The majority of participants were aged 21--25 (65.0\%) and enrolled as
+university students (70.0\%). Gender was approximately balanced, with
+21~female (52.5\%) and 19~male (47.5\%) respondents. Most participants
+reported low familiarity with health applications: 72.5\% indicated
+that they rarely or never use such tools.
+
+\begin{table}[t]
+\caption{Participant demographics ($n = 40$).}
+\label{tab:demographics}
+\centering
+\small
+\begin{tabular}{@{}llrc@{}}
+\toprule
+\textbf{Variable} & \textbf{Category} & \textbf{n} & \textbf{\%} \\
+\midrule
+Age range   & 18--20  &  8 & 20.0 \\
+            & 21--25  & 26 & 65.0 \\
+            & 26--34  &  6 & 15.0 \\
+\addlinespace
+Gender      & Female  & 21 & 52.5 \\
+            & Male    & 19 & 47.5 \\
+\addlinespace
+Role        & Student & 28 & 70.0 \\
+            & Working professional & 12 & 30.0 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \subsection{Quantitative Comparison}
 \label{subsec:quant}
-% TODO: Overview table of mean ± SD for all three dimensions, both methods.
-%       Cite paired t-test results.
-%       Results (n=39):
-%         Clarity:   LLM 4.077 ± 0.723  vs  Rule 3.940 ± 0.841  (diff +0.137, p=0.014*)
-%         Relevance: LLM 4.085 ± 0.639  vs  Rule 3.684 ± 0.772  (diff +0.402, p=0.001*)
-%         Quality:   LLM 3.957 ± 0.663  vs  Rule 3.684 ± 0.733  (diff +0.274, p=0.001*)
-%       All three dimensions statistically significant (p < 0.05, paired t-test).
+
+Each of the three COSMIN-grounded dimensions was measured by three
+Likert items (1--5 scale). Per-participant composite scores were
+computed by averaging the three items within each dimension.
+Table~\ref{tab:quant} presents per-item and composite means for both
+methods, together with paired $t$-test results ($df = 39$).
+
+All three composite scores were significantly higher for the LLM-based
+method: Clarity ($\Delta = +0.13$, $p = .014$), Relevance
+($\Delta = +0.42$, $p < .001$), and Quality ($\Delta = +0.29$,
+$p < .001$). Relevance showed the largest difference, while Clarity
+showed the smallest.
+
+\begin{table*}[t]
+\caption{Per-item and composite Likert scores (mean $\pm$ SD) with paired $t$-test results ($n = 40$). Asterisks denote statistical significance: {*}\,$p < .05$; {**}\,$p < .01$; {***}\,$p < .001$.}
+\label{tab:quant}
+\centering
+\small
+\begin{tabular}{@{}llcccccc@{}}
+\toprule
+\textbf{Dimension} & \textbf{Item} & \textbf{LLM (M $\pm$ SD)} & \textbf{Rule (M $\pm$ SD)} & \textbf{$\Delta$} & \textbf{$t$} & \textbf{$p$} \\
+\midrule
+Clarity
+  & Clear and easy to understand      & $4.22 \pm 0.73$ & $4.03 \pm 0.95$ & $+0.20$ & $1.75$ & $.088$ \\
+  & Specific and unambiguous           & $3.83 \pm 0.96$ & $3.70 \pm 1.07$ & $+0.12$ & $1.30$ & $.200$ \\
+  & Easy to know how to answer         & $4.10 \pm 0.96$ & $4.03 \pm 1.05$ & $+0.07$ & $0.62$ & $.538$ \\
+  & \textbf{Composite}                 & $\mathbf{4.05 \pm 0.73}$ & $\mathbf{3.92 \pm 0.84}$ & $\mathbf{+0.13}$ & $\mathbf{2.58}$ & $\mathbf{.014}$* \\
+\addlinespace
+Relevance
+  & Relevant to Sophie's health profile & $4.15 \pm 0.66$ & $3.77 \pm 0.80$ & $+0.38$ & $3.55$ & $.001$** \\
+  & Addressed important aspects         & $4.00 \pm 0.75$ & $3.62 \pm 0.87$ & $+0.38$ & $2.94$ & $.005$** \\
+  & Reflected changes since prev.\ month & $4.10 \pm 0.78$ & $3.60 \pm 0.93$ & $+0.50$ & $3.29$ & $.002$** \\
+  & \textbf{Composite}                  & $\mathbf{4.08 \pm 0.63}$ & $\mathbf{3.67 \pm 0.77}$ & $\mathbf{+0.42}$ & $\mathbf{3.69}$ & $\mathbf{<.001}$*** \\
+\addlinespace
+Quality
+  & Captured important details           & $3.90 \pm 0.74$ & $3.50 \pm 0.88$ & $+0.40$ & $3.57$ & $.001$** \\
+  & Well designed for meaningful assessment & $4.00 \pm 0.78$ & $3.58 \pm 0.93$ & $+0.42$ & $3.60$ & $.001$** \\
+  & Natural and appropriate              & $3.98 \pm 0.89$ & $3.92 \pm 0.80$ & $+0.05$ & $0.36$ & $.720$ \\
+  & \textbf{Composite}                  & $\mathbf{3.96 \pm 0.66}$ & $\mathbf{3.67 \pm 0.73}$ & $\mathbf{+0.29}$ & $\mathbf{3.76}$ & $\mathbf{<.001}$*** \\
+\bottomrule
+\end{tabular}
+\end{table*}
 
 \subsection{Clarity}
 \label{subsec:clarity_results}

@@ -46,23 +46,35 @@
 
 Mental health is increasingly recognised as a critical component of overall well-being,
 and digital health applications are playing a growing role in routine screening and
-self-monitoring. In practice, most of these applications rely on standardised static
+self-monitoring, such as periodic mood check-ins and longitudinal symptom tracking.
+In practice, most of these applications rely on standardised static
 instruments such as the PHQ-9 \cite{kroenke2001} and the GAD-7 \cite{spitzer2006},
-which present the same fixed set of items at every check-in regardless of the user's
+which present the same fixed set of questions at every check-in regardless of the user's
 current condition, prior responses, or longitudinal history. While these instruments
-are clinically validated, repeated administration of fixed items can increase
-self-report burden. Prior work on ecological momentary assessment and computerised
-adaptive screening therefore motivates designs that reduce item burden or adjust
-item selection during repeated assessment
-\cite{maatoug2021,gibbons2008,choi2010,malanin2025}.
+are clinically validated, repeated administration of the same questions can increase
+self-report burden and reduce user engagement over time \cite{maatoug2021}.
 
 Adaptive questionnaire techniques, such as branching logic and computerised adaptive
-screening, have been introduced to partially address this limitation by tailoring item
-sequences to user input \cite{wang2023}. However, these rule-based mechanisms remain
-bounded by predefined decision trees and cannot generate new items or reframe questions
-based on a user's individual context. 
+screening, have been introduced to partially address this limitation by tailoring question
+sequences to user input \cite{wang2023}. However, these static rule-based mechanisms remain
+bounded by predefined decision trees and cannot generate non-repetitive new question sets
+or dynamically reframe questions based on a user's individual context.
+Prior work on computerised adaptive testing and ecological momentary assessment
+has shown that adaptive selection can reduce question burden while preserving
+measurement performance \cite{gibbons2008, choi2010, malanin2025},
+further motivating exploration of more flexible adaptation methods.
 
-Recent advances in Large Language Models (LLMs) open a new design space for adaptive assessment: LLMs can synthesise context-aware questions informed by a user's health profile and prior responses, and have begun to be explored as engines for patient-reported outcome measures \cite{terheyden2025}. Despite this promise, the use of LLMs in mental health remains at an early stage. A recent systematic review of mental health chatbots also highlights that most existing systems are still rule-based, and that LLM-based designs, while more flexible, introduce new concerns around safety, appropriateness, and clinical reliability \cite{hua2025, li2025llm, shen2026}. However, some studies claim that LLM-based system is promising to improve health screening questions to better predictors for future health??? Work needs to be done to integrate LLM-based adaptive mental health questionnaires within a single unified application using a controlled, human-centric evaluation.
+Recent advances in Large Language Models (LLMs) open a new design space for adaptive
+assessment: LLMs can synthesise context-aware questions informed by a user's health
+profile and prior responses, and have begun to be explored as engines for
+patient-reported outcome measures \cite{terheyden2025}. Despite this promise,
+the use of LLMs in mental health remains at an early stage. A recent systematic review
+of mental health chatbots highlights that most existing systems are still rule-based,
+and that LLM-based designs, while more flexible, introduce new concerns around safety,
+appropriateness, and clinical reliability \cite{hua2025, li2025llm, shen2026}.
+To date, no study has directly compared LLM-based and rule-based adaptive mental health
+questionnaires within a single unified application using a controlled, human-centric
+evaluation.
 
 To address this gap, we developed \emph{Navigator}, a web-based prototype that
 implements two distinct monthly mental health check-in methods within the same
@@ -81,11 +93,11 @@ dimensions of questionnaire content validity.
 
 This study aims to answer the following research questions:
 \begin{itemize}
-  \item \textbf{RQ1 (Clarity):} Do LLM-generated questionnaires produce higher perceived
+  \item \textbf{RQ1 (Clarity):} Do LLM-based questionnaires produce higher perceived
         clarity than rule-based questionnaires?
-  \item \textbf{RQ2 (Quality):} Do LLM-generated questionnaires produce higher perceived
+  \item \textbf{RQ2 (Quality):} Do LLM-based questionnaires produce higher perceived
         quality than rule-based questionnaires?
-  \item \textbf{RQ3 (Relevance):} Do LLM-generated questionnaires produce higher perceived
+  \item \textbf{RQ3 (Relevance):} Do LLM-based questionnaires produce higher perceived
         relevance than rule-based questionnaires?
 \end{itemize}
 
@@ -119,7 +131,7 @@ progressively narrow toward our research question. We first review the dominant
 paradigm of static, validated mental health instruments and the limitations
 they impose on longitudinal self-report. We then survey existing adaptive
 questionnaire strategies, from computerised adaptive testing to rule-based
-interface adaptation, and most recently to LLM-generated patient-reported
+interface adaptation, and most recently to LLM-based patient-reported
 outcome measures. Finally, we examine the emerging body of work on LLM-based
 mental health systems, identifying both their promise and the safety
 considerations that constrain their design. We conclude by introducing the
@@ -234,7 +246,7 @@ This distinction is also important for our setting: questionnaire systems do
 not aim to provide therapeutic dialogue, but rather to elicit structured,
 interpretable self-reports through clear and relevant prompts. The risks
 identified in conversational LLM use therefore translate, but do not transfer
-directly, into the design constraints for LLM-generated questionnaire items.
+directly, into the design constraints for LLM-based questionnaire items.
 
 Despite this growing body of work, limited prior research has directly
 compared rule-based and LLM-based adaptive questionnaires within a unified
@@ -242,7 +254,7 @@ application using a controlled, within-subjects evaluation. Existing
 comparisons either contrast different chatbot generations against one another
 \cite{hua2025}, study LLM use in unstructured user discussions
 \cite{li2025llm}, or evaluate adaptive item \emph{selection} without
-addressing LLM-generated \emph{wording} \cite{gibbons2008, choi2010}. Our
+addressing LLM-based \emph{wording} \cite{gibbons2008, choi2010}. Our
 work addresses this gap by holding the application environment, the evaluation
 persona, and the participant group constant, thereby isolating the effect of
 the adaptation method itself.
@@ -859,7 +871,7 @@ making claims about clinical suitability.
 %   - Multiple LLM providers comparison
 %   - Longitudinal study: same participants across multiple monthly check-ins
 %   - Real patient data integration (beyond mock persona)
-%   - Clinical validation of LLM-generated questions with domain experts
+%   - Clinical validation of LLM-based questions with domain experts
 %   - Expansion to other health domains (dietary, physical activity, etc.)
 
 % ── References ────────────────────────────────────────────────────────────────

@@ -415,7 +415,7 @@ longitudinal rather than single-month thresholds, and omission of the
 isolation item where Month~1 data showed no change was expected.
 
 \begin{table*}[t]
-\caption{Mental health check-in questions under each adaptation method for Sophie's Month~2 scenario. The rule-based column shows the questions produced by the branching engine; the LLM-based column shows the Gemini-generated transformations. Cells marked as not asked, hidden, or skipped indicate items not presented in that method.}
+\caption{Mental health check-in questions under each adaptation method for Sophie's Month~2 scenario. The rule-based column shows the questions produced by the branching engine; the LLM-based column shows the Gemini-assisted transformations. Cells marked as not asked, hidden, or skipped indicate items not presented in that method.}
 \label{tab:comparison}
 \centering
 \small
@@ -559,7 +559,7 @@ session, following a four-step procedure:
 
   \item \textbf{LLM-based check-in.} Participants then completed the
         same Month~2 check-in using the LLM-based method, which
-        presented the transformed questions generated from Sophie's
+        presented transformed questions adapted using Sophie's
         longitudinal profile. The interface layout and interaction
         pattern were identical to the rule-based condition.
 
@@ -637,8 +637,8 @@ Table~\ref{tab:demographics} summarises the sample characteristics.
 The majority of participants were aged 21--25 (65.0\%) and enrolled as
 university students (70.0\%). Gender was approximately balanced, with
 21~female (52.5\%) and 19~male (47.5\%) respondents. Most participants
-reported low familiarity with health applications: 75.0\% indicated
-that they rarely or never use such tools.
+reported low familiarity with health applications: 75.0\% selected
+responses indicating rare or no use of such tools.
 
 \begin{table}[t]
 \caption{Participant demographics ($n = 40$).}
@@ -678,31 +678,31 @@ $p < .001$). Relevance showed the largest difference, while Clarity
 showed the smallest.
 
 \begin{table*}[t]
-\caption{Per-item and composite Likert scores (mean $\pm$ SD) with paired $t$-test results ($n = 40$). Asterisks denote statistical significance: {*}\,$p < .05$; {**}\,$p < .01$; {***}\,$p < .001$.}
+\caption{Per-item and composite Likert scores (mean $\pm$ SD) with paired $t$-test results ($n = 40$). Effect size $d_z = t/\sqrt{n}$. Asterisks: {*}\,$p < .05$; {**}\,$p < .01$; {***}\,$p < .001$.}
 \label{tab:quant}
 \centering
 \small
 \begin{tabular}{@{}llcccccc@{}}
 \toprule
-\textbf{Dimension} & \textbf{Item} & \textbf{LLM (M $\pm$ SD)} & \textbf{Rule (M $\pm$ SD)} & \textbf{$\Delta$} & \textbf{$t$} & \textbf{$p$} \\
+\textbf{Dimension} & \textbf{Item} & \textbf{LLM (M $\pm$ SD)} & \textbf{Rule (M $\pm$ SD)} & \textbf{$\Delta$} & \textbf{$t$} & \textbf{$p$} & \textbf{$d_z$} \\
 \midrule
 Clarity
-  & Clear and easy to understand      & $4.22 \pm 0.73$ & $4.03 \pm 0.95$ & $+0.20$ & $1.75$ & $.088$ \\
-  & Specific and unambiguous           & $3.83 \pm 0.96$ & $3.70 \pm 1.07$ & $+0.12$ & $1.30$ & $.200$ \\
-  & Easy to know how to answer         & $4.10 \pm 0.96$ & $4.03 \pm 1.05$ & $+0.07$ & $0.62$ & $.538$ \\
-  & \textbf{Composite}                 & $\mathbf{4.05 \pm 0.73}$ & $\mathbf{3.92 \pm 0.84}$ & $\mathbf{+0.13}$ & $\mathbf{2.58}$ & $\mathbf{.014}$* \\
+  & Clear and easy to understand      & $4.22 \pm 0.73$ & $4.03 \pm 0.95$ & $+0.20$ & $1.75$ & $.088$ & $0.28$ \\
+  & Specific and unambiguous           & $3.83 \pm 0.96$ & $3.70 \pm 1.07$ & $+0.12$ & $1.30$ & $.200$ & $0.21$ \\
+  & Easy to know how to answer         & $4.10 \pm 0.96$ & $4.03 \pm 1.05$ & $+0.07$ & $0.62$ & $.538$ & $0.10$ \\
+  & \textbf{Composite}                 & $\mathbf{4.05 \pm 0.73}$ & $\mathbf{3.92 \pm 0.84}$ & $\mathbf{+0.13}$ & $\mathbf{2.58}$ & $\mathbf{.014}$* & $\mathbf{0.41}$ \\
 \addlinespace
 Relevance
-  & Relevant to Sophie's health profile & $4.15 \pm 0.66$ & $3.77 \pm 0.80$ & $+0.38$ & $3.55$ & $.001$** \\
-  & Addressed important aspects         & $4.00 \pm 0.75$ & $3.62 \pm 0.87$ & $+0.38$ & $2.94$ & $.005$** \\
-  & Reflected changes since prev.\ month & $4.10 \pm 0.78$ & $3.60 \pm 0.93$ & $+0.50$ & $3.29$ & $.002$** \\
-  & \textbf{Composite}                  & $\mathbf{4.08 \pm 0.63}$ & $\mathbf{3.67 \pm 0.77}$ & $\mathbf{+0.42}$ & $\mathbf{3.69}$ & $\mathbf{<.001}$*** \\
+  & Relevant to Sophie's health profile & $4.15 \pm 0.66$ & $3.77 \pm 0.80$ & $+0.38$ & $3.55$ & $.001$** & $0.56$ \\
+  & Addressed important aspects         & $4.00 \pm 0.75$ & $3.62 \pm 0.87$ & $+0.38$ & $2.94$ & $.005$** & $0.46$ \\
+  & Reflected changes since prev.\ month & $4.10 \pm 0.78$ & $3.60 \pm 0.93$ & $+0.50$ & $3.29$ & $.002$** & $0.52$ \\
+  & \textbf{Composite}                  & $\mathbf{4.08 \pm 0.63}$ & $\mathbf{3.67 \pm 0.77}$ & $\mathbf{+0.42}$ & $\mathbf{3.69}$ & $\mathbf{<.001}$*** & $\mathbf{0.58}$ \\
 \addlinespace
 Quality
-  & Captured important details           & $3.90 \pm 0.74$ & $3.50 \pm 0.88$ & $+0.40$ & $3.57$ & $.001$** \\
-  & Well designed for meaningful assessment & $4.00 \pm 0.78$ & $3.58 \pm 0.93$ & $+0.42$ & $3.60$ & $.001$** \\
-  & Natural and appropriate              & $3.98 \pm 0.89$ & $3.92 \pm 0.80$ & $+0.05$ & $0.36$ & $.720$ \\
-  & \textbf{Composite}                  & $\mathbf{3.96 \pm 0.65}$ & $\mathbf{3.67 \pm 0.73}$ & $\mathbf{+0.29}$ & $\mathbf{3.76}$ & $\mathbf{<.001}$*** \\
+  & Captured important details           & $3.90 \pm 0.74$ & $3.50 \pm 0.88$ & $+0.40$ & $3.57$ & $.001$** & $0.56$ \\
+  & Well designed for meaningful assessment & $4.00 \pm 0.78$ & $3.58 \pm 0.93$ & $+0.42$ & $3.60$ & $.001$** & $0.57$ \\
+  & Natural and appropriate              & $3.98 \pm 0.89$ & $3.92 \pm 0.80$ & $+0.05$ & $0.36$ & $.720$ & $0.06$ \\
+  & \textbf{Composite}                  & $\mathbf{3.96 \pm 0.65}$ & $\mathbf{3.67 \pm 0.73}$ & $\mathbf{+0.29}$ & $\mathbf{3.76}$ & $\mathbf{<.001}$*** & $\mathbf{0.59}$ \\
 \bottomrule
 \end{tabular}
 \end{table*}
@@ -761,7 +761,7 @@ more comfortable or natural to complete.
 
 The composite Quality score was significantly higher for the LLM-based method
 ($\Delta=+0.29$, $t(39)=3.76$, $p<.001$). This suggests that participants
-viewed the LLM-generated transformations as better aimed at Sophie's situation,
+viewed the LLM-based transformations as better aimed at Sophie's situation,
 particularly in terms of capturing meaningful details, rather than simply as a
 more pleasant interaction.
 
@@ -787,8 +787,8 @@ prior history.
 
 The open-ended responses helped explain why the LLM-based method was rated
 more favourably, particularly in Relevance. In the comparison question, 20
-respondents explicitly preferred the LLM-based version, compared with four who
-preferred the rule-based version and one who felt the two were similar. The
+respondents explicitly preferred the LLM-based version, compared with three who
+preferred the rule-based version and one who felt the two were broadly similar. The
 most common reasons for preferring the LLM method were that it felt more
 personalised or tailored, adapted to previous-month history, required less
 effort, or felt more natural. Representative comments described the LLM version
@@ -857,7 +857,7 @@ whether a questionnaire is adapted with an LLM. A static rule-based method can
 remain clear when its items are carefully designed.
 
 For RQ2, the findings suggest that participants perceived the LLM-based method
-as somewhat higher in Quality. This may reflect the way the generated questions
+as somewhat higher in Quality. This may reflect the way the LLM-adapted questions
 were framed around Sophie's student background and ongoing mental health
 pattern. However, this result should be interpreted as perceived questionnaire
 quality rather than evidence of clinical validity. The study did not evaluate
@@ -931,7 +931,7 @@ Fifth, the prototype focused only on the mental health pathway, used a single
 LLM provider, and was evaluated with a small convenience sample. Future studies
 should use counterbalanced presentation orders, larger and more diverse
 participant groups, longer longitudinal scenarios, and clinician review of
-generated questions before making claims about clinical suitability.
+LLM-adapted questions before making claims about clinical suitability.
 
 % ── Section 7: Conclusion ─────────────────────────────────────────────────────
 \section{Conclusion}
@@ -973,7 +973,12 @@ Future versions should also record downstream risk scores and compare whether
 different question sequences produce measurably different assessment outcomes.
 This would connect the present user-perception findings to the broader
 Navigator aim of improving data quality for health monitoring and prediction.
-Finally, LLM-generated or LLM-adapted questions should be reviewed by clinical
+Making individual check-in questions optional and tracking skip rates per
+method would further provide a behavioural measure of perceived relevance,
+complementing the self-reported ratings used in this study: a question
+that participants consistently skip may indicate low relevance more directly
+than a Likert rating alone.
+Finally, LLM-based or LLM-adapted questions should be reviewed by clinical
 or domain experts before use in higher-risk settings, and the approach should
 be tested across other health domains beyond mental health.
 

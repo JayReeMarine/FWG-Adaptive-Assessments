@@ -21,7 +21,7 @@
 
 \author{
   \IEEEauthorblockN{Jaeyun Ree, Khang Nguyen, Zachary Yeap}
-  \IEEEauthorblockA{Department of Software Systems and Cybersecurity\\
+  \IEEEauthorblockA{Department of Software Engineering\\
                     Faculty of Information Technology, Monash University}
 }
 % ─────────────────────────────────────────────────────────────────────────────
@@ -80,9 +80,9 @@ To address this gap, we developed \emph{Navigator}, a web-based prototype that
 implements two distinct monthly mental health check-in methods within the same
 application environment:
 \begin{itemize}
-  \item \textbf{Rule-based method:} predefined branching logic determines which
-        follow-up questions appear based on fixed risk-level thresholds.
-  \item \textbf{LLM-based method:} Google Gemini 2.5 Flash dynamically generates
+  \item \textbf{Static rule-based method:} predefined branching logic determines
+        which follow-up questions appear based on fixed risk-level thresholds.
+  \item \textbf{Dynamic LLM-based method:} Google Gemini 2.5 Flash dynamically generates
         personalised questions from the user's health profile and prior assessment data.
 \end{itemize}
 Using a within-subjects study design, participants interacted with both methods via a
@@ -808,6 +808,18 @@ that LLMs may be particularly useful when questionnaire systems need to connect
 standard assessment content with individual history, rather than simply present
 the same static items at each check-in.
 
+Taken together, the improvements in perceived relevance and quality carry
+practical implications beyond user experience. If an adaptive method can
+produce questions that users find more relevant to their situation, respondents
+are more likely to engage meaningfully rather than providing superficial or
+habitual answers. In the context of health monitoring, more engaged and
+thoughtful responses can improve the quality of collected data, which in turn
+can strengthen the accuracy of downstream risk prediction. While this study
+did not directly measure prediction outcomes, the observed pattern suggests
+that LLM-based adaptation may contribute to better data collection, and
+therefore better prediction capability, by asking questions that users perceive
+as genuinely connected to their circumstances.
+
 \subsection{Limitations}
 \label{subsec:limitations}
 
@@ -845,12 +857,18 @@ refer to sensitive personal experiences.
 Fourth, the study measured perceived clarity, quality, relevance, and
 preference rather than clinical accuracy or health outcomes. The results
 therefore cannot show that the LLM-based method leads to improved clinical
-outcomes or more accurate risk assessment. The prototype also focused only
-on the mental health pathway, used a single LLM provider, and was evaluated with
-a small convenience sample. Future studies should use counterbalanced
-presentation orders, larger and more diverse participant groups, longer
-longitudinal scenarios, and clinician review of generated questions before
-making claims about clinical suitability.
+outcomes or more accurate risk assessment. Moreover, the prototype did not log
+the risk assessment scores (derived from PHQ-9 and GAD-7 mappings) computed
+during each condition, preventing a direct comparison of whether the two
+methods produced different risk profiles for the same persona scenario. Future
+work should record these scores to enable analysis of whether improved question
+relevance translates into measurably different assessment outcomes.
+
+Fifth, the prototype focused only on the mental health pathway, used a single
+LLM provider, and was evaluated with a small convenience sample. Future studies
+should use counterbalanced presentation orders, larger and more diverse
+participant groups, longer longitudinal scenarios, and clinician review of
+generated questions before making claims about clinical suitability.
 
 % ── Section 7: Conclusion ─────────────────────────────────────────────────────
 \section{Conclusion}

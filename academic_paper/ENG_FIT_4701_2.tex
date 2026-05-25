@@ -16,13 +16,11 @@
 \bibliographystyle{IEEEtran}
 
 % ── Project Data ──────────────────────────────────────────────────────────────
-\title{Evaluating LLM-Based and Rule-Based Adaptive Mental Health\\
-       Questionnaires: A Human-Centric User Study}
+\title{A Human-Centric Adaptive Assessments: Evaluating Static Rule-Based and Dynamic LLM-Based Mental Health Questionnaires}
 
 \author{
-  \IEEEauthorblockN{Jaeyun Ree, Khang Nguyen, Zachary Yeap}
-  \IEEEauthorblockA{Department of Software Engineering\\
-                    Faculty of Information Technology, Monash University}
+  \IEEEauthorblockN{Jaeyun Ree, Khang Huynh, and Zachary Yeap}
+  \IEEEauthorblockA{Department of Software Engineering}
 }
 % ─────────────────────────────────────────────────────────────────────────────
 
@@ -32,12 +30,13 @@
 
 % ── Abstract ─────────────────────────────────────────────────────────────────
 \begin{abstract}
+% TODO: ~150 words
+% Hint: Cover (1) problem: static questionnaires fail to reflect changing conditions,
+%       (2) approach: Navigator prototype with rule-based and LLM-based methods,
+%       (3) study: within-subjects user study, metrics: Clarity / Quality / Relevance,
+%       (4) key findings.
 Static mental health check-in questionnaires can be clear and clinically
-grounded, but they often repeat the same items regardless of a user's changing
-context. This paper presents Navigator, a web-based prototype comparing a
-static rule-based monthly check-in with a dynamic LLM-based method that adapts
-baseline questions using a controlled persona and previous-month health
-profile. Forty valid participants evaluated both methods through a
+grounded, but they often repeat the same questions regardless of a user's fluctuating mental health state. This study presents Navigator, a web-based prototype comparing a static rule-based monthly check-in with a dynamic LLM-based method. This dynamic method adapts the baseline questions using a controlled persona and a health profile from the previous-month. Forty valid participants evaluated both methods through a
 within-subjects survey grounded in COSMIN content-validity dimensions:
 Clarity, Relevance, and Quality. The LLM-based method received higher composite ratings across all three
 dimensions, with the most pronounced difference in Relevance. Qualitative responses further suggested that
@@ -45,12 +44,12 @@ participants valued the LLM method for its personalisation and history-aware
 questioning, while the rule-based method remained understandable and
 straightforward. These findings indicate that the primary advantage of
 LLM-based adaptation lies not in clearer wording alone, but in making questions
-feel more contextually relevant to an evolving health profile.
+feel more contextually relevant to an evolving health profile. The findings indicate that improving the Clarity, Relevance and Quality of questionnaires using initial seed data could help Navigator to better predict health outcome.  
 \end{abstract}
 
 % ── Section 1: Introduction ───────────────────────────────────────────────────
 \section{Introduction}
-\label{sec:intro}
+\label{sec:intro} 
 
 Mental health is increasingly recognised as a critical component of overall well-being,
 and digital health applications are playing a growing role in routine screening and
@@ -62,27 +61,25 @@ current condition, prior responses, or longitudinal history. While these instrum
 are clinically validated, repeated administration of the same questions can increase
 self-report burden and reduce user engagement over time \cite{maatoug2021}.
 
-Adaptive questionnaire techniques, such as branching logic and computerised adaptive
+Adaptive questionnaire techniques, such as pre-determined branching logic and computerised adaptive
 screening, have been introduced to partially address this limitation by tailoring question
 sequences to user input \cite{wang2023}. However, these static rule-based mechanisms remain
 bounded by predefined decision trees and cannot generate non-repetitive new question sets
 or dynamically reframe questions based on a user's individual context.
 Prior work on computerised adaptive testing has shown that adaptive selection
-can reduce question burden while preserving measurement performance
+can reduce question burden while preserving the quality of the measurement.
 \cite{gibbons2008, choi2010}, further motivating exploration of more flexible
 adaptation methods \cite{malanin2025}.
 
 Recent advances in Large Language Models (LLMs) open a new design space for adaptive
-assessment: LLMs can synthesise context-aware questions informed by a user's health
+assessment to better predict health outcome: LLMs can synthesise context-aware questions informed by a user's health
 profile and prior responses, and have begun to be explored as engines for
 patient-reported outcome measures \cite{terheyden2025}. Despite this promise,
 the use of LLMs in mental health remains at an early stage. A recent systematic review
-of mental health chatbots highlights that most existing systems are still rule-based,
-and that LLM-based designs, while more flexible, introduce new concerns around safety,
+of mental health chatbots highlights that most existing systems use pre-determined rule-based questionnaires,
+and that LLM-based questionnaires designs, while more flexible, introduce new concerns around safety,
 appropriateness, and clinical reliability \cite{hua2025, li2025llm, shen2026}.
-To date, no study has directly compared LLM-based and rule-based adaptive mental health
-questionnaires within a single unified application using a controlled, human-centric
-evaluation.
+Although both Dynamic LLM-based and Statistic rule-based adaption method exist, the current literature lacks a direct human-centric comparison of these two approaches within the same application environment. The comparison helps identify better method for the development of mental health apps. Furthermore, utilizing a unified platform allows us to evaluate questionnaire clarity, relevance, and quality without bias. 
 
 To address this gap, we developed \emph{Navigator}, a web-based prototype that
 implements two distinct monthly mental health check-in methods within the same
@@ -177,7 +174,7 @@ completed the full protocol and the average daily response rate was 62.5\%
 from engagement and completion challenges, even when the underlying measures
 are clinically meaningful.
 
-Beyond engagement, fixed wording can raise concerns about content validity.
+Beyond engagement, fixed wording can raise concerns about content validity and relevance.
 Baas et al.\ \cite{baas2011} demonstrated that one PHQ-9 item exhibited measurement
 non-invariance across ethnic groups, revealing cultural bias in supposedly
 universal items. Wild et al.\ \cite{wild2005} similarly argue that questionnaire wording
@@ -270,15 +267,15 @@ the adaptation method itself.
 \subsection{Evaluation Framework: Content Validity via COSMIN}
 \label{subsec:rw_cosmin}
 
-To evaluate the two adaptation methods on common ground, we adopt the COSMIN
+To evaluate the two adaptive assessments methods on common ground, we adopt the COSMIN
 content-validity framework \cite{terwee2018}. Drawing on an international
 Delphi study of 159 experts, COSMIN formalises content validity along three
 dimensions: \emph{relevance}, \emph{comprehensiveness}, and
 \emph{comprehensibility}, for the target population and context of use. We
 map these directly onto the three evaluation metrics used in this paper:
-\emph{comprehensibility} corresponds to \emph{Clarity} (whether the wording is
+\emph{comprehensibility} corresponds to \emph{Clarity} (whether the wording of questionnaires is
 easy to understand), \emph{relevance} corresponds to \emph{Relevance} (whether
-the items fit the participant's context), and \emph{comprehensiveness}
+the questionnaires fit the participant's context), and \emph{comprehensiveness}
 corresponds to perceived \emph{Quality}, since participants are asked to
 judge whether each adaptive question appears complete, appropriate, and
 useful within the monthly mental-health check-in context (see
@@ -340,7 +337,7 @@ pre-authored enhanced questions if the API is unavailable, ensuring that
 every participant in the study receives the same enhanced questionnaire
 content regardless of network conditions.
 
-\subsection{Rule-Based Method}
+\subsection{Static Rule-Based Adaption Method}
 \label{subsec:rule_based}
 
 The rule-based method adapts monthly check-in questionnaires through a
@@ -376,7 +373,7 @@ months of Mild risk may warrant exploring it. The rule-based system
 cannot detect this longitudinal pattern because each rule evaluates a
 single response in isolation.
 
-\subsection{Dynamic LLM-Based Adapation Method}
+\subsection{Dynamic LLM-Based Adaption Method}
 \label{subsec:llm_based}
 
 The LLM-based method adapts personalised monthly check-in questions by
@@ -457,7 +454,7 @@ To enable a fair within-subjects comparison, both methods are evaluated
 using a single standardised persona rather than participants' own health
 data. ``Sophie'' is a fictional 24-year-old female East Asian
 international university student whose Month~1 foundational assessment
-produced a Mild mental health risk classification and None across all
+produced a Mild mental health risk prediction and None across all
 other domains. Her context notes record specific response details: a mood
 frequency score of~1 (``Several days''), a low and stable isolation
 score, and no triggered functional-impact questions.
@@ -465,7 +462,7 @@ score, and no triggered functional-impact questions.
 The decision to use a fixed persona serves three evaluation purposes.
 First, it eliminates between-participant variation in health profiles,
 ensuring that every participant sees the same rule-based and LLM-based
-questionnaire outputs and that observed differences in Clarity, Quality,
+questionnaires and that observed differences in Clarity, Quality,
 and Relevance ratings reflect the adaptation method rather than
 individual health circumstances. Second, it avoids the ethical
 complications of collecting real mental health data in a prototype
@@ -487,7 +484,7 @@ produced by the LLM method) might be particularly relevant, while
 remaining relatable to the predominantly university-aged participant pool.
 
 % ── Study Design (subsections within Methodology) ────────────────────────────
-\subsection{Research Design}
+\subsection{Study Design}
 \label{subsec:research_design}
 \label{sec:study}
 
@@ -528,7 +525,7 @@ students enrolled at Monash University Malaysia and Indonesia campuses
 were excluded from recruitment, as the approval was scoped to the
 Australian campus.
 
-A total of 42 responses were received between 25~April and 13~May~2026.
+A total of 42 responses were received between 25~April and 22~May~2026.
 After excluding one non-consent response and one invalid submission, 40
 valid responses were retained. Demographic details are reported in
 Section~\ref{subsec:demographics}.
@@ -708,6 +705,10 @@ Quality
 
 \subsection{Clarity}
 \label{subsec:clarity_results}
+% TODO: Report per-item and composite Clarity scores.
+%       LLM mean 4.08 vs Rule 3.94 -- smallest gap of the three dimensions.
+%       Both methods rated positively; suggests both were clearly worded.
+%       Interpret: wording clarity is less sensitive to static vs dynamic distinction.
 
 Both methods were rated positively for Clarity, with all item means above~3.7.
 The LLM-based method scored slightly higher on each item: clear and easy to
@@ -729,6 +730,11 @@ advantage while preserving overall comprehensibility.
 
 \subsection{Relevance}
 \label{subsec:relevance_results}
+% TODO: Report per-item and composite Relevance scores.
+%       LLM mean 4.09 vs Rule 3.68 -- LARGEST gap (+0.40).
+%       Key item: "Reflected changes since previous month" shows biggest LLM advantage.
+%       Interpret: context-awareness and longitudinal history drive relevance perception.
+%       This is the dimension where static vs dynamic distinction is most visible.
 
 Relevance showed the clearest separation between methods. The LLM-based method
 was rated higher on all three relevance items: relevance to Sophie's health
@@ -747,8 +753,12 @@ unless those pathways were manually encoded. The LLM-based method was
 therefore perceived as more relevant because it could adapt question wording
 and selection to the persona's previous state.
 
+
 \subsection{Quality}
 \label{subsec:quality_results}
+% TODO: Report per-item and composite Quality scores.
+%       LLM mean 3.96 vs Rule 3.68 -- moderate gap (+0.27).
+%       Interpret: LLM questions felt more meaningful and well-designed overall.
 
 Quality ratings also favoured the LLM-based method, though the pattern was more
 specific than a general improvement in user experience. The LLM-based method
@@ -764,8 +774,15 @@ viewed the LLM-based transformations as better aimed at Sophie's situation,
 particularly in terms of capturing meaningful details, rather than simply as a
 more pleasant interaction.
 
-\subsection{Overall Satisfaction and Preference}
+\subsection{Overall Preference}
 \label{subsec:preference_results}
+% TODO: Report preference distribution (n=39):
+%       Satisfied with both:    17 (43.6%)
+%       Dynamic LLM-based:      12 (30.8%)
+%       Static Rule-based:       8 (20.5%)
+%       Neither:                  2 (5.1%)
+%       Interpretation: largest group preferred both -- rule-based was not poor.
+%       Combined LLM preference (LLM only + both) = 74.4%.
 
 The overall satisfaction item was multi-select, so responses indicate
 endorsement rather than mutually exclusive preference. A majority of
@@ -783,6 +800,17 @@ prior history.
 
 \subsection{Qualitative Findings}
 \label{subsec:qual}
+% TODO: Thematic analysis of open-ended responses (theme → code → % → quote).
+%       Q2 themes (n=39):
+%         Personalisation/Relevance       8 (20.5%) -- "The LLM felt more specific and tailored" (P23)
+%         No strong preference / Both OK 11 (28.2%) -- "Both were easy to complete" (P33)
+%         Longitudinal awareness          4 (10.3%) -- "LLM linked back to Month 1 questions" (P16)
+%         Simplicity/Transparency (Rule)  4 (10.3%) -- "Rule-based gave more context of prev. month" (P38)
+%         Natural/Conversational          3  (7.7%) -- "LLM feels more human-like" (P05)
+%       Q3 improvement themes:
+%         More personalisation in LLM     3  (7.7%)
+%         Better guidance/instructions    2  (5.1%)
+%         User control/flexibility        1  (2.6%)
 
 The open-ended responses helped explain why the LLM-based method was rated
 more favourably, particularly in Relevance. In the comparison question, 20
@@ -804,6 +832,13 @@ personal depth and interface polish from an adaptive system.
 
 \subsection{Summary of Key Observations}
 \label{subsec:summary}
+% TODO: Synthesise quantitative + qualitative findings in 1 paragraph.
+%       Key message: LLM-based method was perceived as more relevant and
+%       context-aware (especially on Relevance dimension), but both methods
+%       performed well on Clarity, confirming that the static rule-based
+%       questions were competently designed. The primary advantage of the
+%       LLM-based method lies in its dynamic, context-aware adaptation
+%       rather than in surface-level wording quality.
 
 Across the nine evaluation items, the LLM-based questionnaire was rated equal
 to or higher than the rule-based questionnaire in every case. The largest
@@ -814,7 +849,6 @@ connected to Sophie's profile and previous-month condition. The qualitative
 themes converged with this interpretation: participants most often praised the
 LLM method for personalisation, history awareness, and contextual fit, while
 still recognising that the rule-based method was straightforward and usable.
-
 % ── Section 6: Discussion ─────────────────────────────────────────────────────
 \section{Discussion}
 \label{sec:discussion}
@@ -875,11 +909,11 @@ practical implications beyond user experience. If an adaptive method can
 produce questions that users find more relevant to their situation, respondents
 are more likely to engage meaningfully rather than providing superficial or
 habitual answers. In the context of health monitoring, more engaged and
-thoughtful responses can improve the quality of collected data, which in turn
+Thoughtful responses can improve the quality of collected data, which in turn
 can strengthen the accuracy of downstream risk prediction. While this study
 did not directly measure prediction outcomes, the observed pattern suggests
 that LLM-based adaptation may contribute to better data collection, and
-therefore better prediction capability, by asking questions that users perceive
+therefore, better prediction capability, by asking questions that users perceive
 as genuinely connected to their circumstances.
 
 \subsection{Limitations}
@@ -935,10 +969,17 @@ LLM-adapted questions before making claims about clinical suitability.
 % ── Section 7: Conclusion ─────────────────────────────────────────────────────
 \section{Conclusion}
 \label{sec:conclusion}
+% TODO: ~0.3 page
+% Summarise: problem (static questionnaires), approach (Navigator prototype,
+% rule-based vs LLM-based, Sophie persona, COSMIN evaluation),
+% key findings (LLM significantly higher on Relevance and Quality;
+% static vs dynamic distinction more explanatory than wording quality),
+% implications (adaptive health questionnaire design should prioritise
+% context-awareness and longitudinal integration over cosmetic wording changes).
 
 This study evaluated whether an LLM-based adaptive questionnaire method could
 improve user perceptions of mental health check-in questions compared with a
-static rule-based method. Using the Navigator prototype and a controlled Sophie
+static rule-based method. Using the Navigator prototype for mental health and a controlled Sophie
 persona, participants completed both versions and rated them across Clarity,
 Relevance, and Quality. The findings show that the LLM-based method was rated
 higher across all three composite dimensions, with the clearest advantage in
@@ -948,15 +989,24 @@ participants preferred the LLM-based version.
 
 The study does not show that LLMs are clinically superior to rule-based
 questionnaires, nor that they produce more accurate mental health risk
-assessment. Instead, it shows that LLM-based adaptation can make questionnaire
+assessment. Overall, this study demonstrates that LLM-based adaptation can make questionnaire
 content feel more connected to a user's profile and previous responses within a
 controlled prototype setting. The main contribution of this work is therefore a
 human-centred evaluation of static versus dynamic adaptation, showing that the
-value of LLMs in health questionnaire systems lies primarily in contextual
+value of LLMs in mental health questionnaire systems lies primarily in contextual
 relevance rather than clearer wording alone.
+
 
 \subsection{Future Work}
 \label{subsec:future}
+% TODO:
+%   - Broader participant pool (clinical populations, older demographics)
+%   - Counterbalanced study design to control for order effects
+%   - Multiple LLM providers comparison
+%   - Longitudinal study: same participants across multiple monthly check-ins
+%   - Real patient data integration (beyond mock persona)
+%   - Clinical validation of LLM-generated questions with domain experts
+%   - Expansion to other health domains (dietary, physical activity, etc.)
 
 Future work should extend this evaluation in several ways. First, a
 counterbalanced study design should be used so that some participants complete
@@ -980,6 +1030,7 @@ than a Likert rating alone.
 Finally, LLM-based or LLM-adapted questions should be reviewed by clinical
 or domain experts before use in higher-risk settings, and the approach should
 be tested across other health domains beyond mental health.
+
 
 % ── References ────────────────────────────────────────────────────────────────
 \bibliography{ENG_FIT_4701_2.bib}

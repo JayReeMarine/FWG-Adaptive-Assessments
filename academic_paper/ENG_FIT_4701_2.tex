@@ -801,6 +801,7 @@ and selection to the persona's previous state.
   \label{fig:relevance}
 \end{figure}
 
+
 \subsection{Quality}
 \label{subsec:quality_results}
 % TODO: Report per-item and composite Quality scores.
@@ -894,42 +895,45 @@ These comments indicate that participants valued the direction of LLM-based
 adaptation, but also expected a higher level of personal depth and interface
 polish from an adaptive system.
 
-\begin{table}[t]
-\caption{Thematic analysis of questionnaire preference (Q2, $n=39$).}
+\begin{table*}[t]
+\caption{Qualitative thematic analysis of open-ended responses. Panel~(a) summarises questionnaire preference themes (Q2, $n=39$); Panel~(b) summarises improvement suggestions (Q3, $n=13$).}
 \label{tab:qual_preference}
+\label{tab:qual_improvement}
 \centering
 \small
-\begin{tabular}{@{}p{3.6cm}rrl@{}}
+\begin{minipage}[t]{0.48\textwidth}
+\centering
+\textbf{(a) Questionnaire Preference (Q2)}\\[4pt]
+\begin{tabular}{@{}p{2.8cm}rrp{3.2cm}@{}}
 \toprule
 \textbf{Theme} & \textbf{$n$} & \textbf{\%} & \textbf{Example} \\
 \midrule
 No strong preference       & 11 & 28.2 & ``Both were easy to complete'' \\
-Personalisation / Relevance & 8 & 20.5 & ``Felt more specific and tailored'' \\
+Personalisation / Relevance & 8 & 20.5 & ``More specific and tailored'' \\
 Longitudinal awareness      & 4 & 10.3 & ``Linked back to Month~1'' \\
 Simplicity (Rule-based)     & 4 & 10.3 & ``Rule-based was straightforward'' \\
 Natural / Conversational    & 3 &  7.7 & ``Feels more human-like'' \\
-Brevity / Efficiency        & 2 &  5.1 & ``Less questions, straight to point'' \\
+Brevity / Efficiency        & 2 &  5.1 & ``Straight to the point'' \\
 \bottomrule
 \end{tabular}
-\end{table}
-
-\begin{table}[t]
-\caption{Improvement suggestions from open-ended feedback (Q3, $n=13$).}
-\label{tab:qual_improvement}
+\end{minipage}%
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
 \centering
-\small
-\begin{tabular}{@{}p{3.6cm}rrl@{}}
+\textbf{(b) Improvement Suggestions (Q3)}\\[4pt]
+\begin{tabular}{@{}p{2.8cm}rrp{3.2cm}@{}}
 \toprule
 \textbf{Theme} & \textbf{$n$} & \textbf{\%} & \textbf{Example} \\
 \midrule
 More personalisation        & 4 & 30.8 & ``More depth in LLM questions'' \\
 Scoring / display bugs      & 2 & 15.4 & ``Scores seemed inverted'' \\
 New features (open text)    & 2 & 15.4 & ``Short answers for updates'' \\
-UI / navigation issues      & 1 &  7.7 & ``Side-by-side was hard to navigate'' \\
+UI / navigation issues      & 1 &  7.7 & ``Hard to navigate side-by-side'' \\
 Clearer instructions        & 1 &  7.7 & ``More guidance for the process'' \\
 \bottomrule
 \end{tabular}
-\end{table}
+\end{minipage}
+\end{table*}
 
 \subsection{Summary of Key Observations}
 \label{subsec:summary}

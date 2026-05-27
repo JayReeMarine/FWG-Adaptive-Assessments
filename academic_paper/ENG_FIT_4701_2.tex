@@ -78,11 +78,12 @@ engines for patient-reported outcome measures \cite{terheyden2025}. Despite this
 the use of LLMs in mental health remains at an early stage. A recent systematic review
 of mental health chatbots highlights that most existing systems use pre-determined rule-based questionnaires,
 and that LLM-based questionnaire designs, while more flexible, introduce new concerns around safety,
-appropriateness, and clinical reliability \cite{hua2025, li2025llm, shen2026}.
+appropriateness, and validation \cite{hua2025, li2025llm, shen2026}.
 Despite this growing body of work, no study has directly compared LLM-based
 and rule-based adaptive mental health questionnaires within a single
 application using a controlled, human-centric evaluation grounded in
-established content-validity criteria such as clinical reliability.
+established content-validity criteria such as relevance, comprehensibility,
+and comprehensiveness.
 
 
 To address this gap, we developed \emph{Navigator}, a web-based prototype that
@@ -140,7 +141,7 @@ this rigidity, but remain bounded by predefined item banks or decision trees
 \cite{gibbons2008, wang2023}. More recently, large language models have been
 explored as engines for generating personalised patient-reported outcome items
 \cite{terheyden2025}, though their use in mental health is still at an early
-stage and raises concerns around safety and clinical reliability
+stage and raises concerns around safety and validation
 \cite{hua2025, shen2026}. Despite this growing body of work, no study has
 directly compared rule-based and LLM-based adaptive questionnaires within a
 single application using a controlled, human-centric evaluation.
@@ -346,7 +347,9 @@ scoring pipeline, so that any difference participants observe can be
 attributed to the adaptation method itself rather than to interface
 variation. Figure~\ref{fig:homepage} shows the Navigator landing page,
 including the pre-filled foundational assessment (Step~1) and the two
-monthly check-in pathways (Step~2).
+monthly check-in pathways (Step~2). Figure~\ref{fig:persona_reference}
+shows the persona reference provided to participants before they completed
+the two monthly check-ins.
 
 \begin{figure}[t]
   \centering
@@ -355,17 +358,38 @@ monthly check-in pathways (Step~2).
   \label{fig:homepage}
 \end{figure}
 
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.95\columnwidth]{figures/persona_reference.png}
+  \caption{Persona reference shown to participants in the user guide. The reference defines Sophie's demographic profile, Month~1 mental health risk level, and key notes used as the Month~0/Month~1 context for the adaptive check-in.}
+  \label{fig:persona_reference}
+\end{figure}
+
 For LLM-based question generation, the application calls the Google
-Gemini~2.5 Flash API. This model was selected based on four practical
-criteria aligned with the prototype's requirements: (1)~a free-tier API
-with sufficient quota, which supports reproducibility by allowing other
-researchers to replicate the pipeline without commercial licensing;
-(2)~native JSON response mode, enabling structured output that maps
-directly to the questionnaire data schema without additional parsing;
-(3)~low inference latency, a practical requirement for generating
-questionnaire items in real time within a web application; and
-(4)~integration within the Google Cloud ecosystem, which simplified
-deployment alongside the Flutter web front-end and Supabase back-end.
+Gemini~2.5 Flash API. Before final implementation, the research team
+screened three candidate LLM options---Gemini, an OpenAI GPT model, and
+an Anthropic Claude model---using the same Sophie scenario, baseline
+mental health questions, and structured JSON output requirement. The
+outputs were reviewed by the team against three implementation criteria:
+whether the model preserved the intended mental health constructs,
+whether it produced useful personalised wording rather than generic
+paraphrases, and whether it consistently followed the required JSON
+schema. This screening was used for implementation selection rather than
+as a formal model benchmark. Gemini~2.5 Flash was selected because it
+provided the strongest fit for the prototype environment while producing
+adapted questions that the team judged to be aligned with the baseline
+items and Sophie's longitudinal context.
+
+The final selection was also supported by four practical criteria aligned
+with the prototype's requirements: (1)~a free-tier API with sufficient
+quota, which supports reproducibility by allowing other researchers to
+replicate the pipeline without commercial licensing; (2)~native JSON
+response mode, enabling structured output that maps directly to the
+questionnaire data schema without additional parsing; (3)~low inference
+latency, a practical requirement for generating questionnaire items in
+real time within a web application; and (4)~integration within the Google
+Cloud ecosystem, which simplified deployment alongside the Flutter web
+front-end and Supabase back-end.
 We acknowledge that the choice of a single LLM provider limits the
 generalisability of results; observed differences may partly reflect
 model-specific generation characteristics rather than properties of
@@ -375,7 +399,7 @@ if the API is unavailable, ensuring that every participant in the study
 receives the same enhanced questionnaire content regardless of network
 conditions.
 
-\subsection{Static Rule-Based Adaption Method}
+\subsection{Static Rule-Based Adaptation Method}
 \label{subsec:rule_based}
 
 The rule-based method adapts monthly check-in questionnaires through a
@@ -415,7 +439,7 @@ months of Mild risk may warrant exploring it. The rule-based system
 cannot detect this longitudinal pattern because each rule evaluates a
 single response in isolation.
 
-\subsection{Dynamic LLM-Based Adaption Method}
+\subsection{Dynamic LLM-Based Adaptation Method}
 \label{subsec:llm_based}
 
 The LLM-based method adapts personalised monthly check-in questions by
@@ -464,20 +488,21 @@ and benchmarked against fixed instruments. In Navigator, the LLM does not
 generate questions from scratch; it \emph{transforms} baseline questions derived
 from validated instruments together with project-specific follow-up items,
 using the user's longitudinal context.
-Table~\ref{tab:comparison} presents the five specific transformations
+Table~\ref{tab:comparison} presents the main question-level differences
 applied in Sophie's scenario: history-aware rephrasing of the mood
 frequency item, occupation-specific language for the manageability item,
 a new trend-direction item that captures the two-month persistent Mild
 pattern, early unlocking of the functional-impact item based on
-longitudinal rather than single-month thresholds, and omission of the
-isolation item where Month~1 data showed no change was expected.
+longitudinal rather than single-month thresholds, omission of the
+isolation item where Month~1 data showed no change was expected, and
+broader coverage of symptom frequency, trend, and functional consequence.
 
 \begin{table*}[t]
 \caption{Mental health check-in questions under each adaptation method for Sophie's Month~2 scenario, mapped to COSMIN content-validity dimensions. The rule-based column shows the questions produced by the branching engine; the LLM-based column shows the Gemini~2.5 Flash-assisted transformations.}
 \label{tab:comparison}
 \centering
 \small
-\begin{tabular}{@{}p{1.4cm}p{1.2cm}p{3.4cm}p{3.8cm}p{4.4cm}@{}}
+\begin{tabular}{@{}p{1.8cm}p{1.5cm}p{3.6cm}p{4.0cm}p{4.8cm}@{}}
 \toprule
 \textbf{Item} & \textbf{COSMIN} & \textbf{Rule-Based} & \textbf{LLM-Based} & \textbf{Transformation Rationale} \\
 \midrule
@@ -504,6 +529,12 @@ Functional impact
 & \emph{Hidden} because the mood score of~1 does not meet the $\geq 2$ threshold required by the branching rule.
 & ``Have these feelings made it harder for you to manage your daily life, for example, attending classes, completing work, or maintaining relationships?''
 & Unlocked early based on persistent pattern; phrasing adapted to student context. \\
+\addlinespace
+Assessment coverage
+& Quality
+& Visible questions focus mainly on current symptom frequency and generic manageability; functional consequence is absent when the threshold is not met.
+& Visible questions cover symptom continuity, student responsibilities, change direction, and functional impact.
+& Improves completeness of the monthly assessment by collecting both symptom status and practical impact. \\
 \addlinespace
 Isolation
 & Relevance
@@ -1111,7 +1142,7 @@ practical implications beyond user experience. If an adaptive method can
 produce questions that users find more relevant to their situation, respondents
 are more likely to engage meaningfully rather than providing superficial or
 habitual answers. In the context of health monitoring, more engaged and
-Thoughtful responses can improve the quality of collected data, which in turn
+thoughtful responses can improve the quality of collected data, which in turn
 can strengthen the accuracy of downstream risk prediction. While this study
 did not directly measure prediction outcomes, the observed pattern suggests
 that LLM-based adaptation may contribute to better data collection, and

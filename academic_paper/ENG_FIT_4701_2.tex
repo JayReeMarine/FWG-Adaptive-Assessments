@@ -336,7 +336,16 @@ adaptation methods. Both the rule-based and LLM-based monthly check-in methods
 share the same front-end layout, question rendering components, and
 scoring pipeline, so that any difference participants observe can be
 attributed to the adaptation method itself rather than to interface
-variation.
+variation. Figure~\ref{fig:homepage} shows the Navigator landing page,
+including the pre-filled foundational assessment (Step~1) and the two
+monthly check-in pathways (Step~2).
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.75\columnwidth]{figures/Homepage.png}
+  \caption{Navigator prototype landing page. Step~1 shows the foundational assessment pre-filled with Sophie's persona data; Step~2 presents the two monthly check-in methods.}
+  \label{fig:homepage}
+\end{figure}
 
 For LLM-based question generation, the application calls the Google
 Gemini~2.5 Flash API. This model was selected for its low latency and
@@ -461,6 +470,13 @@ Isolation
 \bottomrule
 \end{tabular}
 \end{table*}
+
+\begin{figure*}[t]
+  \centering
+  \includegraphics[width=0.85\textwidth]{figures/static_llm_comparison.png}
+  \caption{Side-by-side comparison of Sophie's Month~2 mental health check-in. Left: the LLM-based method adapts question wording using Sophie's prior history and student context. Right: the rule-based method presents the same generic questions regardless of the user's profile.}
+  \label{fig:method_comparison}
+\end{figure*}
 
 \subsection{Controlled Scenario: Sophie}
 \label{subsec:sophie}

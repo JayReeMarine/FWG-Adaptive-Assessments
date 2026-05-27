@@ -44,7 +44,8 @@ participants valued the LLM method for its personalisation and history-aware
 questioning, while the rule-based method remained understandable and
 straightforward. These findings indicate that the primary advantage of
 LLM-based adaptation lies not in clearer wording alone, but in making questions
-feel more contextually relevant to an evolving health profile, and that leveraging longitudinal assessment data to improve content validity may support more accurate health outcome prediction. \end{abstract}
+feel more contextually relevant to an evolving health profile, and that leveraging longitudinal assessment data to improve content validity may support more accurate health outcome prediction. 
+\end{abstract}
 
 % ── Section 1: Introduction ───────────────────────────────────────────────────
 \section{Introduction}
@@ -66,19 +67,22 @@ sequences to user input \cite{wang2023}. However, these static rule-based mechan
 bounded by predefined decision trees and cannot generate non-repetitive new question sets
 or dynamically reframe questions based on a user's individual context.
 Prior work on computerised adaptive testing has shown that adaptive selection
-can reduce question burden while preserving the quality of the measurement.
+can reduce question burden while preserving the quality of the measurement
 \cite{gibbons2008, choi2010}, further motivating exploration of more flexible
 adaptation methods \cite{malanin2025}.
 
 Recent advances in Large Language Models (LLMs) open a new design space for adaptive
-assessment to better predict health outcome: LLMs can synthesise context-aware questions informed by a user's health
-profile and prior responses, and have begun to be explored as engines for
-patient-reported outcome measures \cite{terheyden2025}. Despite this promise,
+assessment: LLMs can synthesise context-aware questions informed by a user's health
+profile, lifestyle changes, and prior responses, and have begun to be explored as
+engines for patient-reported outcome measures \cite{terheyden2025}. Despite this promise,
 the use of LLMs in mental health remains at an early stage. A recent systematic review
 of mental health chatbots highlights that most existing systems use pre-determined rule-based questionnaires,
-and that LLM-based questionnaires designs, while more flexible, introduce new concerns around safety,
+and that LLM-based questionnaire designs, while more flexible, introduce new concerns around safety,
 appropriateness, and clinical reliability \cite{hua2025, li2025llm, shen2026}.
-Although both Dynamic LLM-based and Statistic rule-based adaption method exist, the current literature lacks a direct human-centric comparison of these two approaches within the same application environment. The comparison helps identify better method for the development of mental health apps. Furthermore, utilizing a unified platform allows us to evaluate questionnaire clarity, relevance, and quality without bias. 
+Despite this growing body of work, no study has directly compared LLM-based
+and rule-based adaptive mental health questionnaires within a single
+application using a controlled, human-centric evaluation grounded in
+established content-validity criteria such as clinical reliability.
 
 To address this gap, we developed \emph{Navigator}, a web-based prototype that
 implements two distinct monthly mental health check-in methods within the same
@@ -126,21 +130,38 @@ Section~\ref{sec:discussion}, and conclusions in Section~\ref{sec:conclusion}.
 \section{Related Work}
 \label{sec:related}
 
-Although the broader Navigator project was initially framed around adaptive
-assessment across multiple chronic-disease domains \cite{aihw2012}, this paper
-narrows the evaluation to mental health check-ins, which provide a concrete,
-high-impact, and survey-feasible context for comparing rule-based and LLM-based
-adaptation methods. We accordingly organise prior work along three lines that
-progressively narrow toward our research question. We first review the dominant
-paradigm of static, validated mental health instruments and the limitations
-they impose on longitudinal self-report. We then survey existing adaptive
+Digital mental health applications increasingly offer routine self-monitoring
+through periodic check-ins, yet most rely on static, validated instruments
+that repeat the same items regardless of a user's changing condition
+\cite{kroenke2001, spitzer2006}. Adaptive approaches, from computerised
+adaptive testing to rule-based branching interfaces, have partially addressed
+this rigidity, but remain bounded by predefined item banks or decision trees
+\cite{gibbons2008, wang2023}. More recently, large language models have been
+explored as engines for generating personalised patient-reported outcome items
+\cite{terheyden2025}, though their use in mental health is still at an early
+stage and raises concerns around safety and clinical reliability
+\cite{hua2025, shen2026}. Despite this growing body of work, no study has
+directly compared rule-based and LLM-based adaptive questionnaires within a
+single application using a controlled, human-centric evaluation.
+
+Navigator is a web-based mental health questionnaire prototype developed to
+address this gap. It implements both a static rule-based and a dynamic
+LLM-based monthly check-in method within the same application environment,
+allowing direct comparison under identical conditions. Although the broader
+project was initially framed around adaptive assessment across multiple
+chronic-disease domains \cite{aihw2012}, this paper narrows the evaluation
+to mental health check-ins, which provide a concrete, high-impact, and
+survey-feasible context.
+
+We accordingly organise prior work along three lines that progressively
+narrow toward our research question. We first review the dominant paradigm
+of static, validated mental health instruments and the limitations they
+impose on longitudinal self-report. We then survey existing adaptive
 questionnaire strategies, from computerised adaptive testing to rule-based
-interface adaptation, and most recently to LLM-based patient-reported
-outcome measures. Finally, we examine the emerging body of work on LLM-based
-mental health systems, identifying both their promise and the safety
-considerations that constrain their design. We conclude by introducing the
-COSMIN content-validity framework \cite{terwee2018}, which provides the three
-evaluation dimensions used in this study.
+interface adaptation, and most recently to LLM-based patient-reported outcome
+measures. Finally, we examine the emerging body of work on LLM-based mental
+health systems, identifying both their promise and the safety considerations
+that constrain their design.
 
 \subsection{Mental Health Assessment and Static Instruments}
 \label{subsec:rw_static}
@@ -263,25 +284,14 @@ work addresses this gap by holding the application environment, the evaluation
 persona, and the participant group constant, thereby isolating the effect of
 the adaptation method itself.
 
-\subsection{Evaluation Framework: Content Validity via COSMIN}
-\label{subsec:rw_cosmin}
-
-To evaluate the two adaptive assessments methods on common ground, we adopt the COSMIN
-content-validity framework \cite{terwee2018}. Drawing on an international
-Delphi study of 159 experts, COSMIN formalises content validity along three
-dimensions: \emph{relevance}, \emph{comprehensiveness}, and
-\emph{comprehensibility}, for the target population and context of use. We
-map these directly onto the three evaluation metrics used in this paper:
-\emph{comprehensibility} corresponds to \emph{Clarity} (whether the wording of questionnaires is
-easy to understand), \emph{relevance} corresponds to \emph{Relevance} (whether
-the questionnaires fit the participant's context), and \emph{comprehensiveness}
-corresponds to perceived \emph{Quality}, since participants are asked to
-judge whether each adaptive question appears complete, appropriate, and
-useful within the monthly mental-health check-in context (see
-Section~\ref{subsec:metrics}). This grounding provides a principled basis for
-comparing rule-based and LLM-based adaptive questionnaires that draws on
-established patient-reported-outcome methodology rather than ad-hoc usability
-heuristics.
+Although several evaluation approaches exist for patient-reported outcome
+measures, the COSMIN (COnsensus-based Standards for the selection of health
+Measurement INstruments) framework \cite{terwee2018} is widely recognised as
+the methodological standard for assessing content validity. Drawing on an
+international Delphi study of 159 experts, COSMIN formalises content validity
+along three dimensions: \emph{relevance}, \emph{comprehensiveness}, and
+\emph{comprehensibility}. These dimensions align directly with the evaluation
+needs of this study, as described in Section~\ref{subsec:metrics}.
 
 % ── Section 3: Methodology ───────────────────────────────────────────────────
 \section{Methodology}
@@ -301,7 +311,7 @@ within a unified web-based prototype
 persona (Section~\ref{subsec:sophie}); (5)~design of a within-subjects
 user study with a COSMIN-grounded feedback survey
 (Sections~\ref{subsec:research_design}--\ref{subsec:metrics}); and
-(6)~data collection and analysis (Section~\ref{sec:results}).
+(6)~data collection and analysis (Section~\ref{subsec:data_collection}).
 
 The prototype was designed as an evaluation instrument rather than a
 production system: its purpose is to present both methods within a
@@ -580,16 +590,22 @@ completion, was estimated to take 10--15 minutes.
 \subsection{Evaluation Metrics}
 \label{subsec:metrics}
 
-Evaluation metrics are grounded in the three content-validity dimensions
-identified by the COSMIN framework \cite{terwee2018}, mapped to the
-study context as follows:
+We adopt the COSMIN content-validity framework \cite{terwee2018} to evaluate
+the two adaptation methods on common ground. COSMIN was selected because it
+is the most widely adopted standard for assessing the content validity of
+patient-reported outcome measures, grounded in an international Delphi
+consensus of 159 experts. This provides a principled basis for comparison
+that draws on established methodology rather than ad-hoc usability
+heuristics. We map the three COSMIN dimensions onto study-specific
+evaluation metrics as follows:
 
 \begin{itemize}
   \item \textbf{Clarity} (COSMIN \emph{comprehensibility}): whether the
         questionnaire wording is clear and easy to understand.
   \item \textbf{Quality} (COSMIN \emph{comprehensiveness}): whether the
         questions are well-formed, meaningful, and complete within the
-        monthly check-in context.
+        monthly check-in context. Participants judge whether each adaptive
+        question appears appropriate and useful.
   \item \textbf{Relevance} (COSMIN \emph{relevance}): whether the
         questions are appropriate and pertinent to Sophie's health
         profile and circumstances.
@@ -613,6 +629,23 @@ that structured items may not capture. A final satisfaction item asked
 participants to endorse one or more of four options: rule-based method,
 LLM-based method, both, or neither.
 
+\subsection{Data Collection and Analysis}
+\label{subsec:data_collection}
+
+Survey responses were collected via Google Forms between 25~April and
+22~May~2026, yielding 42 submissions. Two responses were excluded during
+data cleaning: one participant did not provide consent, and one submission
+was identified as invalid based on uniform extreme ratings across all
+18~Likert items combined with non-substantive open-ended answers.
+The final analysis sample comprised $n = 40$ valid responses.
+
+For quantitative analysis, paired-sample $t$-tests were used to compare
+composite scores between the two methods for each COSMIN dimension. Effect
+sizes were computed using Cohen's $d_z = t / \sqrt{n}$ to characterise the
+practical magnitude of observed differences. For qualitative analysis,
+the three open-ended responses were reviewed independently by the research
+team, and recurring themes were identified through thematic grouping.
+
 % ── Section 5: Results and Analysis ──────────────────────────────────────────
 \section{Results and Analysis}
 \label{sec:results}
@@ -620,14 +653,8 @@ LLM-based method, both, or neither.
 \subsection{Participant Demographics}
 \label{subsec:demographics}
 
-A total of 42 survey responses were collected between 25~April and
-13~May~2026. Two responses were excluded: one participant did not
-provide consent, and one submission was identified as invalid based on
-uniform extreme ratings across all 18~Likert items (all ``Strongly
-Disagree'') combined with non-substantive open-ended answers, a
-pattern consistent with an invalid response. The final
-analysis sample comprised $n = 40$ valid responses.
-
+As described in Section~\ref{subsec:data_collection}, the final analysis
+sample comprised $n = 40$ valid responses after excluding two submissions.
 Table~\ref{tab:demographics} summarises the sample characteristics.
 The majority of participants were aged 21--25 (65.0\%) and enrolled as
 university students (70.0\%). Gender was approximately balanced, with

@@ -84,6 +84,7 @@ and rule-based adaptive mental health questionnaires within a single
 application using a controlled, human-centric evaluation grounded in
 established content-validity criteria such as clinical reliability.
 
+
 To address this gap, we developed \emph{Navigator}, a web-based prototype that
 implements two distinct monthly mental health check-in methods within the same
 application environment:
@@ -420,35 +421,40 @@ longitudinal rather than single-month thresholds, and omission of the
 isolation item where Month~1 data showed no change was expected.
 
 \begin{table*}[t]
-\caption{Mental health check-in questions under each adaptation method for Sophie's Month~2 scenario. The rule-based column shows the questions produced by the branching engine; the LLM-based column shows the Gemini-assisted transformations. Cells marked as not asked, hidden, or skipped indicate items not presented in that method.}
+\caption{Mental health check-in questions under each adaptation method for Sophie's Month~2 scenario, mapped to COSMIN content-validity dimensions. The rule-based column shows the questions produced by the branching engine; the LLM-based column shows the Gemini~2.5 Flash-assisted transformations.}
 \label{tab:comparison}
 \centering
 \small
-\begin{tabular}{@{}p{1.6cm}p{3.8cm}p{4.2cm}p{4.6cm}@{}}
+\begin{tabular}{@{}p{1.4cm}p{1.2cm}p{3.4cm}p{3.8cm}p{4.4cm}@{}}
 \toprule
-\textbf{Item} & \textbf{Rule-Based} & \textbf{LLM-Based} & \textbf{Transformation Rationale} \\
+\textbf{Item} & \textbf{COSMIN} & \textbf{Rule-Based} & \textbf{LLM-Based} & \textbf{Transformation Rationale} \\
 \midrule
 Mood frequency
+& Clarity
 & ``In the past month, how often have you felt low mood, sad, hopeless, nervous, worried, or restless?''
 & ``Over the past month, have you continued to experience feelings like low mood, worry, or restlessness? Last month you reported this happening on several days.''
 & References Month~1 history; acknowledges continuity rather than repeating identical wording. \\
 \addlinespace
 Managing life
+& Clarity
 & ``\ldots how often have you felt that important things in your life were difficult to manage?''
 & ``\ldots has it felt harder than usual to stay on top of your studies, daily responsibilities, or relationships?''
 & Replaces generic ``important things'' with student-specific language. \\
 \addlinespace
 Trend direction
+& Relevance
 & Not asked
 & ``Since you've reported similar feelings for two months in a row, how would you describe the change over the past month?''
 & New item capturing longitudinal signal (two-month Mild pattern) that rule-based thresholds cannot detect. \\
 \addlinespace
 Functional impact
+& Quality
 & \emph{Hidden} because the mood score of~1 does not meet the $\geq 2$ threshold required by the branching rule.
 & ``Have these feelings made it harder for you to manage your daily life, for example, attending classes, completing work, or maintaining relationships?''
 & Unlocked early based on persistent pattern; phrasing adapted to student context. \\
 \addlinespace
 Isolation
+& Relevance
 & ``In the past month, how often do you feel isolated from others?''
 & \emph{Skipped} because the Month~1 score was low and stable, so no new information was expected.
 & De-prioritises items unlikely to yield new signal, reducing respondent burden. \\
@@ -653,8 +659,10 @@ team, and recurring themes were identified through thematic grouping.
 \subsection{Participant Demographics}
 \label{subsec:demographics}
 
+% - include some graphs and charts
 As described in Section~\ref{subsec:data_collection}, the final analysis
 sample comprised $n = 40$ valid responses after excluding two submissions.
+
 Table~\ref{tab:demographics} summarises the sample characteristics.
 The majority of participants were aged 21--25 (65.0\%) and enrolled as
 university students (70.0\%). Gender was approximately balanced, with
@@ -754,6 +762,13 @@ LLM-based questions feeling longer. This suggests that the rule-based method
 was not unclear; instead, the LLM-based method offered a modest clarity
 advantage while preserving overall comprehensibility.
 
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{figures/clarity_comparison.pdf}
+  \caption{Per-item Clarity scores for the LLM-based and rule-based methods ($n=40$). All items were rated above~3.7, with small differences between methods.}
+  \label{fig:clarity}
+\end{figure}
+
 \subsection{Relevance}
 \label{subsec:relevance_results}
 % TODO: Report per-item and composite Relevance scores.
@@ -779,6 +794,12 @@ unless those pathways were manually encoded. The LLM-based method was
 therefore perceived as more relevant because it could adapt question wording
 and selection to the persona's previous state.
 
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{figures/relevance_comparison.pdf}
+  \caption{Per-item Relevance scores ($n=40$). The LLM-based method showed the largest advantage on the change-tracking item ($\Delta=+0.50$).}
+  \label{fig:relevance}
+\end{figure}
 
 \subsection{Quality}
 \label{subsec:quality_results}
@@ -799,6 +820,13 @@ The composite Quality score was significantly higher for the LLM-based method
 viewed the LLM-based transformations as better aimed at Sophie's situation,
 particularly in terms of capturing meaningful details, rather than simply as a
 more pleasant interaction.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{figures/quality_comparison.pdf}
+  \caption{Per-item Quality scores ($n=40$). The natural-and-appropriate item was nearly tied ($\Delta=+0.06$), while other items showed larger differences.}
+  \label{fig:quality}
+\end{figure}
 
 \subsection{Overall Preference}
 \label{subsec:preference_results}
@@ -822,7 +850,14 @@ for the LLM-based version. Importantly, the large ``satisfied with both''
 group indicates that the static rule-based method was not perceived as poor.
 Rather, the LLM-based method appeared to offer an additional benefit,
 especially where participants noticed greater personalisation and awareness of
-prior history.
+prior history. Figure~\ref{fig:satisfaction} illustrates the distribution.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{figures/satisfaction.pdf}
+  \caption{Participant satisfaction endorsements (multi-select, $n=40$). A majority endorsed both methods, with stronger endorsement for the LLM-based version.}
+  \label{fig:satisfaction}
+\end{figure}
 
 \subsection{Qualitative Findings}
 \label{subsec:qual}
@@ -839,22 +874,62 @@ prior history.
 %         User control/flexibility        1  (2.6%)
 
 The open-ended responses helped explain why the LLM-based method was rated
-more favourably, particularly in Relevance. In the comparison question, 20
-respondents explicitly preferred the LLM-based version, compared with three who
-preferred the rule-based version and one who felt the two were broadly similar. The
-most common reasons for preferring the LLM method were that it felt more
-personalised or tailored, adapted to previous-month history, required less
-effort, or felt more natural. Representative comments described the LLM version
-as ``more specific and better tailored'' and noted that it ``linked back'' to
-Month~1 information.
+more favourably, particularly in Relevance. Table~\ref{tab:qual_preference}
+summarises the thematic codes from the comparison question ($n=39$
+non-blank responses). The largest group expressed no strong preference between
+methods (28.2\%), while personalisation and relevance was the most cited reason
+for preferring the LLM method (20.5\%). Longitudinal awareness (10.3\%) and
+natural conversational tone (7.7\%) further supported the LLM preference.
+Conversely, four participants (10.3\%) valued the rule-based method's
+simplicity and transparency, describing it as more straightforward.
+Representative comments described the LLM version as ``more specific and better
+tailored'' and noted that it ``linked back'' to Month~1 information.
 
-The qualitative responses also identified limits of the current prototype.
-Some participants wanted deeper personalisation, clearer instructions, or more
-flexible input options such as open-text responses. A small number of comments
-also noted scoring or display issues and navigation difficulty in the
-side-by-side comparison page. These comments indicate that participants valued
-the direction of LLM-based adaptation, but also expected a higher level of
-personal depth and interface polish from an adaptive system.
+The qualitative responses also identified limits of the current prototype
+(Table~\ref{tab:qual_improvement}). Participants wanted deeper personalisation
+(7.7\%), clearer instructions (5.1\%), or more flexible input options such as
+open-text responses (2.6\%). A small number of comments also noted scoring or
+display issues and navigation difficulty in the side-by-side comparison page.
+These comments indicate that participants valued the direction of LLM-based
+adaptation, but also expected a higher level of personal depth and interface
+polish from an adaptive system.
+
+\begin{table}[t]
+\caption{Thematic analysis of questionnaire preference (Q2, $n=39$).}
+\label{tab:qual_preference}
+\centering
+\small
+\begin{tabular}{@{}p{3.6cm}rrl@{}}
+\toprule
+\textbf{Theme} & \textbf{$n$} & \textbf{\%} & \textbf{Example} \\
+\midrule
+No strong preference       & 11 & 28.2 & ``Both were easy to complete'' \\
+Personalisation / Relevance & 8 & 20.5 & ``Felt more specific and tailored'' \\
+Longitudinal awareness      & 4 & 10.3 & ``Linked back to Month~1'' \\
+Simplicity (Rule-based)     & 4 & 10.3 & ``Rule-based was straightforward'' \\
+Natural / Conversational    & 3 &  7.7 & ``Feels more human-like'' \\
+Brevity / Efficiency        & 2 &  5.1 & ``Less questions, straight to point'' \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[t]
+\caption{Improvement suggestions from open-ended feedback (Q3, $n=13$).}
+\label{tab:qual_improvement}
+\centering
+\small
+\begin{tabular}{@{}p{3.6cm}rrl@{}}
+\toprule
+\textbf{Theme} & \textbf{$n$} & \textbf{\%} & \textbf{Example} \\
+\midrule
+More personalisation        & 4 & 30.8 & ``More depth in LLM questions'' \\
+Scoring / display bugs      & 2 & 15.4 & ``Scores seemed inverted'' \\
+New features (open text)    & 2 & 15.4 & ``Short answers for updates'' \\
+UI / navigation issues      & 1 &  7.7 & ``Side-by-side was hard to navigate'' \\
+Clearer instructions        & 1 &  7.7 & ``More guidance for the process'' \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \subsection{Summary of Key Observations}
 \label{subsec:summary}

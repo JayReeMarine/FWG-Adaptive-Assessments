@@ -294,6 +294,14 @@ along three dimensions: \emph{relevance}, \emph{comprehensiveness}, and
 \emph{comprehensibility}. These dimensions align directly with the evaluation
 needs of this study, as described in Section~\ref{subsec:metrics}.
 
+In summary, existing work establishes that (1)~adaptive item selection can
+reduce respondent burden, (2)~LLM-based mental health tools are growing but
+remain at early validation stages, and (3)~COSMIN provides a rigorous
+framework for evaluating content validity. However, no prior study has
+directly compared a static rule-based and a dynamic LLM-based adaptive
+questionnaire within a single application using a controlled, human-centred
+COSMIN-grounded evaluation. This study addresses that gap.
+
 % ── Section 3: Methodology ───────────────────────────────────────────────────
 \section{Methodology}
 \label{sec:system}
@@ -348,13 +356,24 @@ monthly check-in pathways (Step~2).
 \end{figure}
 
 For LLM-based question generation, the application calls the Google
-Gemini~2.5 Flash API. This model was selected for its low latency and
-structured-output support (native JSON response mode), which are
-practical requirements for generating questionnaire items in real time
-within a web application. A deterministic fallback path returns
-pre-authored enhanced questions if the API is unavailable, ensuring that
-every participant in the study receives the same enhanced questionnaire
-content regardless of network conditions.
+Gemini~2.5 Flash API. This model was selected based on four practical
+criteria aligned with the prototype's requirements: (1)~a free-tier API
+with sufficient quota, which supports reproducibility by allowing other
+researchers to replicate the pipeline without commercial licensing;
+(2)~native JSON response mode, enabling structured output that maps
+directly to the questionnaire data schema without additional parsing;
+(3)~low inference latency, a practical requirement for generating
+questionnaire items in real time within a web application; and
+(4)~integration within the Google Cloud ecosystem, which simplified
+deployment alongside the Flutter web front-end and Supabase back-end.
+We acknowledge that the choice of a single LLM provider limits the
+generalisability of results; observed differences may partly reflect
+model-specific generation characteristics rather than properties of
+LLM-based adaptation in general (see Section~\ref{subsec:limitations}).
+A deterministic fallback path returns pre-authored enhanced questions
+if the API is unavailable, ensuring that every participant in the study
+receives the same enhanced questionnaire content regardless of network
+conditions.
 
 \subsection{Static Rule-Based Adaption Method}
 \label{subsec:rule_based}
@@ -412,7 +431,27 @@ dimensions (Clarity, Quality, Relevance) used in the evaluation
 question objects, each containing the question text, response options, and
 a brief rationale for the adaptation. Generation uses a low temperature
 setting ($T = 0.3$) to favour consistency and structured output over
-creative variation.
+creative variation. The following is a simplified excerpt of the prompt
+template used in the Sophie scenario:
+
+\begin{quote}
+\small
+\textit{You are a compassionate health questionnaire assistant. Given the
+user's previous assessment summary below, adapt the baseline check-in
+questions to be more relevant, clearer, and less repetitive.}
+
+\textit{UserSeed: \{name: Sophie, age: 22, occupation: university student,
+domain: Mental Health, month1\_risk: Mild, context: ``Reported difficulty
+sleeping and managing coursework stress''\}}
+
+\textit{Baseline questions: [list of 5 rule-based items for Mental Health
+domain]}
+
+\textit{Return a JSON array where each object contains: question\_text,
+response\_options, and adaptation\_rationale. Do not invent new clinical
+constructs; only rephrase or re-prioritise existing items using the
+user's longitudinal context.}
+\end{quote}
 
 This design aligns with the LLM-PROM framework proposed by Terheyden
 et~al.\ \cite{terheyden2025}, which argues that LLM-generated
@@ -1016,6 +1055,14 @@ were framed around Sophie's student background and ongoing mental health
 pattern. However, this result should be interpreted as perceived questionnaire
 quality rather than evidence of clinical validity. The study did not evaluate
 whether either method produced more accurate mental health assessment outcomes.
+Notably, the LLM-based Quality composite (3.96) remained below the 4.0 midpoint
+of the 5-point scale, whereas Clarity (4.05) and Relevance (4.08) both exceeded
+it. This suggests that even when an LLM adapts questions to a user's context,
+participants may still perceive gaps in the comprehensiveness of a five-item
+check-in. The result may partly reflect inherent limitations of the generative
+model's ability to capture all relevant aspects of a user's mental health
+within a constrained item set, a direction explored further in
+Section~\ref{subsec:limitations}.
 
 For RQ3, the findings provide the strongest support for the LLM-based method.
 Relevance is the dimension most directly connected to contextual adaptation,
@@ -1081,10 +1128,19 @@ methods produced different risk profiles for the same persona scenario. Future
 work should record these scores to enable analysis of whether improved question
 relevance translates into measurably different assessment outcomes.
 
-Fifth, the prototype focused only on the mental health pathway, used a single
-LLM provider, and was evaluated with a small convenience sample. Future studies
-should use counterbalanced presentation orders, larger and more diverse
-participant groups, longer longitudinal scenarios, and clinician review of
+Fifth, the prototype relied on a single LLM provider (Google Gemini~2.5
+Flash). Different models vary in instruction-following behaviour, output
+style, and tendency toward hallucination; the perceived improvements
+reported here may therefore reflect Gemini-specific generation
+characteristics rather than inherent advantages of LLM-based adaptation.
+A multi-model comparison would be needed to disentangle model-specific
+effects from the broader benefit of dynamic, context-aware question
+generation.
+
+Sixth, the prototype focused only on the mental health pathway and was
+evaluated with a small convenience sample. Future studies should use
+counterbalanced presentation orders, larger and more diverse participant
+groups, longer longitudinal scenarios, and clinician review of
 LLM-adapted questions before making claims about clinical suitability.
 
 % ── Section 7: Conclusion ─────────────────────────────────────────────────────
@@ -1148,6 +1204,10 @@ method would further provide a behavioural measure of perceived relevance,
 complementing the self-reported ratings used in this study: a question
 that participants consistently skip may indicate low relevance more directly
 than a Likert rating alone.
+Additionally, future evaluations should compare multiple LLM providers
+(e.g., GPT-4o, Claude, open-source models such as Llama) to determine
+whether the observed improvements generalise beyond Gemini~2.5 Flash or
+are partly attributable to model-specific generation behaviour.
 Finally, LLM-based or LLM-adapted questions should be reviewed by clinical
 or domain experts before use in higher-risk settings, and the approach should
 be tested across other health domains beyond mental health.

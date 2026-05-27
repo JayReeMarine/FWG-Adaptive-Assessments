@@ -452,9 +452,9 @@ sleeping and managing coursework stress''\}}
 domain]}
 
 \textit{Return a JSON array where each object contains: question\_text,
-response\_options, and adaptation\_rationale. Do not invent new clinical
-constructs; only rephrase or re-prioritise existing items using the
-user's longitudinal context.}
+response\_options, and adaptation\_rationale. Do not introduce new clinical
+domains; rephrase, re-prioritise, or add follow-up items only when supported by
+the user's longitudinal context.}
 \end{quote}
 
 This design aligns with the LLM-PROM framework proposed by Terheyden
@@ -603,7 +603,7 @@ students enrolled at Monash University Malaysia and Indonesia campuses
 were excluded from recruitment, as the approval was scoped to the
 Australian campus.
 
-A total of 42 responses were received between 25~April and 22~May~2026.
+A total of 42 responses were received between 25~April and 13~May~2026.
 After excluding one non-consent response and one invalid submission, 40
 valid responses were retained. Demographic details are reported in
 Section~\ref{subsec:demographics}.
@@ -702,7 +702,7 @@ LLM-based method, both, or neither.
 \label{subsec:data_collection}
 
 Survey responses were collected via Google Forms between 25~April and
-22~May~2026, yielding 42 submissions. Two responses were excluded during
+13~May~2026, yielding 42 submissions. Two responses were excluded during
 data cleaning: one participant did not provide consent, and one submission
 was identified as invalid based on uniform extreme ratings across all
 18~Likert items combined with non-substantive open-ended answers.
@@ -930,7 +930,11 @@ for the LLM-based version. Importantly, the large ``satisfied with both''
 group indicates that the static rule-based method was not perceived as poor.
 Rather, the LLM-based method appeared to offer an additional benefit,
 especially where participants noticed greater personalisation and awareness of
-prior history. Figure~\ref{fig:satisfaction} illustrates the distribution.
+prior history. As explored in the qualitative analysis below
+(Section~\ref{subsec:qual}), the primary reasons for this stronger endorsement
+were that the LLM-based questions felt more tailored to Sophie's specific
+situation and more connected to her previous-month responses.
+Figure~\ref{fig:satisfaction} illustrates the distribution.
 
 \begin{figure}[t]
   \centering
@@ -959,27 +963,27 @@ an inductive thematic coding approach: one researcher read all responses,
 assigned initial codes to meaningful segments, and then grouped related
 codes into higher-level themes. A second researcher reviewed the resulting
 code map to verify consistency. Table~\ref{tab:qual_preference}
-summarises the thematic codes from the comparison question ($n=39$
-non-blank responses). The largest group expressed no strong preference between
-methods (28.2\%), while personalisation and relevance was the most cited reason
-for preferring the LLM method (20.5\%). Longitudinal awareness (10.3\%) and
-natural conversational tone (7.7\%) further supported the LLM preference.
-Conversely, four participants (10.3\%) valued the rule-based method's
-simplicity and transparency, describing it as more straightforward.
-Representative comments described the LLM version as ``more specific and better
-tailored'' and noted that it ``linked back'' to Month~1 information.
+summarises non-mutually-exclusive thematic codes from the comparison question
+($n=39$ non-blank responses). Twenty respondents explicitly preferred the
+LLM-based version, while three explicitly preferred the rule-based version.
+The most common reasons for preferring the LLM method were personalisation and
+relevance (20.5\%), longitudinal awareness (10.3\%), and natural
+conversational tone (7.7\%). A further 28.2\% of responses expressed no strong
+preference or stated that both methods were acceptable. Representative comments
+described the LLM version as ``more specific and better tailored'' and noted
+that it ``linked back'' to Month~1 information.
 
 The qualitative responses also identified limits of the current prototype
 (Table~\ref{tab:qual_improvement}). Participants wanted deeper personalisation
-(7.7\%), clearer instructions (5.1\%), or more flexible input options such as
-open-text responses (2.6\%). A small number of comments also noted scoring or
+(30.8\%), clearer instructions (7.7\%), or more flexible input options such as
+open-text responses (15.4\%). A small number of comments also noted scoring or
 display issues and navigation difficulty in the side-by-side comparison page.
 These comments indicate that participants valued the direction of LLM-based
 adaptation, but also expected a higher level of personal depth and interface
 polish from an adaptive system.
 
 \begin{table*}[t]
-\caption{Qualitative thematic analysis of open-ended responses. Panel~(a) summarises questionnaire preference themes (Q2, $n=39$); Panel~(b) summarises improvement suggestions (Q3, $n=13$).}
+\caption{Qualitative thematic analysis of open-ended responses. Panel~(a) summarises non-mutually-exclusive questionnaire preference and reason themes (Q2, $n=39$); Panel~(b) summarises improvement suggestions (Q3, $n=13$).}
 \label{tab:qual_preference}
 \label{tab:qual_improvement}
 \centering
@@ -991,12 +995,12 @@ polish from an adaptive system.
 \toprule
 \textbf{Theme} & \textbf{$n$} & \textbf{\%} & \textbf{Example} \\
 \midrule
-No strong preference       & 11 & 28.2 & ``Both were easy to complete'' \\
-Personalisation / Relevance & 8 & 20.5 & ``More specific and tailored'' \\
-Longitudinal awareness      & 4 & 10.3 & ``Linked back to Month~1'' \\
-Simplicity (Rule-based)     & 4 & 10.3 & ``Rule-based was straightforward'' \\
-Natural / Conversational    & 3 &  7.7 & ``Feels more human-like'' \\
-Brevity / Efficiency        & 2 &  5.1 & ``Straight to the point'' \\
+Explicit LLM preference     & 20 & 51.3 & ``I prefer the LLM'' \\
+No strong preference        & 11 & 28.2 & ``Both were easy to complete'' \\
+Personalisation / Relevance &  8 & 20.5 & ``More specific and tailored'' \\
+Longitudinal awareness      &  4 & 10.3 & ``Linked back to Month~1'' \\
+Explicit rule preference    &  3 &  7.7 & ``Rule-based was straightforward'' \\
+Natural / Conversational    &  3 &  7.7 & ``Feels more human-like'' \\
 \bottomrule
 \end{tabular}
 \end{minipage}%
@@ -1030,8 +1034,8 @@ Clearer instructions        & 1 &  7.7 & ``More guidance for the process'' \\
 
 Across the nine evaluation items, the LLM-based questionnaire was rated equal
 to or higher than the rule-based questionnaire in every case. The largest
-composite differences appeared in Relevance ($M=4.08$ vs.\ $3.68$,
-$d_z=0.58$) and Quality ($M=3.96$ vs.\ $3.53$, $d_z=0.59$), while the
+composite differences appeared in Relevance ($M=4.08$ vs.\ $3.67$,
+$d_z=0.58$) and Quality ($M=3.96$ vs.\ $3.67$, $d_z=0.59$), while the
 Clarity gap was smaller ($M=4.05$ vs.\ $3.92$, $d_z=0.41$). All three
 paired differences were statistically significant ($p<.05$). This pattern suggests that both methods can produce understandable
 questions, but the LLM-based method was better at making those questions feel
@@ -1085,9 +1089,9 @@ were framed around Sophie's student background and ongoing mental health
 pattern. However, this result should be interpreted as perceived questionnaire
 quality rather than evidence of clinical validity. The study did not evaluate
 whether either method produced more accurate mental health assessment outcomes.
-Notably, the LLM-based Quality composite (3.96) remained below the 4.0 midpoint
-of the 5-point scale, whereas Clarity (4.05) and Relevance (4.08) both exceeded
-it. This suggests that even when an LLM adapts questions to a user's context,
+Notably, the LLM-based Quality composite (3.96) remained below the 4.0
+``Agree'' benchmark on the 5-point scale, whereas Clarity (4.05) and
+Relevance (4.08) both exceeded it. This suggests that even when an LLM adapts questions to a user's context,
 participants may still perceive gaps in the comprehensiveness of a five-item
 check-in. The result may partly reflect inherent limitations of the generative
 model's ability to capture all relevant aspects of a user's mental health

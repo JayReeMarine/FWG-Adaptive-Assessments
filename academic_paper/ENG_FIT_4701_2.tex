@@ -388,16 +388,20 @@ or hidden accordingly. This approach mirrors the ``if--then'' rule-based
 adaptation strategy identified as the dominant paradigm in chronic-disease
 adaptive interfaces \cite{wang2023}.
 
-Rules operate on single-question, single-timepoint data: a rule can
-reference the current answer to one question but cannot access prior
-month responses or aggregate longitudinal patterns. For the Mental Health
+Rules operate on single-question, single-timepoint data---that is, each
+rule evaluates only the response given to one question in the current
+month's check-in and cannot access prior month responses or aggregate
+longitudinal patterns. For the Mental Health
 domain, risk levels are classified at the domain level using
 project-specific percentage-based thresholds loosely inspired by the
-PHQ-9 severity bands \cite{kroenke2001}: scores below 25\% of the
-domain maximum are classified as \emph{None}, 25--50\% as \emph{Mild},
-50--75\% as \emph{Moderate}, and above 75\% as \emph{High}. These
-thresholds are a simplified mapping for the prototype and do not
-correspond directly to the validated PHQ-9 cut-off scores.
+PHQ-9 severity bands as originally validated by Kroenke et~al.\
+\cite{kroenke2001}: scores below 25\% of the domain maximum are
+classified as \emph{None}, 25--50\% as \emph{Mild}, 50--75\% as
+\emph{Moderate}, and above 75\% as \emph{High}. These thresholds are a
+simplified mapping designed for the prototype and do not correspond
+directly to the validated PHQ-9 cut-off scores (5, 10, 15, 20); they
+were chosen to provide a workable risk stratification within the
+prototype's percentage-based scoring system.
 
 A concrete example illustrates the method's limitation.
 Table~\ref{tab:comparison} lists the mental health questions presented
@@ -529,7 +533,9 @@ other domains. Her context notes record specific response details: a mood
 frequency score of~1 (``Several days''), a low and stable isolation
 score, and no triggered functional-impact questions.
 
-The decision to use a fixed persona serves three evaluation purposes.
+The decision to use a fixed persona---a single, predetermined user
+profile presented identically to every participant---serves three
+evaluation purposes.
 First, it eliminates between-participant variation in health profiles,
 ensuring that every participant sees the same rule-based and LLM-based
 questionnaires and that observed differences in Clarity, Quality,
@@ -549,9 +555,11 @@ demonstrated that PHQ-9 responses can exhibit measurement non-invariance
 across demographic groups, and Wild et~al.\ \cite{wild2005} emphasised
 that questionnaire wording must account for cultural context. Sophie's
 profile, an East Asian international student, was therefore chosen
-to represent a demographic for whom culturally adapted wording (as
-produced by the LLM method) might be particularly relevant, while
-remaining relatable to the predominantly university-aged participant pool.
+to represent a demographic for whom culturally adapted wording---such as
+referencing coursework stress, adjusting to a new country, or navigating
+university support services---might be particularly relevant when
+produced by the LLM method, while remaining relatable to the
+predominantly university-aged participant pool.
 
 % ── Study Design (subsections within Methodology) ────────────────────────────
 \subsection{Study Design}
@@ -723,7 +731,10 @@ The majority of participants were aged 21--25 (65.0\%) and enrolled as
 university students (70.0\%). Gender was approximately balanced, with
 21~female (52.5\%) and 19~male (47.5\%) respondents. Most participants
 reported low familiarity with health applications: 75.0\% selected
-responses indicating rare or no use of such tools.
+responses indicating rare or no use of such tools. This low adoption
+rate reinforces the need to develop accessible and engaging health
+check-in tools for university students of all genders, as both female
+and male respondents were similarly unfamiliar with existing solutions.
 
 \begin{table}[t]
 \caption{Participant demographics ($n = 40$).}
@@ -806,16 +817,29 @@ vs.~$4.03$), and specific and unambiguous wording ($M=3.83$ vs.~$3.70$).
 However, these item-level differences were small, ranging from $+0.07$ to
 $+0.20$. The composite Clarity score was significantly higher for the
 LLM-based method ($t(39)=2.58$, $p=.014$), but the small difference indicates
-that both versions were generally understandable. Wording specificity was the
-lowest-rated clarity item for both methods, suggesting a shared design
-challenge rather than an issue unique to either approach.
+that both versions were generally understandable. Descriptively,
+students rated Clarity higher than working professionals for both
+methods (LLM: $M=4.20$ vs.\ $3.69$; rule-based: $M=4.08$ vs.\ $3.53$),
+and the 21--25 age group showed the highest Clarity ratings overall
+(LLM: $M=4.13$). Male and female respondents rated Clarity similarly
+(LLM: $M=4.07$ vs.\ $4.03$). These subgroup patterns should be
+interpreted cautiously given the small cell sizes ($n=12$ for working
+professionals; $n=6$ for the 26--34 age group).
+Wording specificity was the lowest-rated clarity item for both methods,
+suggesting a shared design challenge rather than an issue unique to
+either approach.
 
 Open-ended responses supported this interpretation. Most respondents who
 answered the clarity question reported no confusion, with only isolated
 comments mentioning timeframe ambiguity, a need for clearer onboarding, or
 LLM-based questions feeling longer. This suggests that the rule-based method
 was not unclear; instead, the LLM-based method offered a modest clarity
-advantage while preserving overall comprehensibility.
+advantage while preserving overall comprehensibility. This modest
+difference is expected: clarity depends primarily on careful question
+writing, which was present in both methods, whereas the LLM's
+context-aware rephrasing (e.g., referencing Sophie's occupation or
+recent mood trend) may have made individual items feel slightly more
+concrete and therefore easier to interpret.
 
 \begin{figure}[t]
   \centering

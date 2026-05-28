@@ -390,7 +390,7 @@ percentage-based thresholds loosely inspired by the PHQ-9 severity bands
 \emph{Moderate}, $>$75\% \emph{High}. These thresholds are a simplified
 prototype mapping and do not correspond to PHQ-9 cut-off scores
 (5, 10, 15, 20). Sophie's scenario in Table~\ref{tab:comparison}
-illustrates the resulting limitation of static rule-based method: Rule~13 hides the
+illustrates the resulting limitation of the static rule-based method: the branching rule hides the
 functional-impact item when the mood-frequency response is $<2$, so her
 Month~2 response of~1 (``Several days'') suppresses the item despite a
 clinically meaningful two-month Mild pattern that the rule cannot detect.
@@ -459,53 +459,32 @@ mapped to COSMIN dimensions.
   \label{fig:llm_question}
 \end{figure}
 
-\begin{table*}[t]
-\caption{Mental health check-in questions under each adaptation method for Sophie's Month~2 scenario, mapped to COSMIN content-validity dimensions. The rule-based column shows the questions produced by the branching engine; the LLM-based column shows the Gemini~2.5 Flash-assisted transformations.}
+\begin{table}[t]
+\caption{Representative transformation differences between the two methods in Sophie's Month~2 scenario, one per COSMIN dimension.}
 \label{tab:comparison}
 \centering
 \small
-\begin{tabular}{@{}p{1.8cm}p{1.5cm}p{3.6cm}p{4.0cm}p{4.8cm}@{}}
+\begin{tabular}{@{}p{1.4cm}p{1.4cm}p{2.2cm}p{2.2cm}@{}}
 \toprule
-\textbf{Item} & \textbf{COSMIN} & \textbf{Rule-Based} & \textbf{LLM-Based} & \textbf{Transformation Rationale} \\
+\textbf{Dimension} & \textbf{Item} & \textbf{Rule-Based} & \textbf{LLM-Based} \\
 \midrule
-Mood frequency
-& Clarity
-& ``In the past month, how often have you felt low mood, sad, hopeless, nervous, worried, or restless?''
-& ``Over the past month, have you continued to experience feelings like low mood, worry, or restlessness? Last month you reported this happening on several days.''
-& References Month~1 history; acknowledges continuity rather than repeating identical wording. \\
+Clarity
+& Mood frequency
+& Repeats identical generic symptom-frequency wording each month.
+& References Sophie's Month~1 response and rephrases the item more concretely. \\
 \addlinespace
-Managing life
-& Clarity
-& ``\ldots how often have you felt that important things in your life were difficult to manage?''
-& ``\ldots has it felt harder than usual to stay on top of your studies, daily responsibilities, or relationships?''
-& Replaces generic ``important things'' with student-specific language. \\
+Relevance
+& Trend direction
+& Not asked; no longitudinal rule is encoded.
+& Adds a new change-tracking item based on the two-month Mild pattern. \\
 \addlinespace
-Trend direction
-& Relevance
-& Not asked
-& ``Since you've reported similar feelings for two months in a row, how would you describe the change over the past month?''
-& New item capturing longitudinal signal (two-month Mild pattern) that rule-based thresholds cannot detect. \\
-\addlinespace
-Functional impact
-& Quality
-& \emph{Hidden} because the mood score of~1 does not meet the $\geq 2$ threshold required by the branching rule.
-& ``Have these feelings made it harder for you to manage your daily life, for example, attending classes, completing work, or maintaining relationships?''
-& Unlocked early based on persistent pattern; phrasing adapted to student context. \\
-\addlinespace
-Assessment coverage
-& Quality
-& Visible questions focus mainly on current symptom frequency and generic manageability; functional consequence is absent when the threshold is not met.
-& Visible questions cover symptom continuity, student responsibilities, change direction, and functional impact.
-& Improves completeness of the monthly assessment by collecting both symptom status and practical impact. \\
-\addlinespace
-Isolation
-& Relevance
-& ``In the past month, how often do you feel isolated from others?''
-& \emph{Skipped} because the Month~1 score was low and stable, so no new information was expected.
-& De-prioritises items unlikely to yield new signal, reducing respondent burden. \\
+Quality
+& Functional impact
+& \emph{Hidden} because the mood score does not meet the $\geq 2$ branching threshold.
+& Included based on persistent symptoms; phrasing adapted to student context. \\
 \bottomrule
 \end{tabular}
-\end{table*}
+\end{table}
 
 % ── Study Design (subsections within Methodology) ────────────────────────────
 \subsection{Study Design}

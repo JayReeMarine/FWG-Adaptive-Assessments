@@ -279,12 +279,12 @@ COSMIN-grounded evaluation---the gap this study addresses.
 
 
 
-The methodology comprises four components: (i)~implementation of two
-adaptation methods within a unified web-based prototype
-(Sections~\ref{subsec:architecture}--\ref{subsec:llm_based}); (ii)~a
+The methodology comprises four components: (i)~system architecture and a
 controlled evaluation scenario built around a standardised persona
-(Section~\ref{subsec:sophie}); (iii)~a within-subjects user study with a
-COSMIN-grounded feedback survey
+(Sections~\ref{subsec:architecture}--\ref{subsec:sophie});
+(ii)~implementation of the two adaptation methods within the prototype
+(Sections~\ref{subsec:rule_based}--\ref{subsec:llm_based}); (iii)~a
+within-subjects user study with a COSMIN-grounded feedback survey
 (Sections~\ref{subsec:research_design}--\ref{subsec:metrics}); and
 (iv)~data collection and analysis (Section~\ref{subsec:data_collection}).
 The prototype is designed as an evaluation instrument rather than a
@@ -333,6 +333,37 @@ that reliance on a single LLM provider limits generalisability (see
 Section~\ref{subsec:limitations}). A deterministic fallback path
 returns pre-authored enhanced questions if the API is unavailable,
 ensuring identical content across participants.
+
+\subsection{Controlled Scenario: Sophie}
+\label{subsec:sophie}
+
+To enable a fair within-subjects comparison, both methods are evaluated
+using a single standardised persona---a predetermined profile presented
+identically to every participant---rather than participants' own health
+data. ``Sophie'' is a fictional 24-year-old female East Asian
+international university student whose Month~1 assessment produced a
+\emph{Mild} mental health risk and \emph{None} across other domains
+(see Figure~\ref{fig:persona_reference}). Her context records a
+mood-frequency score of~1 (``Several days''), a low and stable isolation
+score, and no triggered functional-impact questions.
+
+The fixed persona serves three purposes. First, it eliminates
+between-participant variation in health profiles, so observed
+differences reflect the adaptation method rather than individual
+circumstances. Second, it avoids the ethical complications of
+collecting real mental health data in a prototype evaluation. Third, it
+concretely illustrates the rule-based limitation: Sophie's profile is
+constructed so the branching rule's hard threshold blocks the
+functional-impact question despite a clinically meaningful two-month
+pattern (Table~\ref{tab:comparison}). The persona also reflects
+measurement-validity considerations from prior work---PHQ-9 responses
+can exhibit non-invariance across demographic groups \cite{baas2011}
+and questionnaire wording must account for cultural context
+\cite{wild2005}---so the East Asian international student profile
+represents a demographic for whom culturally adapted wording (e.g.,
+coursework stress, adjusting to a new country) is particularly relevant.
+This design intentionally prioritises internal validity and standardised
+comparison over ecological realism.
 
 \subsection{Static Rule-Based Adaptation Method}
 \label{subsec:rule_based}
@@ -455,37 +486,6 @@ Isolation
   \caption{Side-by-side comparison of Sophie's Month~2 mental health check-in. Left: the LLM-based method adapts question wording using Sophie's prior history and student context. Right: the rule-based method presents the same generic questions regardless of the user's profile.}
   \label{fig:method_comparison}
 \end{figure*}
-
-\subsection{Controlled Scenario: Sophie}
-\label{subsec:sophie}
-
-To enable a fair within-subjects comparison, both methods are evaluated
-using a single standardised persona---a predetermined profile presented
-identically to every participant---rather than participants' own health
-data. ``Sophie'' is a fictional 24-year-old female East Asian
-international university student whose Month~1 assessment produced a
-\emph{Mild} mental health risk and \emph{None} across other domains
-(see Figure~\ref{fig:persona_reference}). Her context records a
-mood-frequency score of~1 (``Several days''), a low and stable isolation
-score, and no triggered functional-impact questions.
-
-The fixed persona serves three purposes. First, it eliminates
-between-participant variation in health profiles, so observed
-differences reflect the adaptation method rather than individual
-circumstances. Second, it avoids the ethical complications of
-collecting real mental health data in a prototype evaluation. Third, it
-concretely illustrates the rule-based limitation: Sophie's profile is
-constructed so the branching rule's hard threshold blocks the
-functional-impact question despite a clinically meaningful two-month
-pattern (Table~\ref{tab:comparison}). The persona also reflects
-measurement-validity considerations from prior work---PHQ-9 responses
-can exhibit non-invariance across demographic groups \cite{baas2011}
-and questionnaire wording must account for cultural context
-\cite{wild2005}---so the East Asian international student profile
-represents a demographic for whom culturally adapted wording (e.g.,
-coursework stress, adjusting to a new country) is particularly relevant.
-This design intentionally prioritises internal validity and standardised
-comparison over ecological realism.
 
 % ── Study Design (subsections within Methodology) ────────────────────────────
 \subsection{Study Design}

@@ -155,136 +155,88 @@ chronic-disease domains \cite{aihw2012}, this paper narrows the evaluation
 to mental health check-ins, which provide a concrete, high-impact, and
 survey-feasible context.
 
-We accordingly organise prior work along three lines that progressively
-narrow toward our research question. We first review the dominant paradigm
-of static, validated mental health instruments and the limitations they
-impose on longitudinal self-report. We then survey existing adaptive
-questionnaire strategies, from computerised adaptive testing to rule-based
-interface adaptation, and most recently to LLM-based patient-reported outcome
-measures. Finally, we examine the emerging body of work on LLM-based mental
-health systems, identifying both their promise and the safety considerations
-that constrain their design.
+We organise prior work along three lines: static mental health
+instruments and their limitations; adaptive questionnaire strategies
+from CAT to LLM-PROMs; and emerging LLM-based mental health systems with
+their associated safety considerations.
 
 \subsection{Mental Health Assessment and Static Instruments}
 \label{subsec:rw_static}
 
-Mental health screening in primary care and digital health applications has
-long relied on standardised, fixed-item self-report instruments. The Patient
-Health Questionnaire-9 (PHQ-9) for depression \cite{kroenke2001} and the
-Generalised Anxiety Disorder-7 (GAD-7) scale \cite{spitzer2006} remain
-among the most widely used tools, demonstrating strong sensitivity and specificity
-(both 88\% for PHQ-9 $\geq 10$; 89\% and 82\% for GAD-7 $\geq 10$) and
-providing interpretable severity cut-offs across diverse populations. Their
-brevity, transparency, and validated scoring make them attractive for
-integration into digital platforms aimed at routine, longitudinal mental
-health monitoring.
+Mental health screening in digital health applications has long relied on
+standardised fixed-item instruments such as the PHQ-9 \cite{kroenke2001}
+and GAD-7 \cite{spitzer2006}, whose brevity and validated scoring make
+them attractive for routine longitudinal monitoring. However, the
+stability that gives these instruments their psychometric strength also
+imposes user-experience limitations: identical items at every
+administration can drive fatigue and reduce completion. Ecological
+momentary assessment work documents this directly---a 28-day
+smartphone-based depression study reported a 62.5\% average daily
+response rate with only seven of eleven participants completing the full
+protocol \cite{maatoug2021}---and recent work has explicitly called for
+more adaptive health questionnaires \cite{malanin2025}.
 
-However, the very stability that gives these instruments their psychometric
-strength also imposes meaningful limitations on user experience. Static
-questionnaires repeat the same items at every administration, regardless of a
-user's current state or response history. Longitudinal self-report can suffer
-from fatigue and completion challenges when users complete the same scale
-weekly or monthly. Computerised adaptive testing studies have shown that
-adaptive item selection can reduce item burden while preserving
-depressive-symptom measurement performance \cite{gibbons2008, choi2010}, and
-recent work has argued for more adaptive health questionnaires
-\cite{malanin2025}. Ecological momentary
-assessment studies have documented this problem directly: in a 28-day
-smartphone-based depression study, only seven of eleven participants
-completed the full protocol and the average daily response rate was 62.5\%
-\cite{maatoug2021}, suggesting that repeated digital self-report can suffer
-from engagement and completion challenges, even when the underlying measures
-are clinically meaningful.
-
-Beyond engagement, fixed wording can raise concerns about content validity and relevance.
-Baas et al.\ \cite{baas2011} demonstrated that one PHQ-9 item exhibited measurement
-non-invariance across ethnic groups, revealing cultural bias in supposedly
-universal items. Wild et al.\ \cite{wild2005} similarly argue that questionnaire wording
-must be treated as a structured design and validation problem rather than a
-literal translation. These findings indicate that even well-validated
-instruments carry implicit assumptions about who the respondent is and how
-they interpret each item. Adaptive systems may help identify and mitigate these
-assumptions through more context-sensitive wording and item selection.
+Fixed wording also raises content-validity concerns. Baas et~al.\
+\cite{baas2011} found measurement non-invariance for a PHQ-9 item across
+ethnic groups, and Wild et~al.\ \cite{wild2005} argue that questionnaire
+wording must be treated as a structured design and validation problem.
+Even well-validated instruments thus carry implicit assumptions about the
+respondent that adaptive systems may help mitigate through
+context-sensitive wording and item selection.
 
 \subsection{Adaptive Questionnaire Approaches}
 \label{subsec:rw_adaptive}
 
-To mitigate the burden and rigidity of static instruments, prior work has
-explored adaptive questioning strategies. The most established approach is
-Computerised Adaptive Testing (CAT), which uses item response theory to select
-the most informative items based on prior responses. Gibbons et al.\ \cite{gibbons2008}
-demonstrated that the CAT-based assessment of mood and anxiety disorders reduced
-the number of administered items by approximately 95\% relative to a full
-item bank, while preserving strong correlation with the full-scale score.
-Choi et al.\ \cite{choi2010} likewise compared static short forms, two-stage branching,
-and CAT against the full PROMIS depression item bank, finding that CAT
-outperformed static short forms on most performance criteria, with two-stage
-semi-adaptive testing approaching CAT-level performance.
+To mitigate the rigidity of static instruments, prior work has explored
+adaptive questioning. Computerised Adaptive Testing (CAT) uses item
+response theory to select the most informative items from a validated
+bank: Gibbons et~al.\ \cite{gibbons2008} reduced administered items by
+$\sim$95\% while preserving full-scale correlation, and Choi et~al.\
+\cite{choi2010} showed that CAT outperforms static short forms on most
+PROMIS depression criteria. In broader health contexts, Wang et~al.\
+\cite{wang2023} identify rule-based ``if--then'' logic as the dominant
+adaptation paradigm for chronic-disease interfaces, valued for
+interpretability but bounded by the designer's predefined rules.
 
-A parallel line of work has examined rule-based adaptive interfaces in broader
-health contexts. In a systematic review of adaptive user interfaces for
-chronic disease, Wang et al.\ \cite{wang2023} identify three dominant adaptation
-strategies: rule-based ``if--then'' logic, machine-learning-driven prediction,
-and feedback-loop systems that revise content based on accumulating user
-data. Although rule-based approaches dominate the surveyed literature due to
-their interpretability and low computational overhead, they are inherently
-bounded by the comprehensiveness of their predefined rules and cannot adapt
-to contexts the designer did not anticipate.
-
-A more recent direction extends adaptation beyond item selection toward item
-generation. Terheyden et al.\ \cite{terheyden2025} introduce the concept of LLM-powered
-Patient-Reported Outcome Measures (LLM-PROMs), in which large language models
-generate personalised open-ended items and interpret responses against
-established psychometric scaffolds. Their framework argues that LLM-based
-PROMs should be developed from validated content and benchmarked against
-fixed instruments to preserve content validity. This conceptual shift, from
-\emph{selecting} items in a finite bank to \emph{generating} items
-conditioned on user context, defines the design space we examine in this
-paper. Unlike CAT, which adapts by selecting from a validated item bank,
-LLM-based methods can also alter wording or generate new follow-up prompts,
-creating both opportunities for personalisation and additional risks for
-validity.
+A more recent direction extends adaptation from item \emph{selection} to
+item \emph{generation}. Terheyden et~al.\ \cite{terheyden2025} introduce
+LLM-powered Patient-Reported Outcome Measures (LLM-PROMs), in which large
+language models generate personalised items grounded in validated
+psychometric content. This conceptual shift defines the design space we
+examine: unlike CAT, LLM-based methods can also rewrite wording and
+generate follow-up prompts, creating both personalisation opportunities
+and new validity risks.
 
 \subsection{LLM-Based Systems in Mental Health}
 \label{subsec:rw_llm_mh}
 
-The emergence of large language models has accelerated interest in
-conversational and adaptive mental health tools, but evidence on their
-efficacy and safety remains preliminary. In the most comprehensive review to
-date, Hua et al.\ \cite{hua2025} surveyed 160 mental health chatbot studies published
-between 2020 and 2024, classifying them as rule-based, machine-learning-based,
-or LLM-based. Their analysis reveals an important asymmetry: although LLM-based
-systems grew rapidly in 2024, they remain concentrated in early-stage
-validation, while rule-based systems still dominate later-stage human and
-clinical testing. This positioning motivates our study as a pilot, user-centred
-feasibility evaluation rather than a clinical efficacy trial.
+LLMs have accelerated interest in conversational mental health tools,
+but evidence on their efficacy and safety remains preliminary. Hua et~al.\
+\cite{hua2025} surveyed 160 mental health chatbot studies (2020--2024)
+and found that LLM-based systems, though rapidly growing, remain
+concentrated in early-stage validation while rule-based systems still
+dominate later-stage human and clinical testing---positioning our work
+as a user-centred feasibility evaluation rather than a clinical efficacy
+trial. User-facing evidence further suggests LLM behaviour is
+condition-dependent: Li et~al.\ \cite{li2025llm} report
+condition-specific differences in user sentiment, and Shen et~al.\
+\cite{shen2026} found that no tested model reliably produced appropriate
+responses to psychotic content. These findings establish two requirements
+for LLM-based mental health tools: condition-aware framing and explicit
+safety boundaries. Importantly, questionnaire systems differ from
+therapeutic dialogue---they elicit structured self-reports through clear
+prompts---so conversational LLM risks translate, but do not transfer
+directly, into questionnaire design constraints.
 
-User-facing evidence further suggests that LLM behaviour in mental health is
-highly condition-dependent. Li et al.\ \cite{li2025llm} analysed a large dataset of
-online discussions about LLM use for mental health and reported
-condition-specific differences in user sentiment and concerns. This indicates
-that LLM acceptability should not be treated as uniform across mental health
-contexts. Complementing this, Shen et al.\ \cite{shen2026} conducted
-a clinician-blind evaluation of multiple LLM versions on 158 prompts and found
-that no tested model reliably produced appropriate responses to psychotic
-content. Together, these findings establish two requirements for any LLM-based
-mental health tool: condition-aware framing and explicit safety boundaries.
-This distinction is also important for our setting: questionnaire systems do
-not aim to provide therapeutic dialogue, but rather to elicit structured,
-interpretable self-reports through clear and relevant prompts. The risks
-identified in conversational LLM use therefore translate, but do not transfer
-directly, into the design constraints for LLM-based questionnaire items.
-
-Despite this growing body of work, limited prior research has directly
-compared rule-based and LLM-based adaptive questionnaires within a unified
+Despite this growing body of work, no prior study has directly compared
+rule-based and LLM-based adaptive questionnaires within a unified
 application using a controlled, within-subjects evaluation. Existing
-comparisons either contrast different chatbot generations against one another
-\cite{hua2025}, study LLM use in unstructured user discussions
-\cite{li2025llm}, or evaluate adaptive item \emph{selection} without
-addressing LLM-based \emph{wording} \cite{gibbons2008, choi2010}. Our
-work addresses this gap by holding the application environment, the evaluation
-persona, and the participant group constant, thereby isolating the effect of
-the adaptation method itself.
+comparisons either contrast chatbot generations \cite{hua2025}, study
+unstructured LLM use \cite{li2025llm}, or evaluate item \emph{selection}
+without addressing LLM-based \emph{wording} \cite{gibbons2008,
+choi2010}. Our work addresses this gap by holding the application,
+persona, and participant group constant, isolating the adaptation method
+itself.
 
 Although several evaluation approaches exist for patient-reported outcome
 measures, the COSMIN (COnsensus-based Standards for the selection of health
@@ -295,172 +247,111 @@ along three dimensions: \emph{relevance}, \emph{comprehensiveness}, and
 \emph{comprehensibility}. These dimensions align directly with the evaluation
 needs of this study, as described in Section~\ref{subsec:metrics}.
 
-In summary, existing work establishes that (1)~adaptive item selection can
-reduce respondent burden, (2)~LLM-based mental health tools are growing but
-remain at early validation stages, and (3)~COSMIN provides a rigorous
-framework for evaluating content validity. However, no prior study has
-directly compared a static rule-based and a dynamic LLM-based adaptive
-questionnaire within a single application using a controlled, human-centred
-COSMIN-grounded evaluation. This study addresses that gap.
+In summary, existing work shows that adaptive item selection reduces
+respondent burden, LLM-based mental health tools are growing but remain
+at early validation stages, and COSMIN provides the established framework
+for evaluating content validity. No prior study, however, has directly
+compared static rule-based and dynamic LLM-based adaptive questionnaires
+within a single application using a controlled, human-centred,
+COSMIN-grounded evaluation---the gap this study addresses.
 
 % ── Section 3: Methodology ───────────────────────────────────────────────────
 \section{Methodology}
 \label{sec:system}
 
-This section presents the end-to-end methodology used in this study.
-The research proceeded through six stages: (1)~a literature review of
-static and adaptive mental health instruments to identify the limitations
-that motivate this work (Section~\ref{sec:related}); (2)~identification
-of validated questionnaire items, drawing primarily on the PHQ-9
-\cite{kroenke2001} and GAD-7 \cite{spitzer2006}, and a decision to
-focus the evaluation on the mental health domain; (3)~design and
-implementation of two adaptation methods, rule-based and LLM-based,
-within a unified web-based prototype
-(Sections~\ref{subsec:architecture}--\ref{subsec:llm_based});
-(4)~construction of a controlled evaluation scenario using a standardised
-persona (Section~\ref{subsec:sophie}); (5)~design of a within-subjects
-user study with a COSMIN-grounded feedback survey
+The methodology comprises five components: (i)~implementation of two
+adaptation methods within a unified web-based prototype
+(Sections~\ref{subsec:architecture}--\ref{subsec:llm_based}); (ii)~a
+controlled evaluation scenario built around a standardised persona
+(Section~\ref{subsec:sophie}); (iii)~a within-subjects user study with a
+COSMIN-grounded feedback survey
 (Sections~\ref{subsec:research_design}--\ref{subsec:metrics}); and
-(6)~data collection and analysis (Section~\ref{subsec:data_collection}).
-
-The prototype was designed as an evaluation instrument rather than a
-production system: its purpose is to present both methods within a
-single, controlled application environment so that user perceptions can
-be compared fairly. Architectural choices, including a shared interface, fixed
-persona, and identical health domains, were therefore driven by the
-evaluation design.
+(iv)~data collection and analysis (Section~\ref{subsec:data_collection}).
+The prototype is designed as an evaluation instrument rather than a
+production system, so architectural choices---shared interface, fixed
+persona, identical health domains---are driven by the comparison design.
 
 \subsection{Architecture Overview}
 \label{subsec:architecture}
 
-Navigator is implemented as a Flutter web application backed by Supabase
-(PostgreSQL) for question storage and branching-rule definitions. A
-single-page interface presents foundational intake questions, monthly
-check-ins for six health domains (Mental Health, Dietary, Physical
-Activity, Alcohol, Smoking/Vaping, and Women's Health), and a results
-dashboard. Although the broader prototype supports all six domains, the
-present study evaluates only the Mental Health monthly check-in pathway,
-which provides a concrete and high-impact context for comparing
-adaptation methods. Both the rule-based and LLM-based monthly check-in methods
-share the same front-end layout, question rendering components, and
-scoring pipeline, so that any difference participants observe can be
-attributed to the adaptation method itself rather than to interface
-variation. Figure~\ref{fig:homepage} shows the Navigator landing page,
-including the pre-filled foundational assessment (Step~1) and the two
-monthly check-in pathways (Step~2). Figure~\ref{fig:persona_reference}
-shows the persona reference provided to participants before they completed
-the two monthly check-ins.
-
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=0.75\columnwidth]{figures/Homepage.png}
-  \caption{Navigator prototype landing page. Step~1 shows the foundational assessment pre-filled with Sophie's persona data; Step~2 presents the two monthly check-in methods.}
-  \label{fig:homepage}
-\end{figure}
+Navigator is implemented as a Flutter web application backed by
+Supabase (PostgreSQL) for question storage and branching-rule
+definitions. The single-page interface presents foundational intake
+questions, monthly check-ins, and a results dashboard. The broader
+prototype supports six health domains, but this study evaluates only
+the Mental Health pathway. Both methods share the same front-end
+layout, rendering components, and scoring pipeline, so any observed
+difference is attributable to the adaptation method rather than
+interface variation. The prototype presents a pre-filled foundational
+assessment (Step~1) followed by the two monthly check-in pathways
+(Step~2); Figure~\ref{fig:persona_reference} shows the persona
+reference provided to participants beforehand.
 
 \begin{figure}[t]
   \centering
   \includegraphics[width=0.95\columnwidth]{figures/persona_reference.png}
-  \caption{Persona reference shown to participants in the user guide. The reference defines Sophie's demographic profile, Month~1 mental health risk level, and key notes used as the Month~0/Month~1 context for the adaptive check-in.}
+  \caption{Persona reference shown to participants in the user guide, defining Sophie's demographic profile, Month~1 mental health risk level, and key context notes used as the Month~0/Month~1 input for the adaptive check-in.}
   \label{fig:persona_reference}
 \end{figure}
 
-For LLM-based question generation, the application calls the Google
-Gemini~2.5 Flash API. Before final implementation, the research team
-screened three candidate LLM options---Gemini, an OpenAI GPT model, and
-an Anthropic Claude model---using the same Sophie scenario, baseline
-mental health questions, and structured JSON output requirement. The
-outputs were reviewed by the team against three implementation criteria:
-whether the model preserved the intended mental health constructs,
-whether it produced useful personalised wording rather than generic
-paraphrases, and whether it consistently followed the required JSON
-schema. This screening was used for implementation selection rather than
-as a formal model benchmark. Gemini~2.5 Flash was selected because it
-provided the strongest fit for the prototype environment while producing
-adapted questions that the team judged to be aligned with the baseline
-items and Sophie's longitudinal context.
-
-The final selection was also supported by four practical criteria aligned
-with the prototype's requirements: (1)~a free-tier API with sufficient
-quota, which supports reproducibility by allowing other researchers to
-replicate the pipeline without commercial licensing; (2)~native JSON
-response mode, enabling structured output that maps directly to the
-questionnaire data schema without additional parsing; (3)~low inference
-latency, a practical requirement for generating questionnaire items in
-real time within a web application; and (4)~integration within the Google
-Cloud ecosystem, which simplified deployment alongside the Flutter web
-front-end and Supabase back-end.
-We acknowledge that the choice of a single LLM provider limits the
-generalisability of results; observed differences may partly reflect
-model-specific generation characteristics rather than properties of
-LLM-based adaptation in general (see Section~\ref{subsec:limitations}).
-A deterministic fallback path returns pre-authored enhanced questions
-if the API is unavailable, ensuring that every participant in the study
-receives the same enhanced questionnaire content regardless of network
-conditions.
+For LLM-based generation, the application calls the Google Gemini~2.5
+Flash API. Before final implementation, the team screened three
+candidates---Gemini, an OpenAI GPT model, and an Anthropic Claude
+model---on the Sophie scenario, reviewing outputs for (i)~preservation
+of intended mental health constructs, (ii)~useful personalised wording
+rather than generic paraphrase, and (iii)~consistent JSON schema
+compliance. This screening informed implementation selection rather
+than constituting a formal benchmark. Gemini~2.5 Flash was selected
+because it provided the strongest fit on these three criteria and was
+further supported by four practical considerations aligned with the
+prototype: a free-tier API quota that supports reproducibility, native
+JSON response mode that maps directly to the questionnaire schema, low
+inference latency suitable for real-time web use, and Google Cloud
+integration alongside the Flutter and Supabase stack. We acknowledge
+that reliance on a single LLM provider limits generalisability (see
+Section~\ref{subsec:limitations}). A deterministic fallback path
+returns pre-authored enhanced questions if the API is unavailable,
+ensuring identical content across participants.
 
 \subsection{Static Rule-Based Adaptation Method}
 \label{subsec:rule_based}
 
-The rule-based method adapts monthly check-in questionnaires through a
-branching engine that evaluates predefined conditional rules after each
-user response. Each rule is a triple of \emph{trigger question},
-\emph{boolean expression}, and \emph{target action}. When a user answers
-the trigger question, the engine evaluates the expression against the
-response value; if the condition is met, the target questions are shown
-or hidden accordingly. This approach mirrors the ``if--then'' rule-based
-adaptation strategy identified as the dominant paradigm in chronic-disease
-adaptive interfaces \cite{wang2023}.
-
-Rules operate on single-question, single-timepoint data---that is, each
-rule evaluates only the response given to one question in the current
-month's check-in and cannot access prior month responses or aggregate
-longitudinal patterns. For the Mental Health
-domain, risk levels are classified at the domain level using
-project-specific percentage-based thresholds loosely inspired by the
-PHQ-9 severity bands as originally validated by Kroenke et~al.\
-\cite{kroenke2001}: scores below 25\% of the domain maximum are
-classified as \emph{None}, 25--50\% as \emph{Mild}, 50--75\% as
-\emph{Moderate}, and above 75\% as \emph{High}. These thresholds are a
-simplified mapping designed for the prototype and do not correspond
-directly to the validated PHQ-9 cut-off scores (5, 10, 15, 20); they
-were chosen to provide a workable risk stratification within the
-prototype's percentage-based scoring system.
-
-A concrete example illustrates the method's limitation.
-Table~\ref{tab:comparison} lists the mental health questions presented
-under each method in Sophie's scenario
-(Section~\ref{subsec:sophie}). Under the rule-based method, Rule~13
-specifies that the functional-impact question is shown only when the mood
-frequency response is $\geq 2$ on a 0--3 scale. Sophie's Month~2
-response of~1 (``Several days'') does not meet this threshold, so the
-functional-impact item remains hidden, even though two consecutive
-months of Mild risk may warrant exploring it. The rule-based system
-cannot detect this longitudinal pattern because each rule evaluates a
-single response in isolation.
+The rule-based method adapts the monthly check-in through a branching
+engine that evaluates predefined \emph{trigger--condition--action}
+rules: when a user answers a trigger question, the engine evaluates the
+condition against the response and shows or hides target questions
+accordingly---the ``if--then'' paradigm identified as dominant in
+chronic-disease adaptive interfaces \cite{wang2023}. Critically, each
+rule operates on single-question, single-timepoint data and cannot
+access prior-month responses or aggregate longitudinal patterns. For
+the Mental Health domain, risk levels are classified using
+percentage-based thresholds loosely inspired by the PHQ-9 severity bands
+\cite{kroenke2001}: $<$25\% \emph{None}, 25--50\% \emph{Mild}, 50--75\%
+\emph{Moderate}, $>$75\% \emph{High}. These thresholds are a simplified
+prototype mapping and do not correspond to PHQ-9 cut-off scores
+(5, 10, 15, 20). Sophie's scenario in Table~\ref{tab:comparison}
+illustrates the resulting limitation: Rule~13 hides the
+functional-impact item when the mood-frequency response is $<2$, so her
+Month~2 response of~1 (``Several days'') suppresses the item despite a
+clinically meaningful two-month Mild pattern that the rule cannot detect.
 
 \subsection{Dynamic LLM-Based Adaptation Method}
 \label{subsec:llm_based}
 
-The LLM-based method adapts personalised monthly check-in questions by
-conditioning a large language model on the user's prior health snapshot.
-At the start of a monthly check-in, the system constructs a structured
-prompt containing two inputs: (1)~a \emph{UserSeed}, a versioned summary of
-the user's demographics, domain-level risk
-classifications, and free-text context notes from the previous assessment
-period; and (2)~the baseline rule-based questions for the current domain,
-so the model understands what it is improving upon.
-
-The prompt instructs the model to produce questions that are
-\emph{more relevant, clearer, and less repetitive} than the rule-based
-baseline, grounding the generation task in the same content-validity
-dimensions (Clarity, Quality, Relevance) used in the evaluation
+The LLM-based method conditions a large language model on the user's
+prior health snapshot. At the start of each check-in, the system
+constructs a structured prompt with two inputs: (i)~a \emph{UserSeed}, a
+versioned summary of the user's demographics, domain-level risk
+classifications, and free-text context notes from the previous
+assessment period; and (ii)~the baseline rule-based questions for the
+current domain, so the model knows what it is improving upon. The
+prompt instructs the model to produce questions that are \emph{more
+relevant, clearer, and less repetitive} than the baseline, grounding the
+task in the same Clarity/Quality/Relevance dimensions used in evaluation
 (Section~\ref{subsec:metrics}). The model returns a JSON array of
-question objects, each containing the question text, response options, and
-a brief rationale for the adaptation. Generation uses a low temperature
-setting ($T = 0.3$) to favour consistency and structured output over
-creative variation. The following is a simplified excerpt of the prompt
-template used in the Sophie scenario:
+question objects (text, response options, adaptation rationale) at a
+low temperature setting ($T=0.3$) to favour consistency over creative
+variation. A simplified excerpt of the prompt:
 
 \begin{quote}
 \small
@@ -481,21 +372,13 @@ domains; rephrase, re-prioritise, or add follow-up items only when supported by
 the user's longitudinal context.}
 \end{quote}
 
-This design aligns with the LLM-PROM framework proposed by Terheyden
-et~al.\ \cite{terheyden2025}, which argues that LLM-generated
-patient-reported outcome items should be developed from validated content
-and benchmarked against fixed instruments. In Navigator, the LLM does not
-generate questions from scratch; it \emph{transforms} baseline questions derived
-from validated instruments together with project-specific follow-up items,
-using the user's longitudinal context.
-Table~\ref{tab:comparison} presents the main question-level differences
-applied in Sophie's scenario: history-aware rephrasing of the mood
-frequency item, occupation-specific language for the manageability item,
-a new trend-direction item that captures the two-month persistent Mild
-pattern, early unlocking of the functional-impact item based on
-longitudinal rather than single-month thresholds, omission of the
-isolation item where Month~1 data showed no change was expected, and
-broader coverage of symptom frequency, trend, and functional consequence.
+This design aligns with the LLM-PROM framework \cite{terheyden2025},
+which argues that LLM-generated patient-reported outcome items should be
+developed from validated content and benchmarked against fixed
+instruments. In Navigator the LLM does not generate from scratch but
+\emph{transforms} baseline items using the user's longitudinal context.
+Table~\ref{tab:comparison} summarises the resulting transformations in
+Sophie's scenario, mapped to COSMIN dimensions.
 
 \begin{table*}[t]
 \caption{Mental health check-in questions under each adaptation method for Sophie's Month~2 scenario, mapped to COSMIN content-validity dimensions. The rule-based column shows the questions produced by the branching engine; the LLM-based column shows the Gemini~2.5 Flash-assisted transformations.}
@@ -556,178 +439,109 @@ Isolation
 \label{subsec:sophie}
 
 To enable a fair within-subjects comparison, both methods are evaluated
-using a single standardised persona rather than participants' own health
+using a single standardised persona---a predetermined profile presented
+identically to every participant---rather than participants' own health
 data. ``Sophie'' is a fictional 24-year-old female East Asian
-international university student whose Month~1 foundational assessment
-produced a Mild mental health risk prediction and None across all
-other domains. Her context notes record specific response details: a mood
-frequency score of~1 (``Several days''), a low and stable isolation
+international university student whose Month~1 assessment produced a
+\emph{Mild} mental health risk and \emph{None} across other domains
+(see Figure~\ref{fig:persona_reference}). Her context records a
+mood-frequency score of~1 (``Several days''), a low and stable isolation
 score, and no triggered functional-impact questions.
 
-The decision to use a fixed persona---a single, predetermined user
-profile presented identically to every participant---serves three
-evaluation purposes.
-First, it eliminates between-participant variation in health profiles,
-ensuring that every participant sees the same rule-based and LLM-based
-questionnaires and that observed differences in Clarity, Quality,
-and Relevance ratings reflect the adaptation method rather than
-individual health circumstances. Second, it avoids the ethical
-complications of collecting real mental health data in a prototype
-evaluation context. Third, it provides a scenario that concretely
-illustrates the limitation of rule-based adaptation: Sophie's profile
-is designed so that the branching rule's hard threshold blocks the
+The fixed persona serves three purposes. First, it eliminates
+between-participant variation in health profiles, so observed
+differences reflect the adaptation method rather than individual
+circumstances. Second, it avoids the ethical complications of
+collecting real mental health data in a prototype evaluation. Third, it
+concretely illustrates the rule-based limitation: Sophie's profile is
+constructed so the branching rule's hard threshold blocks the
 functional-impact question despite a clinically meaningful two-month
-pattern (see Table~\ref{tab:comparison}), creating a clear point of
-contrast for participants to evaluate.
-
-The persona was designed with attention to measurement validity
-considerations identified in prior work. Baas et~al.\ \cite{baas2011}
-demonstrated that PHQ-9 responses can exhibit measurement non-invariance
-across demographic groups, and Wild et~al.\ \cite{wild2005} emphasised
-that questionnaire wording must account for cultural context. Sophie's
-profile, an East Asian international student, was therefore chosen
-to represent a demographic for whom culturally adapted wording---such as
-referencing coursework stress, adjusting to a new country, or navigating
-university support services---might be particularly relevant when
-produced by the LLM method, while remaining relatable to the
-predominantly university-aged participant pool.
+pattern (Table~\ref{tab:comparison}). The persona also reflects
+measurement-validity considerations from prior work---PHQ-9 responses
+can exhibit non-invariance across demographic groups \cite{baas2011}
+and questionnaire wording must account for cultural context
+\cite{wild2005}---so the East Asian international student profile
+represents a demographic for whom culturally adapted wording (e.g.,
+coursework stress, adjusting to a new country) is particularly relevant.
 
 % ── Study Design (subsections within Methodology) ────────────────────────────
 \subsection{Study Design}
 \label{subsec:research_design}
 \label{sec:study}
 
-This study uses a within-subjects design: every participant interacts
-with both the rule-based and the LLM-based monthly check-in methods and
-then rates each on the same set of evaluation items. The within-subjects
-approach was chosen because it allows each participant to serve as their
-own control, increasing statistical sensitivity to differences between
-methods while requiring fewer participants than a between-subjects
-design.
-
-Participants completed the rule-based check-in first, followed by the
-LLM-based check-in. This fixed presentation order was adopted because
-the rule-based condition establishes a baseline context that participants
-can reference when evaluating the LLM-based adaptations; the LLM method
-is designed to improve upon the specific limitations of the rule-based
-output (see Table~\ref{tab:comparison}), and viewing the baseline first
-makes these improvements interpretable. Counterbalancing was not
-implemented. We acknowledge this as a limitation: order effects cannot be
-fully ruled out, and this is discussed further in
-Section~\ref{subsec:limitations}.
-
-The study was approved by the Monash University Human Research Ethics
-Committee (MUHREC) under a Non-HREC (Lower Risk) review (Project
-ID~51664). All participants were fully informed of the study's purpose
-and provided consent via a written explanatory statement before
-beginning.
+The study uses a within-subjects design: every participant interacts
+with both methods and rates each on identical evaluation items, with
+each participant serving as their own control. A fixed presentation
+order (rule-based first, LLM-based second) was adopted because the
+rule-based condition establishes a baseline against which LLM
+adaptations become interpretable. Counterbalancing was not implemented;
+we acknowledge this as a limitation discussed in
+Section~\ref{subsec:limitations}. The study was approved by the Monash
+University Human Research Ethics Committee (MUHREC; Project ID~51664,
+Non-HREC Lower Risk review). All participants provided written informed
+consent.
 
 \subsection{Participants}
 \label{subsec:participants}
 
-Participants were recruited through convenience sampling via direct
-contact with peers, classmates, and personal networks. Eligible
-participants were adults aged 18 years or older, comprising university
-students and working professionals. No monetary compensation or
-reimbursement was offered. In accordance with the ethics approval,
-students enrolled at Monash University Malaysia and Indonesia campuses
-were excluded from recruitment, as the approval was scoped to the
-Australian campus.
-
-A total of 42 responses were received between 25~April and 13~May~2026.
-After excluding one non-consent response and one invalid submission, 40
-valid responses were retained. Demographic details are reported in
-Section~\ref{subsec:demographics}.
+Participants were recruited through convenience sampling via peers,
+classmates, and personal networks. Eligibility required adults aged
+18+, including university students and working professionals; no
+compensation was offered. Per the ethics approval (scoped to the
+Australian campus), students at the Monash Malaysia and Indonesia
+campuses were excluded. Of 42 responses received between 25~April and
+13~May~2026, one non-consent and one invalid submission were excluded,
+yielding $n=40$ valid responses (demographics in
+Section~\ref{subsec:demographics}).
 
 \subsection{Procedure}
 \label{subsec:procedure}
 
-Each participant completed the study independently in a single
-session, following a four-step procedure:
-
-\begin{enumerate}
-  \item \textbf{Orientation.} Participants received a link to the
-        Navigator prototype along with a user guide explaining the
-        application interface and the Sophie persona. The guide
-        described Sophie's demographics, her Month~1 health snapshot,
-        and the purpose of the monthly check-in. Participants were
-        instructed to evaluate the questionnaire from Sophie's
-        perspective.
-
-  \item \textbf{Rule-based check-in.} Participants completed Sophie's
-        Month~2 mental health check-in using the rule-based method. The
-        branching engine determined which follow-up questions appeared
-        based on their responses to the pre-filled baseline items.
-        Three questions were presented; the functional-impact item
-        remained hidden because the branching rule's threshold was not
-        met (Table~\ref{tab:comparison}).
-
-  \item \textbf{LLM-based check-in.} Participants then completed the
-        same Month~2 check-in using the LLM-based method, which
-        presented transformed questions adapted using Sophie's
-        longitudinal profile. The interface layout and interaction
-        pattern were identical to the rule-based condition.
-
-  \item \textbf{Feedback survey.} After completing both check-ins,
-        participants were directed to an external Google Form survey
-        comprising five sections:
-        \emph{Section~A} (Demographics) collected age range, gender,
-        health-app usage frequency, and student/professional status;
-        \emph{Section~B} (Clarity), \emph{Section~C} (Relevance), and
-        \emph{Section~D} (Quality) each contained three 5-point Likert
-        items, where every item was rated for both the rule-based and
-        LLM-based methods side by side;
-        \emph{Section~E} (Overall Experience) asked participants to
-        endorse one or more satisfaction options (rule-based, LLM-based,
-        both, or neither) and to provide free-text feedback.
-        Sections~B and~D also included an open-ended question each,
-        yielding three open-ended prompts in total.
-\end{enumerate}
-
-The entire session, including prototype interaction and survey
-completion, was estimated to take 10--15 minutes.
+Each participant completed the study independently in a single 10--15
+minute session: (1)~\textbf{Orientation}---a user guide introduced the
+prototype and the Sophie persona, instructing participants to evaluate
+from Sophie's perspective; (2)~\textbf{Rule-based check-in}---Sophie's
+Month~2 mental health check-in via the branching engine, in which the
+functional-impact item remained hidden because the threshold was not
+met (Table~\ref{tab:comparison}); (3)~\textbf{LLM-based check-in}---the
+same Month~2 check-in via the LLM method, with identical interface
+layout; and (4)~\textbf{Feedback survey} on an external Google Form
+with five sections: A~(Demographics), B~(Clarity), C~(Relevance),
+D~(Quality), and E~(Overall Experience). Sections~B--D each contained
+three 5-point Likert items rated side-by-side for both methods (nine
+paired items in total); Section~E asked participants to endorse
+satisfaction options (rule-based, LLM-based, both, or neither) and
+provide free-text feedback. Sections~B, D, and~E each included one
+open-ended prompt (three in total).
 
 \subsection{Evaluation Metrics}
 \label{subsec:metrics}
 
-We adopt the COSMIN content-validity framework \cite{terwee2018} to evaluate
-the two adaptation methods on common ground. COSMIN was selected because it
-is the most widely adopted standard for assessing the content validity of
-patient-reported outcome measures, grounded in an international Delphi
-consensus of 159 experts. This provides a principled basis for comparison
-that draws on established methodology rather than ad-hoc usability
-heuristics. We map the three COSMIN dimensions onto study-specific
-evaluation metrics as follows:
+We adopt the COSMIN content-validity framework \cite{terwee2018}
+because it is the most widely adopted standard for evaluating the
+content validity of patient-reported outcome measures, grounded in an
+international Delphi consensus of 159 experts. This provides a
+principled comparison basis drawn from established methodology rather
+than ad-hoc usability heuristics. The three COSMIN dimensions map onto
+study-specific metrics as follows:
 
 \begin{itemize}
-  \item \textbf{Clarity} (COSMIN \emph{comprehensibility}): whether the
-        questionnaire wording is clear and easy to understand.
-  \item \textbf{Quality} (COSMIN \emph{comprehensiveness}): whether the
+  \item \textbf{Clarity} (COSMIN \emph{comprehensibility}): whether
+        wording is clear and easy to understand.
+  \item \textbf{Quality} (COSMIN \emph{comprehensiveness}): whether
         questions are well-formed, meaningful, and complete within the
-        monthly check-in context. Participants judge whether each adaptive
-        question appears appropriate and useful.
-  \item \textbf{Relevance} (COSMIN \emph{relevance}): whether the
-        questions are appropriate and pertinent to Sophie's health
-        profile and circumstances.
+        monthly check-in context.
+  \item \textbf{Relevance} (COSMIN \emph{relevance}): whether questions
+        are pertinent to Sophie's health profile and circumstances.
 \end{itemize}
 
-Each dimension was measured using three Likert-scale items rated from~1
-(\emph{Strongly Disagree}) to~5 (\emph{Strongly Agree}). Each item was
-presented as a side-by-side matrix in which participants rated both the
-rule-based and LLM-based methods on the same screen, yielding nine
-paired ratings (18~data points) per participant. The three items within
-each dimension were averaged to produce a single composite score for
-Clarity, Quality, and Relevance for each method.
-
-In addition, three open-ended questions were embedded across the survey
-sections: one within the Clarity section (asking about confusing or
-unclear questions), one within the Quality section (asking participants
-to compare how each version felt to complete), and one in the Overall
-Experience section (inviting general feedback on both methods). These
-qualitative responses supplement the Likert data by surfacing themes
-that structured items may not capture. A final satisfaction item asked
-participants to endorse one or more of four options: rule-based method,
-LLM-based method, both, or neither.
+Each dimension was measured using three 5-point Likert items
+(1~\emph{Strongly Disagree} to~5~\emph{Strongly Agree}), presented as
+side-by-side matrices in which participants rated both methods on the
+same screen (nine paired items, 18~data points per participant). Items
+within a dimension were averaged into a composite score per method. The
+three open-ended prompts described above complement the Likert data by
+surfacing themes that structured items may not capture.
 
 \subsection{Data Collection and Analysis}
 \label{subsec:data_collection}
@@ -753,11 +567,8 @@ team, and recurring themes were identified through thematic grouping.
 \subsection{Participant Demographics}
 \label{subsec:demographics}
 
-% - include some graphs and charts
-As described in Section~\ref{subsec:data_collection}, the final analysis
-sample comprised $n = 40$ valid responses after excluding two submissions.
-
-Table~\ref{tab:demographics} summarises the sample characteristics.
+Table~\ref{tab:demographics} summarises the sample characteristics
+($n=40$).
 The majority of participants were aged 21--25 (65.0\%) and enrolled as
 university students (70.0\%). Gender was approximately balanced, with
 21~female (52.5\%) and 19~male (47.5\%) respondents. Most participants
@@ -872,13 +683,6 @@ context-aware rephrasing (e.g., referencing Sophie's occupation or
 recent mood trend) may have made individual items feel slightly more
 concrete and therefore easier to interpret.
 
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=\columnwidth]{figures/clarity_comparison.pdf}
-  \caption{Per-item Clarity scores for the LLM-based and rule-based methods ($n=40$). All items were rated above~3.7, with small differences between methods.}
-  \label{fig:clarity}
-\end{figure}
-
 \subsection{Relevance}
 \label{subsec:relevance_results}
 % TODO: Report per-item and composite Relevance scores.
@@ -904,14 +708,6 @@ unless those pathways were manually encoded. The LLM-based method was
 therefore perceived as more relevant because it could adapt question wording
 and selection to the persona's previous state.
 
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=\columnwidth]{figures/relevance_comparison.pdf}
-  \caption{Per-item Relevance scores ($n=40$). The LLM-based method showed the largest advantage on the change-tracking item ($\Delta=+0.50$).}
-  \label{fig:relevance}
-\end{figure}
-
-
 \subsection{Quality}
 \label{subsec:quality_results}
 % TODO: Report per-item and composite Quality scores.
@@ -932,12 +728,12 @@ viewed the LLM-based transformations as better aimed at Sophie's situation,
 particularly in terms of capturing meaningful details, rather than simply as a
 more pleasant interaction.
 
-\begin{figure}[t]
+\begin{figure*}[t]
   \centering
-  \includegraphics[width=\columnwidth]{figures/quality_comparison.pdf}
-  \caption{Per-item Quality scores ($n=40$). The natural-and-appropriate item was nearly tied ($\Delta=+0.06$), while other items showed larger differences.}
-  \label{fig:quality}
-\end{figure}
+  \includegraphics[width=0.95\textwidth]{figures/cosmin_combined.pdf}
+  \caption{Per-item and composite Likert ratings across the three COSMIN dimensions for both methods ($n=40$). Composite bars are outlined more boldly; significance markers above each composite denote paired $t$-test results ({*}\,$p<.05$; {***}\,$p<.001$). Clarity differences were small; Relevance and Quality showed larger LLM advantages, with the change-tracking Relevance item exhibiting the single largest item-level gap ($\Delta=+0.50$).}
+  \label{fig:cosmin_combined}
+\end{figure*}
 
 \subsection{Overall Preference}
 \label{subsec:preference_results}
@@ -1053,6 +849,7 @@ Clearer instructions        & 1 &  7.7 & ``More guidance for the process'' \\
 \end{minipage}
 \end{table*}
 
+
 \subsection{Summary of Key Observations}
 \label{subsec:summary}
 % TODO: Synthesise quantitative + qualitative findings in 1 paragraph.
@@ -1082,72 +879,39 @@ still recognising that the rule-based method was straightforward and usable.
 \label{subsec:static_dynamic}
 
 The central interpretation of this study is not that LLM-based questionnaires
-are categorically better than rule-based questionnaires. Rather, the meaningful
-contrast in Navigator is between a static branching design and a dynamically
-context-aware design. The rule-based method used predefined question text and
-fixed branching rules. This made it transparent and predictable, but also
+are categorically better than rule-based questionnaires, but rather that the
+meaningful contrast in Navigator lies between a \emph{static} branching design
+and a \emph{dynamically} context-aware design. The rule-based method's
+predefined text and fixed branching made it transparent and predictable, but
 limited its ability to respond to Sophie's previous-month profile unless each
-possible pathway had been anticipated by the designer. By contrast, the
-LLM-based method used the same assessment context to rewrite, prioritise, or add
-questions that referred more directly to Sophie's profile and longitudinal
-state.
+pathway had been anticipated by the designer. The LLM-based method, by
+contrast, used the same assessment context to rewrite, prioritise, or add
+questions that referred more directly to Sophie's longitudinal state.
 
-This distinction helps explain the observed pattern of results. The LLM-based
-method was perceived most strongly in the Relevance dimension, where
-participants evaluated whether questions reflected Sophie's persona, current
-situation, and previous-month condition. In comparison, the difference in
-Clarity was smaller, suggesting that carefully designed rule-based questions can
-still be clear and understandable. The main value of the LLM-based approach in
-this prototype is therefore not surface-level wording improvement, but the
-ability to scale context-aware adaptation without requiring every possible
-question pathway to be manually authored in advance. This interpretation is
-consistent with the broader motivation for adaptive assessment and
-LLM-supported patient-reported outcome measures \cite{wang2023,terheyden2025}.
+This distinction maps directly onto the three research questions. For RQ1
+(Clarity), the LLM advantage was the smallest of the three dimensions,
+indicating that carefully written rule-based questions can remain
+understandable without LLM support. For RQ2 (Quality), the LLM-based method
+was rated higher, though its composite (3.96) remained just below the 4.0
+``Agree'' benchmark---reflecting that even context-aware adaptation may not
+fully address perceived comprehensiveness within a constrained five-item
+check-in. For RQ3 (Relevance), the LLM-based method showed its strongest
+advantage, with the change-tracking item exhibiting the largest item-level
+gap ($\Delta=+0.50$). This pattern is consistent with the broader
+motivation for adaptive assessment and LLM-supported patient-reported
+outcome measures \cite{wang2023,terheyden2025}: the principal value of LLM
+adaptation in this prototype lies not in surface-level wording improvement,
+but in scaling context-aware questioning without manually pre-authoring
+every pathway.
 
-\subsection{Interpretation of Research Questions}
-\label{subsec:interpretation}
-
-For RQ1, the findings provide only cautious support for the LLM-based method.
-Both versions were rated positively for Clarity, and the difference between
-methods was the smallest among the three evaluation dimensions. This suggests
-that clarity depends strongly on the quality of question writing, not only on
-whether a questionnaire is adapted with an LLM. A static rule-based method can
-remain clear when its items are carefully designed.
-
-For RQ2, the findings suggest that participants perceived the LLM-based method
-as somewhat higher in Quality. This may reflect the way the LLM-adapted questions
-were framed around Sophie's student background and ongoing mental health
-pattern. However, this result should be interpreted as perceived questionnaire
-quality rather than evidence of clinical validity. The study did not evaluate
-whether either method produced more accurate mental health assessment outcomes.
-Notably, the LLM-based Quality composite (3.96) remained below the 4.0
-``Agree'' benchmark on the 5-point scale, whereas Clarity (4.05) and
-Relevance (4.08) both exceeded it. This suggests that even when an LLM adapts questions to a user's context,
-participants may still perceive gaps in the comprehensiveness of a five-item
-check-in. The result may partly reflect inherent limitations of the generative
-model's ability to capture all relevant aspects of a user's mental health
-within a constrained item set, a direction explored further in
-Section~\ref{subsec:limitations}.
-
-For RQ3, the findings provide the strongest support for the LLM-based method.
-Relevance is the dimension most directly connected to contextual adaptation,
-and participants appeared to recognise when questions reflected Sophie's
-previous-month condition or current circumstances. This supports the argument
-that LLMs may be particularly useful when questionnaire systems need to connect
-standard assessment content with individual history, rather than simply present
-the same static items at each check-in.
-
-Taken together, the improvements in perceived relevance and quality carry
-practical implications beyond user experience. If an adaptive method can
-produce questions that users find more relevant to their situation, respondents
-are more likely to engage meaningfully rather than providing superficial or
-habitual answers. In the context of health monitoring, more engaged and
-thoughtful responses can improve the quality of collected data, which in turn
-can strengthen the accuracy of downstream risk prediction. While this study
-did not directly measure prediction outcomes, the observed pattern suggests
-that LLM-based adaptation may contribute to better data collection, and
-therefore, better prediction capability, by asking questions that users perceive
-as genuinely connected to their circumstances.
+These improvements carry practical implications beyond user experience. If
+adaptive questions feel more relevant, respondents are more likely to
+engage meaningfully rather than answer habitually---and more engaged
+responses can strengthen the quality of collected data and, in turn,
+downstream risk prediction. While this study did not directly measure
+prediction outcomes, the observed pattern suggests that LLM-based
+adaptation may contribute to better data collection by asking questions
+that users perceive as genuinely connected to their circumstances.
 
 \subsection{Limitations}
 \label{subsec:limitations}
@@ -1234,56 +998,27 @@ Relevance. Qualitative responses supported this pattern by highlighting
 personalisation, history awareness, and contextual fit as the main reasons
 participants preferred the LLM-based version.
 
-Overall, this study demonstrates that LLM-based adaptation can make questionnaire
-content feel more connected to a user's profile and previous responses within a
-controlled prototype setting. The main contribution of this work is therefore a
-human-centred evaluation of static versus dynamic adaptation, showing that the
-value of LLMs in mental health questionnaire systems lies primarily in contextual
-relevance rather than clearer wording alone.
-
+Overall, this study demonstrates that LLM-based adaptation can make
+questionnaire content feel more connected to a user's profile and previous
+responses within a controlled prototype setting. The main contribution is
+therefore a human-centred evaluation of static versus dynamic adaptation,
+showing that the value of LLMs in mental health questionnaire systems lies
+primarily in contextual relevance rather than clearer wording alone.
 
 \subsection{Future Work}
 \label{subsec:future}
-% TODO:
-%   - Broader participant pool (clinical populations, older demographics)
-%   - Counterbalanced study design to control for order effects
-%   - Multiple LLM providers comparison
-%   - Longitudinal study: same participants across multiple monthly check-ins
-%   - Real patient data integration (beyond mock persona)
-%   - Clinical validation of LLM-generated questions with domain experts
-%   - Expansion to other health domains (dietary, physical activity, etc.)
 
-As stated in Section~\ref{sec:intro}, the central contribution of this
-work is a controlled, human-centred comparison of static and dynamic
-adaptation within a single mental health questionnaire application. The
-following directions build on this contribution by addressing the
-limitations identified above. First, a
-counterbalanced study design should be used so that some participants complete
-the LLM-based method first and others complete the rule-based method first,
-allowing order effects to be separated from method effects. Second, the study
-should be repeated with larger and more diverse samples, including older
-participants and people with more varied experience using health applications.
-Third, the prototype should be evaluated longitudinally across multiple monthly
-check-ins using real participant data, subject to appropriate ethics approval,
-to test whether perceived relevance remains meaningful over time.
-
-Future versions should also record downstream risk scores and compare whether
-different question sequences produce measurably different assessment outcomes.
-This would connect the present user-perception findings to the broader
-Navigator aim of improving data quality for health monitoring and prediction.
-Making individual check-in questions optional and tracking skip rates per
-method would further provide a behavioural measure of perceived relevance,
-complementing the self-reported ratings used in this study: a question
-that participants consistently skip may indicate low relevance more directly
-than a Likert rating alone.
-Additionally, future evaluations should compare multiple LLM providers
-(e.g., GPT-4o, Claude, open-source models such as Llama) to determine
-whether the observed improvements generalise beyond Gemini~2.5 Flash or
-are partly attributable to model-specific generation behaviour.
-Finally, LLM-based or LLM-adapted questions should be reviewed by clinical
-or domain experts before use in higher-risk settings, and the approach should
-be tested across other health domains beyond mental health.
-
+Building on this contribution, future work should address the
+limitations in Section~\ref{subsec:limitations} along four directions:
+(i)~a counterbalanced, larger, and more diverse sample, including
+older and clinical populations; (ii)~longitudinal evaluation using real
+participant data under ethics approval, with logging of downstream risk
+scores and per-question skip rates as behavioural measures of
+relevance; (iii)~a multi-LLM comparison (e.g., GPT-4o, Claude,
+open-source Llama) to test whether the observed advantages generalise
+beyond Gemini~2.5 Flash; and (iv)~clinician review of LLM-adapted
+questions and extension to other health domains before deployment in
+higher-risk settings.
 
 % ── References ────────────────────────────────────────────────────────────────
 \bibliography{ENG_FIT_4701_2.bib}

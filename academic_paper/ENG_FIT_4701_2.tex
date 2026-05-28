@@ -37,12 +37,11 @@
 %       (4) key findings.
 Static mental health check-in questionnaires can be clear and clinically
 grounded, but they often repeat the same questions regardless of changing
-user states. This study presents Navigator, a web-based prototype comparing
-a static rule-based monthly check-in with a dynamic LLM-based method that
-adapts baseline questions using a controlled persona and previous-month
-health profile. Forty valid participants evaluated both methods through a
+user states. This study presents Navigator, a web-based prototype for mental health comparing
+a static rule-based monthly check-in with a dynamic LLM-based method. Based on the baseline questions using a controlled persona and previous-month
+health profile, we generate subsequent monthly questions and compared static Rule-based and dynamic LLM-based methods. Forty valid participants evaluated both methods through a
 within-subjects survey grounded in COSMIN content-validity dimensions:
-Clarity, Relevance, and Quality. The LLM-based method received higher
+Clarity, Relevance, and Quality. The dynamic LLM-based method received higher
 composite ratings for Relevance ($d_z=0.58$) and Quality ($d_z=0.59$),
 while the Clarity difference was smaller ($d_z=0.41$). Qualitative
 responses suggested that participants valued personalisation and
@@ -79,7 +78,7 @@ adaptation methods \cite{malanin2025}.
 Recent advances in Large Language Models (LLMs) open a new design space for adaptive
 assessment: LLMs can synthesise context-aware questions informed by a user's health
 profile, lifestyle changes, and prior responses, and have begun to be explored as
-engines for patient-reported outcome measures \cite{terheyden2025}. Despite this promise,
+engines for patient-reported outcome measures \cite{terheyden2025}. LLM can be used to reduce repeated questions within digital health check-ins including mental health domain. Despite this promise,
 the use of LLMs in mental health remains at an early stage. A recent systematic review
 of mental health chatbots highlights that most existing systems use pre-determined rule-based questionnaires,
 and that LLM-based questionnaire designs, while more flexible, introduce new concerns around safety,
@@ -264,6 +263,22 @@ COSMIN-grounded evaluation---the gap this study addresses.
 \section{Methodology}
 \label{sec:system}
 
+% Questionairre design - Table I example... 
+% Prototype design and implementation - A, D, B, C
+% Survey design - F, G, H
+% Ehics approval - E 
+% Conducting survey and data collection - I
+% Evaluation
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.82\columnwidth]{figures/methodology_diagram.png}
+  \caption{This project is structured into eight distinct phases spanning two semesters. The initial three stages establish the foundational framework and strategic direction of the research, while the remaining phases focus on ethical clearance, data collection, and in-depth analysis.}
+  \label{fig:methodology_diagram}
+\end{figure}
+
+
+
 The methodology comprises four components: (i)~implementation of two
 adaptation methods within a unified web-based prototype
 (Sections~\ref{subsec:architecture}--\ref{subsec:llm_based}); (ii)~a
@@ -336,7 +351,7 @@ percentage-based thresholds loosely inspired by the PHQ-9 severity bands
 \emph{Moderate}, $>$75\% \emph{High}. These thresholds are a simplified
 prototype mapping and do not correspond to PHQ-9 cut-off scores
 (5, 10, 15, 20). Sophie's scenario in Table~\ref{tab:comparison}
-illustrates the resulting limitation: Rule~13 hides the
+illustrates the resulting limitation of static rule-based method: Rule~13 hides the
 functional-impact item when the mood-frequency response is $<2$, so her
 Month~2 response of~1 (``Several days'') suppresses the item despite a
 clinically meaningful two-month Mild pattern that the rule cannot detect.
@@ -790,6 +805,11 @@ Figure~\ref{fig:satisfaction} illustrates the distribution.
 %         Better guidance/instructions    2  (5.1%)
 %         User control/flexibility        1  (2.6%)
 
+
+% n
+% %
+% Sub-category
+% Main theme (C,Q, R)
 The open-ended responses helped explain why the LLM-based method was rated
 more favourably, particularly in Relevance. Responses were analysed using
 an inductive thematic coding approach: one researcher read all responses,

@@ -302,10 +302,18 @@ prototype supports six health domains, but this study evaluates only
 the Mental Health pathway. Both methods share the same front-end
 layout, rendering components, and scoring pipeline, so any observed
 difference is attributable to the adaptation method rather than
-interface variation. The prototype presents a pre-filled foundational
-assessment (Step~1) followed by the two monthly check-in pathways
-(Step~2); Figure~\ref{fig:persona_reference} shows the persona
-reference provided to participants beforehand.
+interface variation. As shown in Figure~\ref{fig:homepage}, the
+prototype presents a pre-filled foundational assessment (Step~1)
+followed by the two monthly check-in pathways (Step~2).
+Figure~\ref{fig:persona_reference} shows the persona reference
+provided to participants beforehand.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.82\columnwidth]{figures/homepage_crop.png}
+  \caption{Navigator prototype interface. Step~1 shows the pre-filled foundational assessment; Step~2 offers the two monthly check-in pathways (Rule-based and LLM-based) for the Mental Health domain.}
+  \label{fig:homepage}
+\end{figure}
 
 \begin{figure}[t]
   \centering
@@ -386,6 +394,16 @@ illustrates the resulting limitation of static rule-based method: Rule~13 hides 
 functional-impact item when the mood-frequency response is $<2$, so her
 Month~2 response of~1 (``Several days'') suppresses the item despite a
 clinically meaningful two-month Mild pattern that the rule cannot detect.
+Figure~\ref{fig:rule_question} shows an example of the rule-based
+check-in questions presented to participants in Sophie's Month~2
+scenario.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.82\columnwidth]{figures/rule_question.png}
+  \caption{Rule-based monthly check-in for Sophie's Month~2 Mental Health scenario. The branching engine presents three generic questions; the functional-impact item is hidden because the mood-frequency threshold is not met.}
+  \label{fig:rule_question}
+\end{figure}
 
 \subsection{Dynamic LLM-Based Adaptation Method}
 \label{subsec:llm_based}
@@ -429,8 +447,17 @@ which argues that LLM-generated patient-reported outcome items should be
 developed from validated content and benchmarked against fixed
 instruments. In Navigator the LLM does not generate from scratch but
 \emph{transforms} baseline items using the user's longitudinal context.
-Table~\ref{tab:comparison} summarises the resulting transformations in
-Sophie's scenario, mapped to COSMIN dimensions.
+Figure~\ref{fig:llm_question} shows an example of the LLM-based
+check-in questions for the same scenario, and
+Table~\ref{tab:comparison} summarises the resulting transformations
+mapped to COSMIN dimensions.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.82\columnwidth]{figures/llm_question.png}
+  \caption{LLM-based monthly check-in for Sophie's Month~2 Mental Health scenario. Questions are adapted using Sophie's prior history and student context, with a longitudinal trend item added and the isolation item de-prioritised.}
+  \label{fig:llm_question}
+\end{figure}
 
 \begin{table*}[t]
 \caption{Mental health check-in questions under each adaptation method for Sophie's Month~2 scenario, mapped to COSMIN content-validity dimensions. The rule-based column shows the questions produced by the branching engine; the LLM-based column shows the Gemini~2.5 Flash-assisted transformations.}
@@ -479,13 +506,6 @@ Isolation
 \bottomrule
 \end{tabular}
 \end{table*}
-
-\begin{figure*}[t]
-  \centering
-  \includegraphics[width=0.75\textwidth]{figures/static_llm_comparison.png}
-  \caption{Side-by-side comparison of Sophie's Month~2 mental health check-in. Left: the LLM-based method adapts question wording using Sophie's prior history and student context. Right: the rule-based method presents the same generic questions regardless of the user's profile.}
-  \label{fig:method_comparison}
-\end{figure*}
 
 % ── Study Design (subsections within Methodology) ────────────────────────────
 \subsection{Study Design}

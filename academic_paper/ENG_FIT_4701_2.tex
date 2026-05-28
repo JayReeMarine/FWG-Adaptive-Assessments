@@ -30,11 +30,6 @@
 
 % ── Abstract ─────────────────────────────────────────────────────────────────
 \begin{abstract}
-% TODO: ~150 words
-% Hint: Cover (1) problem: static questionnaires fail to reflect changing conditions,
-%       (2) approach: Navigator prototype with rule-based and LLM-based methods,
-%       (3) study: within-subjects user study, metrics: Clarity / Quality / Relevance,
-%       (4) key findings.
 Static mental health check-in questionnaires can be clear and clinically
 grounded, but they often repeat the same questions regardless of changing
 user states. Such repetition can increase self-report burden, encourage
@@ -292,8 +287,10 @@ COSMIN-grounded evaluation---the gap this study addresses.
 
 
 
-The methodology comprises four components: (i)~system architecture and a
-controlled evaluation scenario built around a standardised persona
+Figure~\ref{fig:methodology_diagram} outlines the eight project phases
+across two semesters. The methodology comprises four components:
+(i)~system architecture and a controlled evaluation scenario built
+around a standardised persona
 (Sections~\ref{subsec:architecture}--\ref{subsec:sophie});
 (ii)~implementation of the two adaptation methods within the prototype
 (Sections~\ref{subsec:rule_based}--\ref{subsec:llm_based}); (iii)~a
@@ -639,6 +636,9 @@ Gender      & Female  & 21 & 52.5 \\
 \addlinespace
 Role        & Student & 28 & 70.0 \\
             & Working professional & 12 & 30.0 \\
+\addlinespace
+Health-app  & Rarely or never & 30 & 75.0 \\
+familiarity & Sometimes or often & 10 & 25.0 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -649,8 +649,10 @@ Role        & Student & 28 & 70.0 \\
 Each of the three COSMIN-grounded dimensions was measured by three
 Likert items (1--5 scale). Per-participant composite scores were
 computed by averaging the three items within each dimension.
-Table~\ref{tab:quant} presents per-item and composite means for both
-methods, together with paired $t$-test results ($df = 39$).
+Table~\ref{tab:quant} presents composite means for both
+methods, together with paired $t$-test results ($df = 39$);
+item-level patterns are shown descriptively in
+Figure~\ref{fig:cosmin_combined}.
 
 All three composite scores were significantly higher for the LLM-based
 method: Clarity ($\Delta = +0.13$, $p = .014$), Relevance
@@ -660,43 +662,25 @@ showed the smallest. Wilcoxon signed-rank sensitivity checks supported
 the same direction of effects, with strongest evidence for Relevance and Quality (Clarity $p=.018$; Relevance $p<.001$; Quality $p<.001$).
 
 
-\begin{table*}[t]
-\caption{Per-item and composite Likert scores (mean $\pm$ SD) with paired $t$-test results ($n = 40$). Effect size $d_z = t/\sqrt{n}$. Asterisks: {*}\,$p < .05$; {**}\,$p < .01$; {***}\,$p < .001$.}
+\begin{table}[t]
+\caption{Composite Likert scores (mean $\pm$ SD) with paired $t$-test results ($n = 40$, $df = 39$). Effect size $d_z = t/\sqrt{n}$. Item-level patterns are shown in Figure~\ref{fig:cosmin_combined}.}
 \label{tab:quant}
 \centering
 \small
-\begin{tabular}{@{}llcccccc@{}}
+\begin{tabular}{@{}lccccc@{}}
 \toprule
-\textbf{Dimension} & \textbf{Item} & \textbf{LLM (M $\pm$ SD)} & \textbf{Rule (M $\pm$ SD)} & \textbf{$\Delta$} & \textbf{$t$} & \textbf{$p$} & \textbf{$d_z$} \\
+\textbf{Dimension} & \textbf{LLM} & \textbf{Rule} & \textbf{$\Delta$} & \textbf{$t$ ($p$)} & \textbf{$d_z$} \\
 \midrule
-Clarity
-  & Clear and easy to understand      & $4.22 \pm 0.73$ & $4.03 \pm 0.95$ & $+0.20$ & $1.75$ & $.088$ & $0.28$ \\
-  & Specific and unambiguous           & $3.83 \pm 0.96$ & $3.70 \pm 1.07$ & $+0.12$ & $1.30$ & $.200$ & $0.21$ \\
-  & Easy to know how to answer         & $4.10 \pm 0.96$ & $4.03 \pm 1.05$ & $+0.07$ & $0.62$ & $.538$ & $0.10$ \\
-  & \textbf{Composite}                 & $\mathbf{4.05 \pm 0.73}$ & $\mathbf{3.92 \pm 0.84}$ & $\mathbf{+0.13}$ & $\mathbf{2.58}$ & $\mathbf{.014}$* & $\mathbf{0.41}$ \\
-\addlinespace
-Relevance
-  & Relevant to Sophie's health profile & $4.15 \pm 0.66$ & $3.77 \pm 0.80$ & $+0.38$ & $3.55$ & $.001$** & $0.56$ \\
-  & Addressed important aspects         & $4.00 \pm 0.75$ & $3.62 \pm 0.87$ & $+0.38$ & $2.94$ & $.005$** & $0.46$ \\
-  & Reflected changes since prev.\ month & $4.10 \pm 0.78$ & $3.60 \pm 0.93$ & $+0.50$ & $3.29$ & $.002$** & $0.52$ \\
-  & \textbf{Composite}                  & $\mathbf{4.08 \pm 0.63}$ & $\mathbf{3.67 \pm 0.77}$ & $\mathbf{+0.42}$ & $\mathbf{3.69}$ & $\mathbf{<.001}$*** & $\mathbf{0.58}$ \\
-\addlinespace
-Quality
-  & Captured important details           & $3.90 \pm 0.74$ & $3.50 \pm 0.88$ & $+0.40$ & $3.57$ & $.001$** & $0.56$ \\
-  & Well designed for meaningful assessment & $4.00 \pm 0.78$ & $3.58 \pm 0.93$ & $+0.42$ & $3.60$ & $.001$** & $0.57$ \\
-  & Natural and appropriate              & $3.98 \pm 0.89$ & $3.92 \pm 0.80$ & $+0.05$ & $0.36$ & $.720$ & $0.06$ \\
-  & \textbf{Composite}                  & $\mathbf{3.96 \pm 0.65}$ & $\mathbf{3.67 \pm 0.73}$ & $\mathbf{+0.29}$ & $\mathbf{3.76}$ & $\mathbf{<.001}$*** & $\mathbf{0.59}$ \\
+Clarity   & $4.05 \pm 0.73$ & $3.92 \pm 0.84$ & $+0.13$ & $2.58$ ($.014$)*     & $0.41$ \\
+Relevance & $4.08 \pm 0.63$ & $3.67 \pm 0.77$ & $+0.42$ & $3.69$ ($<.001$)***  & $0.58$ \\
+Quality   & $3.96 \pm 0.65$ & $3.67 \pm 0.73$ & $+0.29$ & $3.76$ ($<.001$)***  & $0.59$ \\
 \bottomrule
+\multicolumn{6}{@{}l@{}}{\scriptsize *\,$p < .05$;\; ***\,$p < .001$}
 \end{tabular}
-\end{table*}
+\end{table}
 
 \subsection{Clarity}
 \label{subsec:clarity_results}
-% TODO: Report per-item and composite Clarity scores.
-%       LLM mean 4.08 vs Rule 3.94 -- smallest gap of the three dimensions.
-%       Both methods rated positively; suggests both were clearly worded.
-%       Interpret: wording clarity is less sensitive to static vs dynamic distinction.
-
 Both methods were rated positively for Clarity, with all item means above~3.7.
 The LLM-based method scored slightly higher on each item: clear and easy to
 understand ($M=4.22$ vs.~$4.03$), easy to know how to answer ($M=4.10$
@@ -723,12 +707,6 @@ concrete and therefore easier to interpret.
 
 \subsection{Relevance}
 \label{subsec:relevance_results}
-% TODO: Report per-item and composite Relevance scores.
-%       LLM mean 4.09 vs Rule 3.68 -- LARGEST gap (+0.40).
-%       Key item: "Reflected changes since previous month" shows biggest LLM advantage.
-%       Interpret: context-awareness and longitudinal history drive relevance perception.
-%       This is the dimension where static vs dynamic distinction is most visible.
-
 Relevance showed the clearest separation between methods. The LLM-based method
 was rated higher on all three relevance items: relevance to Sophie's health
 profile ($M=4.15$ vs.~$3.77$), addressing what seemed most important
@@ -748,10 +726,6 @@ and selection to the persona's previous state.
 
 \subsection{Quality}
 \label{subsec:quality_results}
-% TODO: Report per-item and composite Quality scores.
-%       LLM mean 3.96 vs Rule 3.68 -- moderate gap (+0.27).
-%       Interpret: LLM questions felt more meaningful and well-designed overall.
-
 Quality ratings also favoured the LLM-based method, though the pattern was more
 specific than a general improvement in user experience. The LLM-based method
 scored higher for capturing important details ($M=3.90$ vs.~$3.50$) and being
@@ -773,16 +747,8 @@ more pleasant interaction.
   \label{fig:cosmin_combined}
 \end{figure*}
 
-\subsection{Overall Preference}
+\subsection{Overall Satisfaction and Preference}
 \label{subsec:preference_results}
-% TODO: Report preference distribution (n=39):
-%       Satisfied with both:    17 (43.6%)
-%       Dynamic LLM-based:      12 (30.8%)
-%       Static Rule-based:       8 (20.5%)
-%       Neither:                  2 (5.1%)
-%       Interpretation: largest group preferred both -- rule-based was not poor.
-%       Combined LLM preference (LLM only + both) = 74.4%.
-
 The overall satisfaction item was multi-select, so responses indicate
 endorsement rather than mutually exclusive preference. A majority of
 participants endorsed satisfaction with both methods ($n=22$, 55.0\%). The
@@ -805,17 +771,6 @@ Figure~\ref{fig:satisfaction} illustrates the distribution.
 
 \subsection{Qualitative Findings}
 \label{subsec:qual}
-% TODO: Thematic analysis of open-ended responses (theme → code → % → quote).
-%       Q2 themes (n=39):
-%         Personalisation/Relevance       8 (20.5%) -- "The LLM felt more specific and tailored" (P23)
-%         No strong preference / Both OK 11 (28.2%) -- "Both were easy to complete" (P33)
-%         Longitudinal awareness          4 (10.3%) -- "LLM linked back to Month 1 questions" (P16)
-%         Simplicity/Transparency (Rule)  4 (10.3%) -- "Rule-based gave more context of prev. month" (P38)
-%         Natural/Conversational          3  (7.7%) -- "LLM feels more human-like" (P05)
-%       Q3 improvement themes:
-%         More personalisation in LLM     3  (7.7%)
-%         Better guidance/instructions    2  (5.1%)
-%         User control/flexibility        1  (2.6%)
 
 
 % n
@@ -890,14 +845,6 @@ Clearer instructions        & 1 &  7.7 & ``More guidance for the process'' \\
 
 \subsection{Summary of Key Observations}
 \label{subsec:summary}
-% TODO: Synthesise quantitative + qualitative findings in 1 paragraph.
-%       Key message: LLM-based method was perceived as more relevant and
-%       context-aware (especially on Relevance dimension), but both methods
-%       performed well on Clarity, confirming that the static rule-based
-%       questions were competently designed. The primary advantage of the
-%       LLM-based method lies in its dynamic, context-aware adaptation
-%       rather than in surface-level wording quality.
-
 Across the nine evaluation items, the LLM-based questionnaire was rated equal
 to or higher than the rule-based questionnaire in every case. The largest
 composite differences appeared in Relevance ($M=4.08$ vs.\ $3.67$,
@@ -1034,14 +981,6 @@ double-coding and report agreement measures such as Cohen's $\kappa$.
 % ── Section 7: Conclusion ─────────────────────────────────────────────────────
 \section{Conclusion}
 \label{sec:conclusion}
-% TODO: ~0.3 page
-% Summarise: problem (static questionnaires), approach (Navigator prototype,
-% rule-based vs LLM-based, Sophie persona, COSMIN evaluation),
-% key findings (LLM significantly higher on Relevance and Quality;
-% static vs dynamic distinction more explanatory than wording quality),
-% implications (adaptive health questionnaire design should prioritise
-% context-awareness and longitudinal integration over cosmetic wording changes).
-
 This study evaluated whether an LLM-based adaptive questionnaire method could
 improve user perceptions of mental health check-in questions compared with a
 static rule-based method. Using the Navigator prototype for mental health and a controlled Sophie
@@ -1062,15 +1001,6 @@ primarily in contextual relevance rather than clearer wording alone.
 
 \subsection{Future Work}
 \label{subsec:future}
-% TODO:
-%   - Broader participant pool (clinical populations, older demographics)
-%   - Counterbalanced study design to control for order effects
-%   - Multiple LLM providers comparison
-%   - Longitudinal study: same participants across multiple monthly check-ins
-%   - Real patient data integration (beyond mock persona)
-%   - Clinical validation of LLM-generated questions with domain experts
-%   - Expansion to other health domains (dietary, physical activity, etc.)
-
 Building on this contribution, future work should address the
 limitations in Section~\ref{subsec:limitations} along four directions:
 (i)~a counterbalanced, larger, and more diverse sample, including

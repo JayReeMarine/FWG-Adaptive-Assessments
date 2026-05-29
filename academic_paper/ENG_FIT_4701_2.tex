@@ -280,7 +280,7 @@ COSMIN-grounded evaluation---the gap this study addresses.
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.82\columnwidth]{figures/methodology_diagram.png}
+  \includegraphics[width=0.80\columnwidth]{figures/methodology_diagram.jpg}
   \caption{This project is structured into eight distinct phases spanning two semesters. The initial three stages establish the foundational framework and strategic direction of the research, while the remaining phases focus on ethical clearance, data collection, and in-depth analysis.}
   \label{fig:methodology_diagram}
 \end{figure}
@@ -681,6 +681,7 @@ Quality   & $3.96 \pm 0.65$ & $3.67 \pm 0.73$ & $+0.29$ & $3.76$ ($<.001$)***  &
 
 \subsection{Clarity}
 \label{subsec:clarity_results}
+
 Both methods were rated positively for Clarity, with all item means above~3.7.
 The LLM-based method scored slightly higher on each item: clear and easy to
 understand ($M=4.22$ vs.~$4.03$), easy to know how to answer ($M=4.10$
@@ -707,6 +708,12 @@ concrete and therefore easier to interpret.
 
 \subsection{Relevance}
 \label{subsec:relevance_results}
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.82\columnwidth]{figures/demographic_relevance.png}
+  \label{fig:demographic_relevance}
+\end{figure}
+
 Relevance showed the clearest separation between methods. The LLM-based method
 was rated higher on all three relevance items: relevance to Sophie's health
 profile ($M=4.15$ vs.~$3.77$), addressing what seemed most important
@@ -724,8 +731,27 @@ unless those pathways were manually encoded. The LLM-based method was
 therefore perceived as more relevant because it could adapt question wording
 and selection to the persona's previous state.
 
+To explore whether this pattern held across participant subgroups,
+Figure~\ref{fig:demo_relevance} breaks down composite Relevance scores by
+age, gender, health-app familiarity, and profession. The LLM-based method
+was rated higher than the rule-based method in every subgroup. The gap was
+widest among participants aged 26--34 ($\Delta=+0.77$, $n=6$) and working
+professionals ($\Delta=+0.53$, $n=12$), and narrowest among those aged
+18--20 ($\Delta=+0.09$, $n=8$). Clarity and Quality showed similar
+directional patterns across all subgroups, with smaller gaps that mirrored
+the overall composite findings. These subgroup comparisons are descriptive
+only; the small and unequal cell sizes preclude inferential testing.
+
+\begin{figure*}[t]
+  \centering
+  \includegraphics[width=0.92\textwidth]{figures/demographic_relevance.png}
+  \caption{Composite Relevance scores by demographic subgroup ($n=40$). The LLM-based method (blue) was rated higher than the rule-based method (purple) in every subgroup. The 26--34 age group and working professionals showed the largest gaps; Clarity and Quality exhibited similar but smaller directional patterns across all subgroups (not shown).}
+  \label{fig:demo_relevance}
+\end{figure*}
+
 \subsection{Quality}
 \label{subsec:quality_results}
+
 Quality ratings also favoured the LLM-based method, though the pattern was more
 specific than a general improvement in user experience. The LLM-based method
 scored higher for capturing important details ($M=3.90$ vs.~$3.50$) and being
@@ -845,6 +871,7 @@ Clearer instructions        & 1 &  7.7 & ``More guidance for the process'' \\
 
 \subsection{Summary of Key Observations}
 \label{subsec:summary}
+
 Across the nine evaluation items, the LLM-based questionnaire was rated equal
 to or higher than the rule-based questionnaire in every case. The largest
 composite differences appeared in Relevance ($M=4.08$ vs.\ $3.67$,
@@ -981,6 +1008,7 @@ double-coding and report agreement measures such as Cohen's $\kappa$.
 % ── Section 7: Conclusion ─────────────────────────────────────────────────────
 \section{Conclusion}
 \label{sec:conclusion}
+
 This study evaluated whether an LLM-based adaptive questionnaire method could
 improve user perceptions of mental health check-in questions compared with a
 static rule-based method. Using the Navigator prototype for mental health and a controlled Sophie
@@ -1001,6 +1029,7 @@ primarily in contextual relevance rather than clearer wording alone.
 
 \subsection{Future Work}
 \label{subsec:future}
+
 Building on this contribution, future work should address the
 limitations in Section~\ref{subsec:limitations} along four directions:
 (i)~a counterbalanced, larger, and more diverse sample, including

@@ -42,9 +42,8 @@ dynamic LLM-based method that adapts baseline questions using a controlled
 persona and previous-month health profile. Forty valid participants
 evaluated both methods through a within-subjects survey grounded in COSMIN
 content-validity dimensions: Clarity, Relevance, and Quality. The dynamic
-LLM-based method received higher composite ratings for Relevance
-($d_z=0.58$) and Quality ($d_z=0.59$), while the Clarity difference was
-smaller ($d_z=0.41$). Qualitative responses highlighted personalisation
+LLM-based method received higher composite ratings for Relevance and Quality, while the Clarity difference was
+smaller. Qualitative responses highlighted personalisation
 and history-aware questioning as key advantages, while the rule-based
 method remained understandable and straightforward. These findings
 indicate that the main advantage of LLM-based adaptation lies in
@@ -272,16 +271,6 @@ COSMIN-grounded evaluation, which is the gap this study addresses.
 \section{Methodology}
 \label{sec:system}
 
-
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=0.80\columnwidth]{figures/methodology_diagram.jpg}
-  \caption{Research methodology overview. The project progressed through eight phases across two semesters: literature review, questionnaire design, prototype implementation, survey design, ethics approval, survey conduct, data collection, and quantitative and qualitative evaluation.}
-  \label{fig:methodology_diagram}
-\end{figure}
-
-
-
 Figure~\ref{fig:methodology_diagram} outlines the eight project phases
 across two semesters. The methodology comprises four components:
 (i)~system architecture and a controlled evaluation scenario built
@@ -301,11 +290,20 @@ The baseline question bank was developed during the first project phase
 through a review of validated and research-informed health questionnaire
 items, including mental health instruments such as the PHQ-9
 \cite{kroenke2001} and GAD-7 \cite{spitzer2006}. The item set was refined
-through expert consultation with a Monash University researcher with
+through expert consultation within study partners as well as a Monash University researcher with
 expertise in survey design and human data collection, which informed
 wording improvements and helped keep the assessment concise. These
 expert-informed baseline items form the rule-based question set that the
 LLM-based method adapts in this study.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.80\columnwidth]{figures/methodology_diagram.jpg}
+  \caption{Research methodology overview. The project progressed through eight phases across two semesters: literature review, questionnaire design, prototype implementation, survey design, ethics approval, survey conduct, data collection, and quantitative and qualitative evaluation.}
+  \label{fig:methodology_diagram}
+\end{figure}
+
+
 
 \subsection{Architecture Overview}
 \label{subsec:architecture}
@@ -414,7 +412,7 @@ Figure~\ref{fig:rule_question} shows an example of the rule-based
 check-in questions presented to participants in Sophie's Month~2
 scenario.
 
-\begin{figure}[t]
+\begin{figure}[h]
   \centering
   \includegraphics[width=0.82\columnwidth]{figures/rule_question.png}
   \caption{Rule-based monthly check-in for Sophie's Month~2 Mental Health scenario. The branching engine presents three generic questions; the functional-impact item is hidden because the mood-frequency threshold is not met.}
@@ -468,7 +466,7 @@ check-in questions for the same scenario, and
 Table~\ref{tab:comparison} summarises the resulting transformations
 mapped to COSMIN dimensions.
 
-\begin{figure}[t]
+\begin{figure}[h]
   \centering
   \includegraphics[width=0.82\columnwidth]{figures/llm_question.png}
   \caption{LLM-based monthly check-in for Sophie's Month~2 Mental Health scenario. Questions are adapted using Sophie's prior history and student context, with a longitudinal trend item added and the isolation item de-prioritised.}
@@ -668,7 +666,7 @@ the same direction of effects, with strongest evidence for Relevance and Quality
 
 
 \begin{table}[t]
-\caption{Composite Likert scores (mean $\pm$ SD) with paired $t$-test results ($n = 40$, $df = 39$). Effect size $d_z = t/\sqrt{n}$.}
+\caption{Composite Likert scores (mean $\pm$ SD) with paired $t$-test results ($n = 40$, $df = 40$). Effect size $d_z = t/\sqrt{n}$.}
 \label{tab:quant}
 \centering
 \setlength{\tabcolsep}{3.5pt}

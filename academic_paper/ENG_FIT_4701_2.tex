@@ -271,17 +271,11 @@ COSMIN-grounded evaluation---the gap this study addresses.
 \section{Methodology}
 \label{sec:system}
 
-% Questionairre design - Table I example... 
-% Prototype design and implementation - A, D, B, C
-% Survey design - F, G, H
-% Ehics approval - E 
-% Conducting survey and data collection - I
-% Evaluation
 
 \begin{figure}[t]
   \centering
   \includegraphics[width=0.80\columnwidth]{figures/methodology_diagram.jpg}
-  \caption{Research methodology overview. The project progressed through eight phases across two semesters: literature review and questionnaire design, prototype implementation, ethics approval, survey conduct, data collection, and quantitative and qualitative evaluation.}
+  \caption{Research methodology overview. The project progressed through eight phases across two semesters: literature review, questionnaire design, prototype implementation, survey design, ethics approval, survey conduct, data collection, and quantitative and qualitative evaluation.}
   \label{fig:methodology_diagram}
 \end{figure}
 
@@ -664,7 +658,8 @@ the same direction of effects, with strongest evidence for Relevance and Quality
 \caption{Composite Likert scores (mean $\pm$ SD) with paired $t$-test results ($n = 40$, $df = 39$). Effect size $d_z = t/\sqrt{n}$.}
 \label{tab:quant}
 \centering
-\small
+\setlength{\tabcolsep}{3.5pt}
+\scriptsize
 \begin{tabular}{@{}lccccc@{}}
 \toprule
 \textbf{Dimension} & \textbf{LLM} & \textbf{Rule} & \textbf{$\Delta$} & \textbf{$t$ ($p$)} & \textbf{$d_z$} \\
@@ -789,73 +784,48 @@ history. Figure~\ref{fig:satisfaction} illustrates the distribution.
 \label{subsec:qual}
 
 
-% n
-% %
-% Sub-category
-% Main theme (C,Q, R)
 The open-ended responses helped explain why the LLM-based method was rated
 more favourably, particularly in Relevance. Responses were analysed using
 an inductive thematic coding approach: one researcher read all responses,
 assigned initial codes to meaningful segments, and then grouped related
-codes into higher-level themes. A second researcher reviewed the resulting
-code map to verify consistency. Table~\ref{tab:qual_preference}
-summarises non-mutually-exclusive thematic codes from the comparison question
-($n=39$ non-blank responses). Twenty respondents explicitly preferred the
-LLM-based version, while three explicitly preferred the rule-based version.
-The most common reasons for preferring the LLM method were personalisation and
-relevance (20.5\%), longitudinal awareness (10.3\%), and natural
-conversational tone (7.7\%). A further 28.2\% of responses expressed no strong
-preference or stated that both methods were acceptable. Representative comments
-described the LLM version as ``more specific and better tailored'' and noted
-that it ``linked back'' to Month~1 information.
+codes into higher-level themes mapped to the three COSMIN dimensions. A
+second researcher reviewed the resulting code map to verify consistency.
+Table~\ref{tab:qual_preference} presents the thematic codes organised by
+COSMIN dimension and method preference. Relevance-related themes were the
+most frequent: personalisation and tailoring to context (27.5\%) and
+awareness of history or change over time (15.0\%) were both associated
+with the LLM-based method. Clarity themes were more mixed---some
+participants valued the LLM method's brevity (7.5\%), while others found
+the rule-based method more straightforward (10.0\%) or noted wording
+ambiguity in both methods (7.5\%). Quality themes favoured the LLM
+method for depth and meaningfulness (10.0\%) and a more natural feel
+(5.0\%).
 
-The qualitative responses also identified limits of the current prototype
-(Table~\ref{tab:qual_improvement}). Participants wanted deeper personalisation
-(30.8\%), clearer instructions (7.7\%), or more flexible input options such as
-open-text responses (15.4\%). A small number of comments also noted scoring or
-display issues and navigation difficulty in the side-by-side comparison page.
-These comments indicate that participants valued the direction of LLM-based
-adaptation, but also expected a higher level of personal depth and interface
-polish from an adaptive system.
+These patterns indicate that participants valued the direction of
+LLM-based adaptation, particularly for contextual relevance, while also
+showing that clarity and perceived quality remained important design
+considerations.
 
 \begin{table*}[t]
-\caption{Qualitative thematic analysis of open-ended responses. Panel~(a) summarises non-mutually-exclusive questionnaire preference and reason themes (Q2, $n=39$); Panel~(b) summarises improvement suggestions (Q3, $n=13$).}
+\caption{Thematic coding of open-ended responses, by COSMIN dimension and method preference ($n=40$). Codes are non-mutually-exclusive; percentages are of the 40 valid respondents.}
 \label{tab:qual_preference}
-\label{tab:qual_improvement}
 \centering
 \small
-\begin{minipage}[t]{0.48\textwidth}
-\centering
-\textbf{(a) Questionnaire Preference (Q2)}\\[4pt]
-\begin{tabular}{@{}p{2.8cm}rrp{3.2cm}@{}}
+\begin{tabular}{@{}llllp{4.8cm}@{}}
 \toprule
-\textbf{Theme} & \textbf{$n$} & \textbf{\%} & \textbf{Example} \\
+\textbf{Main Theme} & \textbf{Subcategory (Code)} & \textbf{Favours} & \textbf{$n$ (\% of 40)} & \textbf{Example Quote} \\
 \midrule
-Explicit LLM preference     & 20 & 51.3 & ``I prefer the LLM'' \\
-No strong preference        & 11 & 28.2 & ``Both were easy to complete'' \\
-Personalisation / Relevance &  8 & 20.5 & ``More specific and tailored'' \\
-Longitudinal awareness      &  4 & 10.3 & ``Linked back to Month~1'' \\
-Explicit rule preference    &  3 &  7.7 & ``Rule-based was straightforward'' \\
-Natural / Conversational    &  3 &  7.7 & ``Feels more human-like'' \\
+Relevance & Personalisation \& tailoring to context       & LLM     & 11 (27.5\%) & ``better tailored to my personal situation'' \\
+Relevance & Awareness of history / change over time        & LLM     &  6 (15.0\%) & ``linked back to my month~1 questions'' \\
+\addlinespace
+Clarity   & Brevity / ease of answering                   & LLM     &  3 (7.5\%)  & ``I like the LLM because it is shorter'' \\
+Clarity   & Straightforward / predictable                  & Rule    &  4 (10.0\%) & ``Rule-based because it is straightforward'' \\
+Clarity   & Wording / instruction ambiguity                & Neither &  3 (7.5\%)  & ``confused how long I should check'' \\
+\addlinespace
+Quality   & Depth \& meaningfulness of assessment          & LLM     &  4 (10.0\%) & ``appropriate and meaningful'' \\
+Quality   & Natural / human-like feel                      & LLM     &  2 (5.0\%)  & ``LLM feels more human-like'' \\
 \bottomrule
 \end{tabular}
-\end{minipage}%
-\hfill
-\begin{minipage}[t]{0.48\textwidth}
-\centering
-\textbf{(b) Improvement Suggestions (Q3)}\\[4pt]
-\begin{tabular}{@{}p{2.8cm}rrp{3.2cm}@{}}
-\toprule
-\textbf{Theme} & \textbf{$n$} & \textbf{\%} & \textbf{Example} \\
-\midrule
-More personalisation        & 4 & 30.8 & ``More depth in LLM questions'' \\
-Scoring / display bugs      & 2 & 15.4 & ``Scores seemed inverted'' \\
-New features (open text)    & 2 & 15.4 & ``Short answers for updates'' \\
-UI / navigation issues      & 1 &  7.7 & ``Hard to navigate side-by-side'' \\
-Clearer instructions        & 1 &  7.7 & ``More guidance for the process'' \\
-\bottomrule
-\end{tabular}
-\end{minipage}
 \end{table*}
 
 
@@ -914,7 +884,12 @@ downstream assessment quality. While this study did not directly measure
 prediction outcomes or clinical accuracy, the observed pattern suggests
 that LLM-based adaptation may contribute to better data collection by
 asking questions that users perceive as genuinely connected to their
-circumstances.
+circumstances. Exploratory subgroup patterns were directionally
+consistent with the main Relevance finding, with LLM-based scores higher
+across all age, gender, health-app familiarity, and role groups. Because
+several subgroup sizes were small, these patterns should be interpreted
+as descriptive support rather than evidence of differential demographic
+effects.
 
 \subsection{Limitations}
 \label{subsec:limitations}
